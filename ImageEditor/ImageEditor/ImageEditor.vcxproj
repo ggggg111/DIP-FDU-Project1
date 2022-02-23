@@ -161,6 +161,10 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\modules\GUI.cpp" />
+    <ClCompile Include="src\modules\Input.cpp" />
+    <ClCompile Include="src\modules\Renderer.cpp" />
+    <ClCompile Include="src\modules\Window.cpp" />
     <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdl.cpp" />
     <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.cpp" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
@@ -171,6 +175,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\modules\GUI.h" />
+    <ClInclude Include="src\modules\Input.h" />
+    <ClInclude Include="src\modules\Renderer.h" />
+    <ClInclude Include="src\modules\Window.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />

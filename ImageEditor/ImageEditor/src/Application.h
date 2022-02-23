@@ -1,11 +1,18 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
+class Window;
+class Renderer;
+class GUI;
+class Input;
+
 class Application
 {
 public:
     Application();
     ~Application();
+
+    void Run();
 
     void Start();
 
@@ -14,6 +21,16 @@ public:
     void PostUpdate();
 
     void CleanUp();
+
+public:
+    Window* window;
+    Renderer* renderer;
+    GUI* gui;
+    Input* input;
+
+    bool running;
 };
+
+extern Application* App;
 
 #endif /* __APPLICATION_H__ */

@@ -10,6 +10,10 @@
     <ClCompile Include="vendor\ImGui\imgui_draw.cpp" />
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
     <ClCompile Include="vendor\ImGui\imgui.cpp" />
+    <ClCompile Include="src\modules\Window.cpp" />
+    <ClCompile Include="src\modules\Renderer.cpp" />
+    <ClCompile Include="src\modules\GUI.cpp" />
+    <ClCompile Include="src\modules\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -21,5 +25,9 @@
     <ClInclude Include="vendor\ImGui\imstb_rectpack.h" />
     <ClInclude Include="vendor\ImGui\imgui_internal.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
+    <ClInclude Include="src\modules\Window.h" />
+    <ClInclude Include="src\modules\Renderer.h" />
+    <ClInclude Include="src\modules\GUI.h" />
+    <ClInclude Include="src\modules\Input.h" />
   </ItemGroup>
 </Project>
