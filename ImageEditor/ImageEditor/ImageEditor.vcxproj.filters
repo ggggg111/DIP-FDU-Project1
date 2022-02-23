@@ -2,5 +2,24 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="vendor\ImGui\imgui.h" />
+    <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.h" />
+    <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
+    <ClInclude Include="vendor\ImGui\imstb_textedit.h" />
+    <ClInclude Include="vendor\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\ImGui\imgui_internal.h" />
+    <ClInclude Include="vendor\ImGui\imconfig.h" />
   </ItemGroup>
 </Project>

@@ -72,31 +72,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\vendor\SDL\lib\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,7 +159,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.h" />
+    <ClInclude Include="vendor\ImGui\imconfig.h" />
+    <ClInclude Include="vendor\ImGui\imgui.h" />
+    <ClInclude Include="vendor\ImGui\imgui_internal.h" />
+    <ClInclude Include="vendor\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\ImGui\imstb_textedit.h" />
+    <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

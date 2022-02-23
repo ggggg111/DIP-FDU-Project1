@@ -14,6 +14,6 @@ public:
     void PostUpdate();
 
     void CleanUp();
-}
+};
 
 #endif /* __APPLICATION_H__ */
