@@ -1,5 +1,3 @@
-#include "Imgui.h"
-
 #include "Application.h"
 #include "modules/Window.h"
 #include "modules/Renderer.h"
@@ -57,10 +55,6 @@ void Application::Update()
     input->Update();
     gui->Update();
     renderer->Update();
-
-    bool show_demo_window = true;
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
 }
 
 void Application::PostUpdate()
