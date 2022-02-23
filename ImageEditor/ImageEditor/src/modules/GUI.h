@@ -13,8 +13,8 @@ public:
 	void PostUpdate();
 	void CleanUp();
 
-public:
-
+private:
+	void MainMenuBar();
 };
 
 #endif /* __GUI_H__ */

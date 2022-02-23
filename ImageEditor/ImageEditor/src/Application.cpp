@@ -7,18 +7,18 @@
 Application::Application()
     : running(true)
 {
-    window = new Window("Image Editor", 1024, 768);
-    renderer = new Renderer();
-    gui = new GUI();
-    input = new Input();
+    this->window = new Window("Image Editor", 1024, 768);
+    this->renderer = new Renderer();
+    this->gui = new GUI();
+    this->input = new Input();
 }
 
 Application::~Application()
 {
-    delete input;
-    delete gui;
-    delete renderer;
-    delete window;
+    delete this->input;
+    delete this->gui;
+    delete this->renderer;
+    delete this->window;
 }
 
 void Application::Run()
@@ -37,37 +37,37 @@ void Application::Run()
 
 void Application::Start()
 {
-    window->Start();
-    renderer->Start();
-    gui->Start();
-    input->Start();
+    this->window->Start();
+    this->renderer->Start();
+    this->gui->Start();
+    this->input->Start();
 }
 
 void Application::PreUpdate()
 {
-    input->PreUpdate();
-    gui->PreUpdate();
-    renderer->PreUpdate();
+    this->input->PreUpdate();
+    this->gui->PreUpdate();
+    this->renderer->PreUpdate();
 }
 
 void Application::Update()
 {
-    input->Update();
-    gui->Update();
-    renderer->Update();
+    this->input->Update();
+    this->gui->Update();
+    this->renderer->Update();
 }
 
 void Application::PostUpdate()
 {
-    input->PostUpdate();
-    gui->PostUpdate();
-    renderer->PostUpdate();
+    this->input->PostUpdate();
+    this->gui->PostUpdate();
+    this->renderer->PostUpdate();
 }
 
 void Application::CleanUp()
 {
-    input->CleanUp();
-    gui->CleanUp();
-    renderer->CleanUp();
-    window->CleanUp();
+    this->input->CleanUp();
+    this->gui->CleanUp();
+    this->renderer->CleanUp();
+    this->window->CleanUp();
 }

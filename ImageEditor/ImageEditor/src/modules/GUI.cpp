@@ -37,7 +37,7 @@ void GUI::PreUpdate()
 
 void GUI::Update()
 {
-	
+	this->MainMenuBar();
 }
 
 void GUI::PostUpdate()
@@ -51,4 +51,20 @@ void GUI::CleanUp()
 	ImGui_ImplSDLRenderer_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void GUI::MainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::MenuItem("Load image");
+			ImGui::MenuItem("Save image");
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
 }
