@@ -28,7 +28,7 @@ void Renderer::Start()
 
 void Renderer::PreUpdate()
 {
-	SDL_SetRenderDrawColor(App->renderer->renderer, rand() % 255, rand() % 255, rand() % 255, 255);
+	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderClear(App->renderer->renderer);
 }
 

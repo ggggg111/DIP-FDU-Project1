@@ -37,7 +37,6 @@ void Editor::CleanUp()
 	SDL_DestroyTexture(this->texture);
 }
 
-
 void Editor::MainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -60,7 +59,12 @@ void Editor::MainMenuBar()
 
 			if (ImGui::MenuItem("Save image"))
 			{
+				auto destination = pfd::save_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg *.bmp" },
+					pfd::opt::force_overwrite).result();
 
+				printf("User selected file %s\n", destination.c_str());
+				this->SaveImg(this->texture, destination);
 			}
 
 			ImGui::EndMenu();
@@ -78,4 +82,9 @@ void Editor::LoadImg(const std::string& path)
 	ImageLoader::GetTextureDimensions(this->texture, &width, &height);
 
 	App->window->SetWindowSize(width, height);
+}
+
+void Editor::SaveImg(SDL_Texture* texture, const std::string& path)
+{
+	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
 }
