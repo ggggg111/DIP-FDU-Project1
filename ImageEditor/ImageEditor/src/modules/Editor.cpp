@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "SDL_image.h"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
 
@@ -9,7 +10,7 @@
 #include "Window.h"
 
 Editor::Editor()
-	: img(nullptr)
+	: texture(nullptr)
 {
 
 }
@@ -21,19 +22,19 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->img = nullptr;
+	this->texture = nullptr;
 }
 
 void Editor::Update()
 {
 	this->MainMenuBar();
 
-	SDL_RenderCopy(App->renderer->renderer, this->img, nullptr, nullptr);
+	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
 }
 
 void Editor::CleanUp()
 {
-	SDL_DestroyTexture(this->img);
+	SDL_DestroyTexture(this->texture);
 }
 
 
@@ -71,10 +72,10 @@ void Editor::MainMenuBar()
 
 void Editor::LoadImg(const std::string& path)
 {
-	this->img = ImageLoader::LoadTexture(App->renderer->renderer, path);
+	this->texture = ImageLoader::LoadTexture(App->renderer->renderer, path);
 	
 	int width, height;
-	ImageLoader::GetTextureDimensions(this->img, &width, &height);
+	ImageLoader::GetTextureDimensions(this->texture, &width, &height);
 
 	App->window->SetWindowSize(width, height);
 }

@@ -1,6 +1,7 @@
 #ifndef __EDITOR_H__
 #define __EDITOR_H__
 
+struct SDL_Surface;
 struct SDL_Texture;
 
 class Editor
@@ -18,7 +19,7 @@ private:
 	void LoadImg(const std::string& path);
 
 private:
-	SDL_Texture* img;
+	SDL_Texture* texture;
 };
 
 #endif /* __EDITOR_H__ */
