@@ -5,6 +5,8 @@
 
 struct SDL_Window;
 struct SDL_Surface;
+struct SDL_Texture;
+struct SDL_Renderer;
 
 class Window
 {
@@ -14,6 +16,9 @@ public:
 
 	void Start();
 	void CleanUp();
+
+	SDL_Texture* GetWindowTexture(SDL_Renderer* renderer) const;
+	void SetWindowSize(const int& width, const int& height);
 
 public:
 	SDL_Window* window;

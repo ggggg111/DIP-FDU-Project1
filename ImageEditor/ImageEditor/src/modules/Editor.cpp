@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Editor.h"
 #include "Renderer.h"
+#include "Window.h"
 
 Editor::Editor()
 	: img(nullptr)
@@ -20,19 +21,22 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	img = ImageLoader::LoadTexture(App->renderer->renderer, "images/test.jpg");
+	this->img = App->window->GetWindowTexture(App->renderer->renderer);
 }
 
 void Editor::Update()
 {
 	this->MainMenuBar();
 
-	SDL_RenderCopy(App->renderer->renderer, img, nullptr, nullptr);
+	SDL_RenderCopy(App->renderer->renderer, this->img, nullptr, nullptr);
 }
 
 void Editor::CleanUp()
 {
-	SDL_DestroyTexture(img);
+	if (this->img)
+	{
+		SDL_DestroyTexture(this->img);
+	}
 }
 
 
@@ -49,7 +53,11 @@ void Editor::MainMenuBar()
 					.result();
 
 				if (!selection.empty())
-					printf("User selected file %s\n", selection[0].c_str());
+				{
+					std::string path = selection[0];
+					printf("User selected file %s\n", path.c_str());
+					this->LoadImg(path);
+				}
 			}
 
 			if (ImGui::MenuItem("Save image"))
@@ -62,4 +70,14 @@ void Editor::MainMenuBar()
 
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void Editor::LoadImg(const std::string& path)
+{
+	this->img = ImageLoader::LoadTexture(App->renderer->renderer, path);
+	
+	int width, height;
+	ImageLoader::GetTextureDimensions(this->img, &width, &height);
+
+	App->window->SetWindowSize(width, height);
 }

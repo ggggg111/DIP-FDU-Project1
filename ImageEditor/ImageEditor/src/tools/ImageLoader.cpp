@@ -20,3 +20,8 @@ SDL_Texture* ImageLoader::LoadTexture(SDL_Renderer* renderer, const std::string&
 
     return texture;
 }
+
+void ImageLoader::GetTextureDimensions(SDL_Texture* texture, int* width, int* height)
+{
+    SDL_QueryTexture(texture, nullptr, nullptr, width, height);
+}

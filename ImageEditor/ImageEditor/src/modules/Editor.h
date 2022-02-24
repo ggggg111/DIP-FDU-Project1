@@ -15,6 +15,7 @@ public:
 
 private:
 	void MainMenuBar();
+	void LoadImg(const std::string& path);
 
 private:
 	SDL_Texture* img;

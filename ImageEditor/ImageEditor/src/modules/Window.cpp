@@ -50,3 +50,15 @@ void Window::CleanUp()
 	IMG_Quit();
 	SDL_Quit();
 }
+
+SDL_Texture* Window::GetWindowTexture(SDL_Renderer* renderer) const
+{
+	SDL_Surface* surface = SDL_GetWindowSurface(this->window);
+
+	return SDL_CreateTextureFromSurface(renderer, surface);
+}
+
+void Window::SetWindowSize(const int& width, const int& height)
+{
+	SDL_SetWindowSize(this->window, width, height);
+}
