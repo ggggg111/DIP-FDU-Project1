@@ -12,9 +12,6 @@ public:
 	void Update();
 	void PostUpdate();
 	void CleanUp();
-
-private:
-	void MainMenuBar();
 };
 
 #endif /* __GUI_H__ */

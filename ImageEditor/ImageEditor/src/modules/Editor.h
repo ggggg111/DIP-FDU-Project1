@@ -14,6 +14,9 @@ public:
 	void CleanUp();
 
 private:
+	void MainMenuBar();
+
+private:
 	SDL_Texture* img;
 };
 
