@@ -6,7 +6,7 @@
 #include "Window.h"
 
 Window::Window(const std::string& name, const int& width, const int& height)
-	: window(nullptr), name(name), width(width), height(height)
+	: window(nullptr), surface(nullptr), name(name), width(width), height(height)
 {
 
 }
@@ -20,7 +20,7 @@ void Window::Start()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("SDL can't be initialized. SDL_Error: %s\n", SDL_GetError());
+		printf("SDL can't be initialized. SDL_GetError: %s\n", SDL_GetError());
 	}
 
 	int image_format_flags = IMG_INIT_JPG | IMG_INIT_PNG;
@@ -33,13 +33,13 @@ void Window::Start()
 	this->window = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->width, this->height, SDL_WINDOW_SHOWN);
 	if (this->window == nullptr)
 	{
-		printf("Window can't be created. SDL_Error: %s\n", SDL_GetError());
+		printf("Window can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 
 	this->surface = SDL_GetWindowSurface(this->window);
 	if (this->surface == nullptr)
 	{
-		printf("Surface can't be created. SDL_Error: %s\n", SDL_GetError());
+		printf("Surface can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 }
 
@@ -47,5 +47,6 @@ void Window::CleanUp()
 {
 	SDL_FreeSurface(this->surface);
 	SDL_DestroyWindow(this->window);
+	IMG_Quit();
 	SDL_Quit();
 }

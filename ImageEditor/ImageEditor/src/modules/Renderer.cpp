@@ -22,7 +22,7 @@ void Renderer::Start()
 	this->renderer = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (this->renderer == nullptr)
 	{
-		printf("Renderer can't be created. SDL_Error: %s\n", SDL_GetError());
+		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 }
 

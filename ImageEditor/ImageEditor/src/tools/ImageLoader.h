@@ -1,9 +1,10 @@
 #include <iostream>
 
-struct SDL_Surface;
+struct SDL_Texture;
+struct SDL_Renderer;
 
 class ImageLoader
 {
 public:
-	static SDL_Surface* LoadImage(const std::string& path);
+	static SDL_Texture* LoadTexture(SDL_Renderer* renderer, const std::string& path);
 };
