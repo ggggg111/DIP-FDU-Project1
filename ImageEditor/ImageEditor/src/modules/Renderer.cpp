@@ -34,7 +34,7 @@ void Renderer::PreUpdate()
 
 void Renderer::Update()
 {
-
+	
 }
 
 void Renderer::PostUpdate()

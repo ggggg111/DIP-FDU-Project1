@@ -21,7 +21,7 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->img = App->window->GetWindowTexture(App->renderer->renderer);
+	this->img = nullptr;
 }
 
 void Editor::Update()
@@ -33,10 +33,7 @@ void Editor::Update()
 
 void Editor::CleanUp()
 {
-	if (this->img)
-	{
-		SDL_DestroyTexture(this->img);
-	}
+	SDL_DestroyTexture(this->img);
 }
 
 

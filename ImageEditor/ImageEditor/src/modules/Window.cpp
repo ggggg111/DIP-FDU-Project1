@@ -6,7 +6,7 @@
 #include "Window.h"
 
 Window::Window(const std::string& name, const int& width, const int& height)
-	: window(nullptr), surface(nullptr), name(name), width(width), height(height)
+	: window(nullptr), name(name), width(width), height(height)
 {
 
 }
@@ -35,27 +35,13 @@ void Window::Start()
 	{
 		printf("Window can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
-
-	this->surface = SDL_GetWindowSurface(this->window);
-	if (this->surface == nullptr)
-	{
-		printf("Surface can't be created. SDL_GetError: %s\n", SDL_GetError());
-	}
 }
 
 void Window::CleanUp()
 {
-	SDL_FreeSurface(this->surface);
 	SDL_DestroyWindow(this->window);
 	IMG_Quit();
 	SDL_Quit();
-}
-
-SDL_Texture* Window::GetWindowTexture(SDL_Renderer* renderer) const
-{
-	SDL_Surface* surface = SDL_GetWindowSurface(this->window);
-
-	return SDL_CreateTextureFromSurface(renderer, surface);
 }
 
 void Window::SetWindowSize(const int& width, const int& height)

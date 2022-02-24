@@ -17,12 +17,10 @@ public:
 	void Start();
 	void CleanUp();
 
-	SDL_Texture* GetWindowTexture(SDL_Renderer* renderer) const;
 	void SetWindowSize(const int& width, const int& height);
 
 public:
 	SDL_Window* window;
-	SDL_Surface* surface;
 
 private:
 	std::string name;
