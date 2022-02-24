@@ -1,6 +1,6 @@
 #include "SDL.h"
 #include "imgui.h"
-#include "nfd.h"
+#include "portable-file-dialogs.h"
 
 #include "tools/ImageLoader.h"
 #include "Application.h"
@@ -44,23 +44,12 @@ void Editor::MainMenuBar()
 		{
 			if (ImGui::MenuItem("Load image"))
 			{
-				nfdchar_t* outPath = nullptr;
-				nfdresult_t result = NFD_OpenDialog(nullptr, nullptr, &outPath);
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg *.bmp" })
+					.result();
 
-				if (result == NFD_OKAY)
-				{
-					puts("Success!");
-					puts(outPath);
-					free(outPath);
-				}
-				else if (result == NFD_CANCEL)
-				{
-					puts("User pressed cancel.");
-				}
-				else
-				{
-					printf("Error: %s\n", NFD_GetError());
-				}
+				if (!selection.empty())
+					printf("User selected file %s\n", selection[0].c_str());
 			}
 
 			if (ImGui::MenuItem("Save image"))

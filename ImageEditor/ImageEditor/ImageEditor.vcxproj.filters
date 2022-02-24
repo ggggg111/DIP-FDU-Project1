@@ -34,5 +34,6 @@
     <ClInclude Include="src\modules\Editor.h" />
     <ClInclude Include="src\tools\ImageLoader.h" />
     <ClInclude Include="vendor\NativeFileDialog\src\include\nfd.h" />
+    <ClInclude Include="vendor\PortableFileDialogs\portable-file-dialogs.h" />
   </ItemGroup>
 </Project>
