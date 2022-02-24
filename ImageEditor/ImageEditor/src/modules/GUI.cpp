@@ -2,7 +2,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
 
-#include "../Application.h"
+#include "Application.h"
 #include "GUI.h"
 #include "Window.h"
 #include "Renderer.h"

@@ -12,9 +12,6 @@ public:
 	void Update();
 	void PostUpdate();
 	void CleanUp();
-
-public:
-
 };
 
 #endif /* __INPUT_H__ */

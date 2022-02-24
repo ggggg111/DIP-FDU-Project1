@@ -14,6 +14,8 @@
     <ClCompile Include="src\modules\Renderer.cpp" />
     <ClCompile Include="src\modules\GUI.cpp" />
     <ClCompile Include="src\modules\Input.cpp" />
+    <ClCompile Include="src\modules\Editor.cpp" />
+    <ClCompile Include="src\tools\ImageLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -29,5 +31,7 @@
     <ClInclude Include="src\modules\Renderer.h" />
     <ClInclude Include="src\modules\GUI.h" />
     <ClInclude Include="src\modules\Input.h" />
+    <ClInclude Include="src\modules\Editor.h" />
+    <ClInclude Include="src\tools\ImageLoader.h" />
   </ItemGroup>
 </Project>

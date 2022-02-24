@@ -5,6 +5,7 @@ class Window;
 class Renderer;
 class GUI;
 class Input;
+class Editor;
 
 class Application
 {
@@ -27,6 +28,7 @@ public:
     Renderer* renderer;
     GUI* gui;
     Input* input;
+    Editor* editor;
 
     bool running;
 };

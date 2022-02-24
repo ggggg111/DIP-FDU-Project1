@@ -2,7 +2,7 @@
 
 #include "SDL.h"
 
-#include "../Application.h"
+#include "Application.h"
 #include "Renderer.h"
 #include "Window.h"
 

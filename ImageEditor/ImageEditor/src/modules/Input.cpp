@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include "imgui_impl_sdl.h"
 
-#include "../Application.h"
+#include "Application.h"
 #include "Input.h"
 
 Input::Input()

@@ -4,6 +4,7 @@
 #include <iostream>
 
 struct SDL_Window;
+struct SDL_Surface;
 
 class Window
 {
@@ -16,6 +17,7 @@ public:
 
 public:
 	SDL_Window* window;
+	SDL_Surface* surface;
 
 private:
 	std::string name;
