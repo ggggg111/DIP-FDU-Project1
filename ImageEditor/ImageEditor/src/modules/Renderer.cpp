@@ -27,12 +27,12 @@ void Renderer::Start()
 		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 
-	texture_target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
+	this->texture_target = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
 }
 
 void Renderer::PreUpdate()
 {
-	SDL_SetRenderTarget(renderer, texture_target);
+	SDL_SetRenderTarget(this->renderer, this->texture_target);
 	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderClear(App->renderer->renderer);
 }
@@ -45,11 +45,11 @@ void Renderer::Update()
 void Renderer::PostUpdate()
 {
 	SDL_RenderPresent(App->renderer->renderer);
-	SDL_SetRenderTarget(renderer, nullptr);
+	SDL_SetRenderTarget(this->renderer, nullptr);
 
-	SDL_RenderClear(renderer);
-	SDL_RenderCopyEx(renderer, texture_target, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
-	SDL_RenderPresent(renderer);
+	SDL_RenderClear(this->renderer);
+	SDL_RenderCopyEx(this->renderer, this->texture_target, nullptr, nullptr, 0, nullptr, SDL_FLIP_VERTICAL);
+	SDL_RenderPresent(this->renderer);
 }
 
 void Renderer::CleanUp()
