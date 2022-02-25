@@ -6,6 +6,7 @@
 #include "GUI.h"
 #include "Window.h"
 #include "Renderer.h"
+#include "Editor.h"
 
 GUI::GUI()
 {
@@ -37,7 +38,7 @@ void GUI::PreUpdate()
 
 void GUI::Update()
 {
-	
+	App->editor->MainMenuBar();
 }
 
 void GUI::PostUpdate()

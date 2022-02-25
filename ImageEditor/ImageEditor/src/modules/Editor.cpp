@@ -22,7 +22,7 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->texture = nullptr;
+	this->texture = App->renderer->texture_target;
 	this->LoadImg("images/test3.jpg");
 }
 
@@ -34,11 +34,6 @@ void Editor::Update()
 void Editor::CleanUp()
 {
 	SDL_DestroyTexture(this->texture);
-}
-
-void Editor::DrawGUI()
-{
-	this->MainMenuBar();
 }
 
 void Editor::MainMenuBar()

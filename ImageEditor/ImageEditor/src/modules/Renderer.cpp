@@ -41,30 +41,19 @@ void Renderer::PreUpdate()
 
 void Renderer::Update()
 {
-
+	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
+	SDL_SetRenderTarget(this->renderer, nullptr);
+	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
 }
 
 void Renderer::PostUpdate()
 {
-	SDL_RenderPresent(App->renderer->renderer);
-	SDL_SetRenderTarget(this->renderer, nullptr);
-
-	SDL_RenderClear(this->renderer);
-	//SDL_RenderCopyEx(this->renderer, this->texture_target, nullptr, nullptr, 0, nullptr, SDL_FLIP_VERTICAL);
-	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
 	SDL_RenderPresent(this->renderer);
-
 	SDL_SetRenderTarget(this->renderer, nullptr);
-
-	App->gui->PreUpdate();
-	App->gui->Update();
-
-	App->editor->DrawGUI();
-
-	App->gui->PostUpdate();
 }
 
 void Renderer::CleanUp()
 {
+	SDL_DestroyTexture(texture_target);
 	SDL_DestroyRenderer(this->renderer);
 }

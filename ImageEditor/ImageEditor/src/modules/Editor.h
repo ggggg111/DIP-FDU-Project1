@@ -1,7 +1,6 @@
 #ifndef __EDITOR_H__
 #define __EDITOR_H__
 
-struct SDL_Surface;
 struct SDL_Texture;
 
 class Editor
@@ -14,10 +13,10 @@ public:
 	void Update();
 	void CleanUp();
 
-	void DrawGUI();
+public:
+	void MainMenuBar();
 
 private:
-	void MainMenuBar();
 	void LoadImg(const std::string& path);
 	void SaveImg(SDL_Texture* texture, const std::string& path);
 

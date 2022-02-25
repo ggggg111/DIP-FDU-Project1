@@ -55,8 +55,8 @@ void Application::PreUpdate()
 
 void Application::Update()
 {
-    this->editor->Update();
     this->input->Update();
+    this->editor->Update();
     this->renderer->Update();
 }
 
