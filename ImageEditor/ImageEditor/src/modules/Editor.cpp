@@ -26,13 +26,13 @@ void Editor::Start()
 
 void Editor::Update()
 {
-	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
-	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 
-	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
+	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
+
 	SDL_RenderCopy(App->renderer->renderer, App->renderer->texture_target, nullptr, nullptr);
+	
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
 
