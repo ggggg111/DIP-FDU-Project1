@@ -10,7 +10,6 @@
 #include "Window.h"
 
 Editor::Editor()
-	: texture(nullptr)
 {
 
 }
@@ -22,14 +21,18 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->texture = nullptr;
-	this->LoadImg("images/test3.jpg");
+	//App->renderer->texture_target = this->LoadImg("images/test2.png");
 }
 
 void Editor::Update()
 {
+	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
+	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
+	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+
+	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+	SDL_RenderCopy(App->renderer->renderer, App->renderer->texture_target, nullptr, nullptr);
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
 
@@ -65,7 +68,7 @@ void Editor::MainMenuBar()
 					pfd::opt::force_overwrite).result();
 
 				printf("User selected file %s\n", destination.c_str());
-				this->SaveImg(this->texture, destination);
+				this->SaveImg(App->renderer->texture_target, destination);
 			}
 
 			ImGui::EndMenu();
@@ -75,18 +78,20 @@ void Editor::MainMenuBar()
 	}
 }
 
-void Editor::LoadImg(const std::string& path)
+SDL_Texture* Editor::LoadImg(const std::string& path)
 {
-	this->texture = ImageLoader::LoadTexture(App->renderer->renderer, path);
+	SDL_Texture* t = ImageLoader::LoadTexture(App->renderer->renderer, path);
 	
 	int width, height;
-	ImageLoader::GetTextureDimensions(this->texture, &width, &height);
+	ImageLoader::GetTextureDimensions(t, &width, &height);
 
 	App->window->SetWindowSize(width, height);
+
+	return t;
 }
 
 void Editor::SaveImg(SDL_Texture* texture, const std::string& path)
 {
-	SDL_SetRenderTarget(App->renderer->renderer, this->texture);
+	SDL_SetRenderTarget(App->renderer->renderer, texture);
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
 }
