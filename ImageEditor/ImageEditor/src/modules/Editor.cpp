@@ -28,12 +28,15 @@ void Editor::Start()
 
 void Editor::Update()
 {
+	SDL_SetRenderTarget(App->renderer->renderer, this->texture);
+	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
+	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
 }
 
 void Editor::CleanUp()
 {
-	SDL_DestroyTexture(this->texture);
+
 }
 
 void Editor::MainMenuBar()

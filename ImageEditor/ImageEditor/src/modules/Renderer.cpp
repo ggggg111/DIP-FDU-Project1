@@ -34,22 +34,18 @@ void Renderer::Start()
 
 void Renderer::PreUpdate()
 {
-	SDL_SetRenderTarget(this->renderer, this->texture_target);
 	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderClear(App->renderer->renderer);
 }
 
 void Renderer::Update()
 {
-	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
-	SDL_SetRenderTarget(this->renderer, nullptr);
-	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
+
 }
 
 void Renderer::PostUpdate()
 {
 	SDL_RenderPresent(this->renderer);
-	SDL_SetRenderTarget(this->renderer, nullptr);
 }
 
 void Renderer::CleanUp()
