@@ -31,8 +31,6 @@ void Editor::Update()
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
-	
-	this->MainMenuBar();
 }
 
 void Editor::CleanUp()
