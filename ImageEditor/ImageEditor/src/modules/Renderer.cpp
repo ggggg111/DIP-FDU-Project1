@@ -19,7 +19,9 @@ Renderer::~Renderer()
 
 void Renderer::Start()
 {
-	this->renderer = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+	this->renderer = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_TARGETTEXTURE);
 	if (this->renderer == nullptr)
 	{
 		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());
@@ -44,6 +46,10 @@ void Renderer::PostUpdate()
 {
 	SDL_RenderPresent(App->renderer->renderer);
 	SDL_SetRenderTarget(renderer, nullptr);
+
+	SDL_RenderClear(renderer);
+	SDL_RenderCopyEx(renderer, texture_target, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
+	SDL_RenderPresent(renderer);
 }
 
 void Renderer::CleanUp()

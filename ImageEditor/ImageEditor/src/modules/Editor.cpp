@@ -23,13 +23,13 @@ Editor::~Editor()
 void Editor::Start()
 {
 	this->texture = nullptr;
+	this->LoadImg("images/test.jpg");
 }
 
 void Editor::Update()
 {
-	this->MainMenuBar();
-
 	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
+	this->MainMenuBar();
 }
 
 void Editor::CleanUp()
