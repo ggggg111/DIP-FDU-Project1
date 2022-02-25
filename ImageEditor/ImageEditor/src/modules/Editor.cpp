@@ -22,16 +22,17 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->texture = App->renderer->texture_target;
+	this->texture = nullptr;
 	this->LoadImg("images/test3.jpg");
 }
 
 void Editor::Update()
 {
-	SDL_SetRenderTarget(App->renderer->renderer, this->texture);
+	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
-	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
+	
+	this->MainMenuBar();
 }
 
 void Editor::CleanUp()
@@ -88,5 +89,6 @@ void Editor::LoadImg(const std::string& path)
 
 void Editor::SaveImg(SDL_Texture* texture, const std::string& path)
 {
+	SDL_SetRenderTarget(App->renderer->renderer, this->texture);
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
 }
