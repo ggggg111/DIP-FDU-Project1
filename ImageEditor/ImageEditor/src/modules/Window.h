@@ -22,8 +22,8 @@ public:
 public:
 	SDL_Window* window;
 
-private:
 	std::string name;
+
 	int width;
 	int height;
 };
