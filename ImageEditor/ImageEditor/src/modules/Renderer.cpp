@@ -5,6 +5,8 @@
 #include "Application.h"
 #include "Renderer.h"
 #include "Window.h"
+#include "Editor.h"
+#include "Gui.h"
 
 Renderer::Renderer()
 	: renderer(nullptr), texture_target(nullptr)
@@ -27,7 +29,7 @@ void Renderer::Start()
 		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 
-	this->texture_target = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
+	this->texture_target = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
 }
 
 void Renderer::PreUpdate()
@@ -39,7 +41,7 @@ void Renderer::PreUpdate()
 
 void Renderer::Update()
 {
-	
+
 }
 
 void Renderer::PostUpdate()
@@ -48,8 +50,18 @@ void Renderer::PostUpdate()
 	SDL_SetRenderTarget(this->renderer, nullptr);
 
 	SDL_RenderClear(this->renderer);
-	SDL_RenderCopyEx(this->renderer, this->texture_target, nullptr, nullptr, 0, nullptr, SDL_FLIP_VERTICAL);
+	//SDL_RenderCopyEx(this->renderer, this->texture_target, nullptr, nullptr, 0, nullptr, SDL_FLIP_VERTICAL);
+	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
 	SDL_RenderPresent(this->renderer);
+
+	SDL_SetRenderTarget(this->renderer, nullptr);
+
+	App->gui->PreUpdate();
+	App->gui->Update();
+
+	App->editor->DrawGUI();
+
+	App->gui->PostUpdate();
 }
 
 void Renderer::CleanUp()

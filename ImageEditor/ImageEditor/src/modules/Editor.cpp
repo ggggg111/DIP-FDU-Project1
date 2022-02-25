@@ -23,18 +23,22 @@ Editor::~Editor()
 void Editor::Start()
 {
 	this->texture = nullptr;
-	this->LoadImg("images/test.jpg");
+	this->LoadImg("images/test3.jpg");
 }
 
 void Editor::Update()
 {
 	SDL_RenderCopy(App->renderer->renderer, this->texture, nullptr, nullptr);
-	this->MainMenuBar();
 }
 
 void Editor::CleanUp()
 {
 	SDL_DestroyTexture(this->texture);
+}
+
+void Editor::DrawGUI()
+{
+	this->MainMenuBar();
 }
 
 void Editor::MainMenuBar()

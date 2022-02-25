@@ -50,7 +50,6 @@ void Application::Start()
 void Application::PreUpdate()
 {
     this->input->PreUpdate();
-    this->gui->PreUpdate();
     this->renderer->PreUpdate();
 }
 
@@ -58,14 +57,12 @@ void Application::Update()
 {
     this->editor->Update();
     this->input->Update();
-    this->gui->Update();
     this->renderer->Update();
 }
 
 void Application::PostUpdate()
 {
     this->input->PostUpdate();
-    this->gui->PostUpdate();
     this->renderer->PostUpdate();
 }
 

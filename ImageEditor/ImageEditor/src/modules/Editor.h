@@ -14,6 +14,8 @@ public:
 	void Update();
 	void CleanUp();
 
+	void DrawGUI();
+
 private:
 	void MainMenuBar();
 	void LoadImg(const std::string& path);
