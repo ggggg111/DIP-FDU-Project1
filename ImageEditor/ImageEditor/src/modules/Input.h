@@ -3,7 +3,7 @@
 
 #define NUM_MOUSE_BUTTONS 5
 
-enum KEY_STATE
+enum class KEY_STATE
 {
 	KEY_IDLE = 0,
 	KEY_DOWN,

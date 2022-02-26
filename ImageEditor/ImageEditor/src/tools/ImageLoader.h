@@ -10,4 +10,5 @@ public:
 	static void SaveTexture(SDL_Renderer* renderer, SDL_Texture* texture, const std::string& path);
 	
 	static void GetTextureDimensions(SDL_Texture* texture, int* width, int* height);
+	static void GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height);
 };

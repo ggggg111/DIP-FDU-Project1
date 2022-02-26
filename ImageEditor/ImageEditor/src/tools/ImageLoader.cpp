@@ -53,3 +53,8 @@ void ImageLoader::GetTextureDimensions(SDL_Texture* texture, int* width, int* he
 {
     SDL_QueryTexture(texture, nullptr, nullptr, width, height);
 }
+
+void ImageLoader::GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height)
+{
+    SDL_QueryTexture(texture, format, access, width, height);
+}

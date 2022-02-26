@@ -16,7 +16,7 @@ Input::~Input()
 
 void Input::Start()
 {
-	memset(this->mouse_buttons, KEY_IDLE, sizeof(KEY_STATE) * NUM_MOUSE_BUTTONS);
+	memset(this->mouse_buttons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * NUM_MOUSE_BUTTONS);
 }
 
 void Input::PreUpdate()
@@ -37,12 +37,12 @@ void Input::PreUpdate()
 			}
 			case SDL_MOUSEBUTTONDOWN:
 			{
-				this->mouse_buttons[e.button.button - 1] = KEY_DOWN;
+				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_DOWN;
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:
 			{
-				this->mouse_buttons[e.button.button - 1] = KEY_UP;
+				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
 				break;
 			}
 			default:
@@ -82,14 +82,14 @@ void Input::UpdateMouseState()
 {
 	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
-		if (this->mouse_buttons[i] == KEY_DOWN)
+		if (this->mouse_buttons[i] == KEY_STATE::KEY_REPEAT)
 		{
-			this->mouse_buttons[i] = KEY_REPEAT;
+			this->mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
 		}
 
-		if (this->mouse_buttons[i] == KEY_UP)
+		if (this->mouse_buttons[i] == KEY_STATE::KEY_REPEAT)
 		{
-			this->mouse_buttons[i] = KEY_IDLE;
+			this->mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
 		}
 	}
 }
