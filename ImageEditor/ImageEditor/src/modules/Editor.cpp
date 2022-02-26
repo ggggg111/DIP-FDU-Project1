@@ -124,7 +124,7 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 	ImGui::Text("Tool selection");
-	ImGui::ColorEdit4("Current color", (float*)&this->tools.color);
+	ImGui::ColorEdit4("Current color", (float*)&this->tools.GetColorReference());
 	ImGui::End();
 }
 

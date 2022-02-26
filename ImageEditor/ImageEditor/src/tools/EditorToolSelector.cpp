@@ -21,12 +21,12 @@ ImVec4 EditorToolSelector::GetColor()
 	);
 }
 
-ImVec4 EditorToolSelector::GetColorNormalized()
+ImVec4& EditorToolSelector::GetColorReference()
 {
 	return this->color;
 }
 
-void EditorToolSelector::SetColor()
+ImVec4 EditorToolSelector::GetColorNormalized()
 {
-
+	return this->color;
 }

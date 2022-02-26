@@ -16,15 +16,14 @@ public:
 	~EditorToolSelector();
 
 	ImVec4 GetColor();
-	//ImVec4& GetColorReference();
-
 	ImVec4 GetColorNormalized();
 	
-	void SetColor();
+	ImVec4& GetColorReference();
 
 public:
 	TOOLS current_tool;
 
+private:
 	ImVec4 color;
 };
 
