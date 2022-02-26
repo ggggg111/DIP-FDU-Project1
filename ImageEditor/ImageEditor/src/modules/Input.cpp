@@ -45,6 +45,16 @@ void Input::PreUpdate()
 				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
 				break;
 			}
+			case SDL_MOUSEMOTION:
+			{
+				mouse_position_x = e.motion.x;
+				mouse_position_y = e.motion.y;
+
+				mouse_motion_x = e.motion.xrel;
+				mouse_motion_y = e.motion.yrel;
+
+				break;
+			}
 			default:
 			{
 				break;
@@ -73,9 +83,10 @@ KEY_STATE Input::GetMouseButton(const int& id)
 	return this->mouse_buttons[id - 1];
 }
 
-void Input::GetMousePosition(int* x, int* y)
+void Input::GetMousePosition(int& x, int& y)
 {
-	SDL_GetMouseState(x, y);
+	x = mouse_position_x;
+	y = mouse_position_y;
 }
 
 void Input::UpdateMouseState()

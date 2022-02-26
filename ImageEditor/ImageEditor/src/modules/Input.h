@@ -25,13 +25,18 @@ public:
 
 public:
 	KEY_STATE GetMouseButton(const int& id);
-	void GetMousePosition(int* x, int* y);
+	void GetMousePosition(int& x, int& y);
 
 private:
 	void UpdateMouseState();
 
 public:
 	KEY_STATE mouse_buttons[NUM_MOUSE_BUTTONS];
+
+	int mouse_position_x;
+	int mouse_position_y;
+	int mouse_motion_x;
+	int mouse_motion_y;
 };
 
 #endif /* __INPUT_H__ */
