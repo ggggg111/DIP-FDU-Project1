@@ -58,7 +58,7 @@ void Renderer::PostUpdate()
 
 void Renderer::CleanUp()
 {
-	SDL_DestroyTexture(texture_target);
+	SDL_DestroyTexture(this->texture_target);
 	SDL_DestroyRenderer(this->renderer);
 }
 
@@ -73,5 +73,22 @@ void Renderer::DrawCircle(const int& x, const int& y, const int& radius)
 		points[i].y = (int)(y + radius * sin(i * factor));
 	}
 
-	SDL_RenderDrawPoints(renderer, points, 360);
+	SDL_RenderDrawPoints(this->renderer, points, 360);
+}
+
+void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius)
+{
+	for (int w = 0; w < radius * 2; ++w)
+	{
+		for (int h = 0; h < radius * 2; ++h)
+		{
+			int dx = radius - w;
+			int dy = radius - h;
+
+			if ((dx * dx + dy * dy) <= (radius * radius))
+			{
+				SDL_RenderDrawPoint(this->renderer, x + dx, y + dy);
+			}
+		}
+	}
 }

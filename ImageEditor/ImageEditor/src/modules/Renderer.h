@@ -17,6 +17,7 @@ public:
 	void CleanUp();
 
 	void DrawCircle(const int& x, const int& y, const int& radius);
+	void DrawCircleFill(const int& x, const int& y, const int& radius);
 
 public:
 	SDL_Renderer* renderer;

@@ -64,7 +64,7 @@ void Editor::Update()
 	{
 		SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
 
-		App->renderer->DrawCircle(mouse_position_x, mouse_position_y, this->tools.tool_size);
+		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
 	}
 	
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
