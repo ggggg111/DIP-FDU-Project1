@@ -135,7 +135,12 @@ SDL_Texture* Editor::LoadImg(const std::string& path)
 	int width, height;
 	ImageLoader::GetTextureDimensions(t, &width, &height);
 
-	App->renderer->texture_target = SDL_CreateTexture(App->renderer->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+	App->renderer->texture_target = SDL_CreateTexture(
+		App->renderer->renderer,
+		SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET,
+		width, height);
+
 	App->window->SetWindowSize(width, height);
 
 	return t;

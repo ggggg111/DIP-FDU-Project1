@@ -22,6 +22,7 @@ public:
 
 public:
 	TOOLS current_tool;
+	int tool_size;
 
 private:
 	ImVec4 color;
