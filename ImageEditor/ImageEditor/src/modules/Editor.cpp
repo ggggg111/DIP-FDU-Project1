@@ -31,11 +31,16 @@ void Editor::Update()
 	App->input->GetMousePosition(&mouse_pos_x, &mouse_pos_y);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-
+	
+	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
+	
 	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
 	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
 
 	SDL_RenderCopy(App->renderer->renderer, App->renderer->texture_target, nullptr, nullptr);
+
+	SDL_Rect rect_test = { 10, 10, 20, 20 };
+	SDL_RenderFillRect(App->renderer->renderer, &rect_test);
 
 	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
