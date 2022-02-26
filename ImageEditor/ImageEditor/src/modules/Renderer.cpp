@@ -47,9 +47,11 @@ void Renderer::PostUpdate()
 {
 	SDL_RenderCopy(this->renderer, this->texture_target, nullptr, nullptr);
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+	
 	App->gui->PreUpdate();
 	App->gui->Update();
 	App->gui->PostUpdate();
+
 	SDL_RenderPresent(this->renderer);
 }
 
