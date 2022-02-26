@@ -8,6 +8,7 @@
 #include "Editor.h"
 #include "Renderer.h"
 #include "Window.h"
+#include "Input.h"
 
 Editor::Editor()
 {
@@ -26,6 +27,10 @@ void Editor::Start()
 
 void Editor::Update()
 {
+	int mouse_pos_x, mouse_pos_y;
+	App->input->GetMousePosition(&mouse_pos_x, &mouse_pos_y);
+	printf("Mouse position: %i %i\n", mouse_pos_x, mouse_pos_y);
+
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 
 	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
