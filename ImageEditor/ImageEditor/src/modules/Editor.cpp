@@ -23,7 +23,14 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	this->bg = this->LoadImg("images/test2.png");
+	//this->bg = this->LoadImg("images/test2.png");
+	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+
+	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
+	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
+
+	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
 
 void Editor::Update()
@@ -32,17 +39,7 @@ void Editor::Update()
 	App->input->GetMousePosition(&mouse_pos_x, &mouse_pos_y);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-		
-	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
-	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
-	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
-
-	if(bg)
-		SDL_RenderCopy(App->renderer->renderer, bg, nullptr, nullptr);
-
-	SDL_Rect rect_test = { 10, 10, 20, 20 };
-	SDL_RenderFillRect(App->renderer->renderer, &rect_test);
-
+	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
@@ -76,6 +73,14 @@ void Editor::MainMenuBar()
 					std::string path = selection[0];
 					printf("User selected file %s\n", path.c_str());
 					this->bg= this->LoadImg(path);
+
+					SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+
+					if (this->bg)
+						SDL_RenderCopy(App->renderer->renderer, this->bg, nullptr, nullptr);
+
+					SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+
 				}
 			}
 
