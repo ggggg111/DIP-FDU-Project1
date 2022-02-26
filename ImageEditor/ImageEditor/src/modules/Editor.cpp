@@ -11,6 +11,7 @@
 #include "Input.h"
 
 Editor::Editor()
+	: bg(nullptr)
 {
 
 }
@@ -22,7 +23,7 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	App->renderer->texture_target = this->LoadImg("images/test2.png");
+	this->bg = this->LoadImg("images/test2.png");
 }
 
 void Editor::Update()
@@ -31,13 +32,13 @@ void Editor::Update()
 	App->input->GetMousePosition(&mouse_pos_x, &mouse_pos_y);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-	
-	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
-	
+		
 	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
+	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
 
-	SDL_RenderCopy(App->renderer->renderer, App->renderer->texture_target, nullptr, nullptr);
+	if(bg)
+		SDL_RenderCopy(App->renderer->renderer, bg, nullptr, nullptr);
 
 	SDL_Rect rect_test = { 10, 10, 20, 20 };
 	SDL_RenderFillRect(App->renderer->renderer, &rect_test);
@@ -74,7 +75,7 @@ void Editor::MainMenuBar()
 				{
 					std::string path = selection[0];
 					printf("User selected file %s\n", path.c_str());
-					App->renderer->texture_target = this->LoadImg(path);
+					this->bg= this->LoadImg(path);
 				}
 			}
 
@@ -102,6 +103,7 @@ SDL_Texture* Editor::LoadImg(const std::string& path)
 	int width, height;
 	ImageLoader::GetTextureDimensions(t, &width, &height);
 
+	App->renderer->texture_target = SDL_CreateTexture(App->renderer->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
 	App->window->SetWindowSize(width, height);
 
 	return t;
