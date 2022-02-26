@@ -133,6 +133,8 @@ void Editor::ToolSelection()
 	ImGui::Begin("Tools");
 	ImGui::Text("Tool selection");
 	ImGui::ColorEdit4("Current color", (float*)&this->tools.GetColorReference());
+	ImGui::DragInt("Tool size", &this->tools.tool_size, 1, 1, 100, "%d%", ImGuiSliderFlags_AlwaysClamp);
+
 	ImGui::End();
 }
 
