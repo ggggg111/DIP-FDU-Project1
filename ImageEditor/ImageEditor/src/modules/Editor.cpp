@@ -22,14 +22,13 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	//App->renderer->texture_target = this->LoadImg("images/test2.png");
+	App->renderer->texture_target = this->LoadImg("images/test2.png");
 }
 
 void Editor::Update()
 {
 	int mouse_pos_x, mouse_pos_y;
 	App->input->GetMousePosition(&mouse_pos_x, &mouse_pos_y);
-	printf("Mouse position: %i %i\n", mouse_pos_x, mouse_pos_y);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 
@@ -37,6 +36,27 @@ void Editor::Update()
 	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
 
 	SDL_RenderCopy(App->renderer->renderer, App->renderer->texture_target, nullptr, nullptr);
+
+	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		SDL_SetRenderDrawBlendMode(App->renderer->renderer, SDL_BLENDMODE_BLEND);
+		SDL_SetRenderDrawColor(App->renderer->renderer, 255, 0, 0, 255);
+
+		SDL_Rect rect = { mouse_pos_x , mouse_pos_y, 1, 1 };
+
+		SDL_RenderSetClipRect(App->renderer->renderer, &rect_screen);
+		SDL_RenderFillRect(App->renderer->renderer, &rect);
+
+		SDL_RenderSetClipRect(App->renderer->renderer, nullptr);
+
+
+
+		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 255, 255);
+		SDL_RenderClear(App->renderer->renderer);
+		SDL_Rect single_pixel = { mouse_pos_x , mouse_pos_y, 1, 1 };
+		SDL_RenderDrawRect(App->renderer->renderer, &single_pixel);
+	}*/
 	
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
@@ -62,7 +82,7 @@ void Editor::MainMenuBar()
 				{
 					std::string path = selection[0];
 					printf("User selected file %s\n", path.c_str());
-					this->LoadImg(path);
+					App->renderer->texture_target = this->LoadImg(path);
 				}
 			}
 

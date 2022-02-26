@@ -24,6 +24,7 @@ public:
 	void CleanUp();
 
 public:
+	KEY_STATE GetMouseButton(const int& id);
 	void GetMousePosition(int* x, int* y);
 
 private:

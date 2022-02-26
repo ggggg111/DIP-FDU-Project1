@@ -68,6 +68,11 @@ void Input::CleanUp()
 
 }
 
+KEY_STATE Input::GetMouseButton(const int& id)
+{
+	return this->mouse_buttons[id - 1];
+}
+
 void Input::GetMousePosition(int* x, int* y)
 {
 	SDL_GetMouseState(x, y);
