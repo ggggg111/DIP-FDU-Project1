@@ -34,8 +34,11 @@ void Editor::Start()
 
 void Editor::Update()
 {
-	int mouse_pos_x, mouse_pos_y;
-	App->input->GetMousePosition(mouse_pos_x, mouse_pos_y);
+	int mouse_position_x, mouse_position_y;
+	App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+	int mouse_motion_x, mouse_motion_y;
+	App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 	
@@ -43,8 +46,11 @@ void Editor::Update()
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
 		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 255, 255);
-		SDL_Rect single_pixel = { mouse_pos_x , mouse_pos_y, 1, 1 };
-		SDL_RenderFillRect(App->renderer->renderer, &single_pixel);
+		SDL_RenderDrawLine(
+			App->renderer->renderer,
+			mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y,
+			mouse_position_x, mouse_position_y
+		);
 	}
 	
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);

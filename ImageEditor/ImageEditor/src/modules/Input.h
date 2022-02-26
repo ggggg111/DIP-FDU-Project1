@@ -26,6 +26,7 @@ public:
 public:
 	KEY_STATE GetMouseButton(const int& id);
 	void GetMousePosition(int& x, int& y);
+	void GetMouseMotion(int& x, int& y);
 
 private:
 	void UpdateMouseState();

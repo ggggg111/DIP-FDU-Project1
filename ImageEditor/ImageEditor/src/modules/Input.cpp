@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "SDL.h"
 #include "imgui_impl_sdl.h"
 
@@ -53,6 +55,9 @@ void Input::PreUpdate()
 				mouse_motion_x = e.motion.xrel;
 				mouse_motion_y = e.motion.yrel;
 
+				printf("Mouse position | x: %d y: %d\n", mouse_position_x, mouse_position_y);
+				printf("Mouse motion | x: %d y: %d\n", mouse_motion_x, mouse_motion_y);
+
 				break;
 			}
 			default:
@@ -87,6 +92,12 @@ void Input::GetMousePosition(int& x, int& y)
 {
 	x = mouse_position_x;
 	y = mouse_position_y;
+}
+
+void Input::GetMouseMotion(int& x, int& y)
+{
+	x = mouse_motion_x;
+	y = mouse_motion_y;
 }
 
 void Input::UpdateMouseState()
