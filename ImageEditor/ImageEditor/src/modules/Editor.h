@@ -14,7 +14,11 @@ public:
 	void CleanUp();
 
 public:
+	void DrawGUI();
+
+private:
 	void MainMenuBar();
+	void ToolSelection();
 
 private:
 	SDL_Texture* LoadImg(const std::string& path);

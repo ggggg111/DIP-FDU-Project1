@@ -38,7 +38,7 @@ void GUI::PreUpdate()
 
 void GUI::Update()
 {
-	App->editor->MainMenuBar();
+	App->editor->DrawGUI();
 }
 
 void GUI::PostUpdate()

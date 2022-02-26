@@ -23,7 +23,6 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	//this->bg = this->LoadImg("images/test2.png");
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 
 	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
@@ -53,7 +52,13 @@ void Editor::Update()
 
 void Editor::CleanUp()
 {
+	SDL_DestroyTexture(this->bg);
+}
 
+void Editor::DrawGUI()
+{
+	this->MainMenuBar();
+	this->ToolSelection();
 }
 
 void Editor::MainMenuBar()
@@ -80,7 +85,6 @@ void Editor::MainMenuBar()
 						SDL_RenderCopy(App->renderer->renderer, this->bg, nullptr, nullptr);
 
 					SDL_SetRenderTarget(App->renderer->renderer, nullptr);
-
 				}
 			}
 
@@ -99,6 +103,13 @@ void Editor::MainMenuBar()
 
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void Editor::ToolSelection()
+{
+	ImGui::Begin("Tools");
+	ImGui::Text("Tool selection");
+	ImGui::End();
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path)
