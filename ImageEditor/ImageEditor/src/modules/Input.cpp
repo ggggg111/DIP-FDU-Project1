@@ -35,16 +35,19 @@ void Input::PreUpdate()
 			case SDL_QUIT:
 			{
 				App->running = false;
+				
 				break;
 			}
 			case SDL_MOUSEBUTTONDOWN:
 			{
 				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_DOWN;
+				
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:
 			{
 				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
+				
 				break;
 			}
 			case SDL_MOUSEMOTION:
@@ -54,9 +57,6 @@ void Input::PreUpdate()
 
 				mouse_motion_x = e.motion.xrel;
 				mouse_motion_y = e.motion.yrel;
-
-				printf("Mouse position | x: %d y: %d\n", mouse_position_x, mouse_position_y);
-				printf("Mouse motion | x: %d y: %d\n", mouse_motion_x, mouse_motion_y);
 
 				break;
 			}

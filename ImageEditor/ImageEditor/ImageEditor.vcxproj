@@ -170,6 +170,7 @@
     <ClCompile Include="src\modules\Input.cpp" />
     <ClCompile Include="src\modules\Renderer.cpp" />
     <ClCompile Include="src\modules\Window.cpp" />
+    <ClCompile Include="src\tools\EditorToolSelector.cpp" />
     <ClCompile Include="src\tools\ImageLoader.cpp" />
     <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdl.cpp" />
     <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="src\modules\Input.h" />
     <ClInclude Include="src\modules\Renderer.h" />
     <ClInclude Include="src\modules\Window.h" />
+    <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\tools\ImageLoader.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.h" />

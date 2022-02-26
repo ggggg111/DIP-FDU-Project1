@@ -16,6 +16,7 @@
     <ClCompile Include="src\modules\Input.cpp" />
     <ClCompile Include="src\modules\Editor.cpp" />
     <ClCompile Include="src\tools\ImageLoader.cpp" />
+    <ClCompile Include="src\tools\EditorToolSelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -35,5 +36,6 @@
     <ClInclude Include="src\tools\ImageLoader.h" />
     <ClInclude Include="vendor\NativeFileDialog\src\include\nfd.h" />
     <ClInclude Include="vendor\PortableFileDialogs\portable-file-dialogs.h" />
+    <ClInclude Include="src\tools\EditorToolSelector.h" />
   </ItemGroup>
 </Project>

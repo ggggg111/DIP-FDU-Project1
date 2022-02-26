@@ -45,7 +45,13 @@ void Editor::Update()
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
-		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 255, 255);
+		SDL_SetRenderDrawColor(App->renderer->renderer,
+			this->tools.GetColor().x,
+			this->tools.GetColor().y,
+			this->tools.GetColor().z,
+			this->tools.GetColor().w
+		);
+
 		SDL_RenderDrawLine(
 			App->renderer->renderer,
 			mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y,
@@ -63,6 +69,9 @@ void Editor::CleanUp()
 
 void Editor::DrawGUI()
 {
+	bool imgui_demo = true;
+	ImGui::ShowDemoWindow(&imgui_demo);
+
 	this->MainMenuBar();
 	this->ToolSelection();
 }
@@ -115,6 +124,7 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 	ImGui::Text("Tool selection");
+	ImGui::ColorEdit4("Current color", (float*)&this->tools.color);
 	ImGui::End();
 }
 
