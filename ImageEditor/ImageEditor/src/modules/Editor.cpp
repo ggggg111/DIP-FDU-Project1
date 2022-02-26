@@ -58,6 +58,14 @@ void Editor::Update()
 			mouse_position_x, mouse_position_y
 		);
 	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+	{
+		SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
+
+		App->renderer->DrawCircle(mouse_position_x, mouse_position_y, this->tools.tool_size);
+	}
 	
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }

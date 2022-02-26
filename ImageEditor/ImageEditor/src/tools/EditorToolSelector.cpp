@@ -1,7 +1,7 @@
 #include "EditorToolSelector.h"
 
 EditorToolSelector::EditorToolSelector()
-	: current_tool(TOOLS::PENCIL), tool_size(5)
+	: current_tool(TOOLS::PENCIL), tool_size(1)
 {
 
 }

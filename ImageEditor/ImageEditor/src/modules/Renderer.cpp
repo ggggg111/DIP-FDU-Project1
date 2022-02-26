@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "SDL.h"
 
@@ -59,4 +60,18 @@ void Renderer::CleanUp()
 {
 	SDL_DestroyTexture(texture_target);
 	SDL_DestroyRenderer(this->renderer);
+}
+
+void Renderer::DrawCircle(const int& x, const int& y, const int& radius)
+{
+	SDL_Point points[360];
+	float factor = (float)M_PI / 180.0f;
+
+	for (int i = 0; i < 360; ++i)
+	{
+		points[i].x = (int)(x + radius * cos(i * factor));
+		points[i].y = (int)(y + radius * sin(i * factor));
+	}
+
+	SDL_RenderDrawPoints(renderer, points, 360);
 }

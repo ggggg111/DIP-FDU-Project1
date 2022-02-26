@@ -16,6 +16,8 @@ public:
 	void PostUpdate();
 	void CleanUp();
 
+	void DrawCircle(const int& x, const int& y, const int& radius);
+
 public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;
