@@ -52,11 +52,14 @@ void Editor::Update()
 			this->tools.GetColor().w
 		);
 
-		SDL_RenderDrawLine(
+		/*SDL_RenderDrawLine(
 			App->renderer->renderer,
 			mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y,
 			mouse_position_x, mouse_position_y
-		);
+		);*/
+
+		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
+		App->renderer->DrawCircleFill(mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y, this->tools.tool_size);
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
@@ -119,6 +122,16 @@ void Editor::MainMenuBar()
 
 				printf("User selected file %s\n", destination.c_str());
 				this->SaveImg(App->renderer->texture_target, destination);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("About"))
+			{
+				App->RequestBrowser("https://github.com/nngg11/DIP-FDU-Project1");
 			}
 
 			ImGui::EndMenu();
