@@ -21,6 +21,9 @@ public:
 	void DrawCircle(const int& x, const int& y, const int& radius);
 	void DrawCircleFill(const int& x, const int& y, const int& radius);
 
+	void SetRenderTarget(SDL_Texture* texture) const;
+	void SetRenderDrawColor(const int& r, const int& g, const int& b, const int& a) const;
+
 public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;

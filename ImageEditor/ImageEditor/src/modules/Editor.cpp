@@ -34,12 +34,12 @@ void Editor::Update()
 	int mouse_motion_x, mouse_motion_y;
 	App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
 
-	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+	App->renderer->SetRenderTarget(App->renderer->texture_target);
 	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
-		SDL_SetRenderDrawColor(App->renderer->renderer,
+		App->renderer->SetRenderDrawColor(
 			this->tools.GetColor().x,
 			this->tools.GetColor().y,
 			this->tools.GetColor().z,
@@ -59,12 +59,12 @@ void Editor::Update()
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 	{
-		SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
+		App->renderer->SetRenderDrawColor(255, 255, 255, 255);
 
 		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
 	}
 	
-	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+	App->renderer->SetRenderTarget(nullptr);
 }
 
 void Editor::CleanUp()

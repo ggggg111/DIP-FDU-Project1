@@ -98,3 +98,13 @@ void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius)
 		}
 	}
 }
+
+void Renderer::SetRenderTarget(SDL_Texture* texture) const
+{
+	SDL_SetRenderTarget(this->renderer, texture);
+}
+
+void Renderer::SetRenderDrawColor(const int& r, const int& g, const int& b, const int& a) const
+{
+	SDL_SetRenderDrawColor(this->renderer, r, g, b, a);
+}
