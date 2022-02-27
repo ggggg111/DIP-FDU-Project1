@@ -46,5 +46,8 @@ void Window::CleanUp()
 
 void Window::SetWindowSize(const int& width, const int& height)
 {
+	this->width = width;
+	this->height = height;
+
 	SDL_SetWindowSize(this->window, width, height);
 }

@@ -76,7 +76,7 @@ void Application::CleanUp()
     }
 }
 
-void Application::RequestBrowser(const std::string& url)
+void Application::RequestBrowser(const std::string& url) const
 {
     switch (App->platform)
     {

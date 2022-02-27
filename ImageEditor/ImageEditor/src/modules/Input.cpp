@@ -83,18 +83,18 @@ void Input::CleanUp()
 
 }
 
-KEY_STATE Input::GetMouseButton(const int& id)
+KEY_STATE Input::GetMouseButton(const int& id) const
 {
 	return this->mouse_buttons[id - 1];
 }
 
-void Input::GetMousePosition(int& x, int& y)
+void Input::GetMousePosition(int& x, int& y) const
 {
 	x = mouse_position_x;
 	y = mouse_position_y;
 }
 
-void Input::GetMouseMotion(int& x, int& y)
+void Input::GetMouseMotion(int& x, int& y) const
 {
 	x = mouse_motion_x;
 	y = mouse_motion_y;

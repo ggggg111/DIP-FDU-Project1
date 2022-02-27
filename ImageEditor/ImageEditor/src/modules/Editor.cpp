@@ -145,7 +145,7 @@ void Editor::ToolSelection()
 	ImGui::End();
 }
 
-SDL_Texture* Editor::LoadImg(const std::string& path)
+SDL_Texture* Editor::LoadImg(const std::string& path) const
 {
 	SDL_Texture* t = ImageLoader::LoadTexture(App->renderer->renderer, path);
 	
@@ -163,7 +163,7 @@ SDL_Texture* Editor::LoadImg(const std::string& path)
 	return t;
 }
 
-void Editor::SaveImg(SDL_Texture* texture, const std::string& path)
+void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
 {
 	SDL_SetRenderTarget(App->renderer->renderer, texture);
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);

@@ -15,8 +15,8 @@ public:
 	EditorToolSelector();
 	~EditorToolSelector();
 
-	ImVec4 GetColor();
-	ImVec4 GetColorNormalized();
+	ImVec4 GetColor() const;
+	ImVec4 GetColorNormalized() const;
 	
 	ImVec4& GetColorReference();
 

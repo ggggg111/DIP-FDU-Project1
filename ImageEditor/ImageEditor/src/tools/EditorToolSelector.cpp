@@ -11,7 +11,7 @@ EditorToolSelector::~EditorToolSelector()
 
 }
 
-ImVec4 EditorToolSelector::GetColor()
+ImVec4 EditorToolSelector::GetColor() const
 {
 	return ImVec4(
 		this->color.x * 255.0f,
@@ -26,7 +26,7 @@ ImVec4& EditorToolSelector::GetColorReference()
 	return this->color;
 }
 
-ImVec4 EditorToolSelector::GetColorNormalized()
+ImVec4 EditorToolSelector::GetColorNormalized() const
 {
 	return this->color;
 }

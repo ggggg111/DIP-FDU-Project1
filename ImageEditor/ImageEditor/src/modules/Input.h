@@ -26,9 +26,9 @@ public:
 	void CleanUp() override;
 
 public:
-	KEY_STATE GetMouseButton(const int& id);
-	void GetMousePosition(int& x, int& y);
-	void GetMouseMotion(int& x, int& y);
+	KEY_STATE GetMouseButton(const int& id) const;
+	void GetMousePosition(int& x, int& y) const;
+	void GetMouseMotion(int& x, int& y) const;
 
 private:
 	void UpdateMouseState();

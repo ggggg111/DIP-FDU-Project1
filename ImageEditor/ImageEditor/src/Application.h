@@ -33,7 +33,7 @@ public:
     void Update();
     void CleanUp();
 
-    void RequestBrowser(const std::string& url);
+    void RequestBrowser(const std::string& url) const;
 
 private:
     void AssignPlatform();
