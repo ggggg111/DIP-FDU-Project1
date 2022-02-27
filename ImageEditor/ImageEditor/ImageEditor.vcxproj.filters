@@ -37,5 +37,6 @@
     <ClInclude Include="vendor\NativeFileDialog\src\include\nfd.h" />
     <ClInclude Include="vendor\PortableFileDialogs\portable-file-dialogs.h" />
     <ClInclude Include="src\tools\EditorToolSelector.h" />
+    <ClInclude Include="src\modules\Module.h" />
   </ItemGroup>
 </Project>

@@ -1,17 +1,18 @@
 #ifndef __GUI_H__
 #define __GUI_H__
 
-class GUI
+#include "Module.h"
+
+class GUI : public Module
 {
 public:
 	GUI();
 	~GUI();
 
-	void Start();
-	void PreUpdate();
-	void Update();
-	void PostUpdate();
-	void CleanUp();
+	void Start() override;
+	void CleanUp() override;
+
+	void Draw();
 };
 
 #endif /* __GUI_H__ */

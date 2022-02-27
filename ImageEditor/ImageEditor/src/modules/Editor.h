@@ -2,18 +2,19 @@
 #define __EDITOR_H__
 
 #include "tools/EditorToolSelector.h"
+#include "Module.h"
 
 struct SDL_Texture;
 
-class Editor
+class Editor : public Module
 {
 public:
 	Editor();
 	~Editor();
 
-	void Start();
-	void Update();
-	void CleanUp();
+	void Start() override;
+	void Update() override;
+	void CleanUp() override;
 
 public:
 	void DrawGUI();

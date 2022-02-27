@@ -1,6 +1,8 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
+#include "Module.h"
+
 #define NUM_MOUSE_BUTTONS 5
 
 enum class KEY_STATE
@@ -11,17 +13,17 @@ enum class KEY_STATE
 	KEY_UP,
 };
 
-class Input
+class Input : public Module
 {
 public:
 	Input();
 	~Input();
 
-	void Start();
-	void PreUpdate();
-	void Update();
-	void PostUpdate();
-	void CleanUp();
+	void Start() override;
+	void PreUpdate() override;
+	void Update() override;
+	void PostUpdate() override;
+	void CleanUp() override;
 
 public:
 	KEY_STATE GetMouseButton(const int& id);

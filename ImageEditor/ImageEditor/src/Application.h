@@ -2,7 +2,9 @@
 #define __APPLICATION_H__
 
 #include <iostream>
+#include <list>
 
+class Module;
 class Window;
 class Renderer;
 class GUI;
@@ -28,17 +30,14 @@ public:
     void Run();
 
     void Start();
-
-    void PreUpdate();
     void Update();
-    void PostUpdate();
-
     void CleanUp();
 
     void RequestBrowser(const std::string& url);
 
 private:
     void AssignPlatform();
+    void AddModule(Module* module);
 
 public:
     PLATFORM platform;
@@ -50,6 +49,9 @@ public:
     Editor* editor;
 
     bool running;
+
+private:
+    std::list<Module*> modules;
 };
 
 extern Application* App;

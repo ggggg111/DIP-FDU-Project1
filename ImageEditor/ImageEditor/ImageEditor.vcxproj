@@ -185,6 +185,7 @@
     <ClInclude Include="src\modules\Editor.h" />
     <ClInclude Include="src\modules\GUI.h" />
     <ClInclude Include="src\modules\Input.h" />
+    <ClInclude Include="src\modules\Module.h" />
     <ClInclude Include="src\modules\Renderer.h" />
     <ClInclude Include="src\modules\Window.h" />
     <ClInclude Include="src\tools\EditorToolSelector.h" />

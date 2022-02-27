@@ -6,7 +6,7 @@
 #include "Application.h"
 #include "Input.h"
 
-Input::Input()
+Input::Input() : Module()
 {
 
 }

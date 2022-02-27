@@ -3,19 +3,21 @@
 
 #include <iostream>
 
+#include "Module.h"
+
 struct SDL_Window;
 struct SDL_Surface;
 struct SDL_Texture;
 struct SDL_Renderer;
 
-class Window
+class Window : public Module
 {
 public:
 	Window(const std::string& name, const int& width, const int& height);
 	~Window();
 
-	void Start();
-	void CleanUp();
+	void Start() override;
+	void CleanUp() override;
 
 	void SetWindowSize(const int& width, const int& height);
 

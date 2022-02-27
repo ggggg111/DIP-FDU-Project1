@@ -6,7 +6,7 @@
 #include "Window.h"
 
 Window::Window(const std::string& name, const int& width, const int& height)
-	: window(nullptr), name(name), width(width), height(height)
+	: Module(), window(nullptr), name(name), width(width), height(height)
 {
 
 }

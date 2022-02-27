@@ -10,7 +10,7 @@
 #include "Gui.h"
 
 Renderer::Renderer()
-	: renderer(nullptr), texture_target(nullptr)
+	: Module(), renderer(nullptr), texture_target(nullptr)
 {
 
 }
@@ -31,6 +31,14 @@ void Renderer::Start()
 	}
 
 	this->texture_target = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
+
+	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
+
+	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
+	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
+
+	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
 
 void Renderer::PreUpdate()
@@ -49,9 +57,7 @@ void Renderer::PostUpdate()
 
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 
-	App->gui->PreUpdate();
-	App->gui->Update();
-	App->gui->PostUpdate();
+	App->gui->Draw();
 
 	SDL_RenderPresent(this->renderer);
 }

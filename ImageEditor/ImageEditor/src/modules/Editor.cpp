@@ -11,7 +11,7 @@
 #include "Input.h"
 
 Editor::Editor()
-	: bg(nullptr)
+	: Module(), bg(nullptr)
 {
 
 }
@@ -23,13 +23,7 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
 
-	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
-	SDL_SetRenderDrawColor(App->renderer->renderer, 255, 255, 255, 255);
-	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
-
-	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 }
 
 void Editor::Update()

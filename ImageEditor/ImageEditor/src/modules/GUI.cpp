@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Editor.h"
 
-GUI::GUI()
+GUI::GUI() : Module()
 {
 
 }
@@ -29,27 +29,21 @@ void GUI::Start()
 	ImGui_ImplSDLRenderer_Init(App->renderer->renderer);
 }
 
-void GUI::PreUpdate()
-{
-	ImGui_ImplSDLRenderer_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
-}
-
-void GUI::Update()
-{
-	App->editor->DrawGUI();
-}
-
-void GUI::PostUpdate()
-{
-	ImGui::Render();
-	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
-}
-
 void GUI::CleanUp()
 {
 	ImGui_ImplSDLRenderer_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void GUI::Draw()
+{
+	ImGui_ImplSDLRenderer_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	App->editor->DrawGUI();
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }

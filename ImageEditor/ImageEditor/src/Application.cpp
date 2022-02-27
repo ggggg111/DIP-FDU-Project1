@@ -3,6 +3,7 @@
 #endif
 
 #include "Application.h"
+#include "modules/Module.h"
 #include "modules/Window.h"
 #include "modules/Renderer.h"
 #include "modules/GUI.h"
@@ -14,20 +15,19 @@ Application::Application()
 {
     this->AssignPlatform();
 
-    this->window = new Window("Image Editor", 1024, 768);
-    this->renderer = new Renderer();
-    this->gui = new GUI();
-    this->input = new Input();
-    this->editor = new Editor();
+    this->AddModule(this->window = new Window("Image Editor", 1024, 768));
+    this->AddModule(this->input = new Input());
+    this->AddModule(this->editor = new Editor());
+    this->AddModule(this->renderer = new Renderer());
+    this->AddModule(this->gui = new GUI());
 }
 
 Application::~Application()
 {
-    delete this->editor;
-    delete this->input;
-    delete this->gui;
-    delete this->renderer;
-    delete this->window;
+    for (auto item = this->modules.rbegin(); item != this->modules.rend(); ++item)
+    {
+        delete *item;
+    }
 }
 
 void Application::Run()
@@ -36,9 +36,7 @@ void Application::Run()
 
     while (this->running)
     {
-        this->PreUpdate();
         this->Update();
-        this->PostUpdate();
     }
 
     this->CleanUp();
@@ -46,54 +44,36 @@ void Application::Run()
 
 void Application::Start()
 {
-    this->window->Start();
-    this->renderer->Start();
-    this->gui->Start();
-    this->input->Start();
-    this->editor->Start();
-}
-
-void Application::PreUpdate()
-{
-    this->input->PreUpdate();
-    this->renderer->PreUpdate();
+    for (auto item = this->modules.begin(); item != this->modules.end(); ++item)
+    {
+        (*item)->Start();
+    }
 }
 
 void Application::Update()
 {
-    this->input->Update();
-    this->editor->Update();
-    this->renderer->Update();
-}
+    for (auto item = this->modules.begin(); item != this->modules.end(); ++item)
+    {
+        (*item)->PreUpdate();
+    }
 
-void Application::PostUpdate()
-{
-    this->input->PostUpdate();
-    this->renderer->PostUpdate();
+    for (auto item = this->modules.begin(); item != this->modules.end(); ++item)
+    {
+        (*item)->Update();
+    }
+
+    for (auto item = this->modules.begin(); item != this->modules.end(); ++item)
+    {
+        (*item)->PostUpdate();
+    }
 }
 
 void Application::CleanUp()
 {
-    this->editor->CleanUp();
-    this->input->CleanUp();
-    this->gui->CleanUp();
-    this->renderer->CleanUp();
-    this->window->CleanUp();
-}
-
-void Application::AssignPlatform()
-{
-#ifdef _WIN32
-    this->platform = PLATFORM::WINDOWS_32;
-#elif _WIN64
-    this->platform = PLATFORM::WINDOWS_64;
-#elif __linux__
-    this->platform = PLATFORM::LINUX;
-#elif __APPLE__
-    this->platform = PLATFORM::APPLE;
-#else
-    this->platform = PLATFORM::UNKNOWN;
-#endif
+    for (auto item = this->modules.rbegin(); item != this->modules.rend(); ++item)
+    {
+        (*item)->CleanUp();
+    }
 }
 
 void Application::RequestBrowser(const std::string& url)
@@ -124,4 +104,24 @@ void Application::RequestBrowser(const std::string& url)
             break;
         }
     }
+}
+
+void Application::AssignPlatform()
+{
+#ifdef _WIN32
+    this->platform = PLATFORM::WINDOWS_32;
+#elif _WIN64
+    this->platform = PLATFORM::WINDOWS_64;
+#elif __linux__
+    this->platform = PLATFORM::LINUX;
+#elif __APPLE__
+    this->platform = PLATFORM::APPLE;
+#else
+    this->platform = PLATFORM::UNKNOWN;
+#endif
+}
+
+void Application::AddModule(Module* module)
+{
+    this->modules.push_back(module);
 }
