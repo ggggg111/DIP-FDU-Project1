@@ -37,6 +37,19 @@ void Editor::Update()
 
 	App->renderer->SetRenderTarget(App->renderer->texture_target);
 
+	thickLineRGBA(
+		App->renderer->renderer,
+		0,
+		0,
+		250,
+		250,
+		this->tools.tool_size,
+		this->tools.GetColor().x,
+		this->tools.GetColor().y,
+		this->tools.GetColor().z,
+		255
+	);
+
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
@@ -44,10 +57,10 @@ void Editor::Update()
 			this->tools.GetColor().x,
 			this->tools.GetColor().y,
 			this->tools.GetColor().z,
-			this->tools.GetColor().w
+			255
 		);
 
-		thickLineRGBA(
+		/*thickLineRGBA(
 			App->renderer->renderer,
 			mouse_position_x - mouse_motion_x,
 			mouse_position_y - mouse_motion_y,
@@ -58,7 +71,22 @@ void Editor::Update()
 			this->tools.GetColor().y,
 			this->tools.GetColor().z,
 			255
+		);*/
+		thickLineRGBA(
+			App->renderer->renderer,
+			mouse_position_x,
+			mouse_position_y,
+			mouse_position_x - mouse_motion_x,
+			mouse_position_y - mouse_motion_y,
+			this->tools.tool_size,
+			this->tools.GetColor().x,
+			this->tools.GetColor().y,
+			this->tools.GetColor().z,
+			255
 		);
+
+		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
+		App->renderer->DrawCircleFill(mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y, this->tools.tool_size);
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
