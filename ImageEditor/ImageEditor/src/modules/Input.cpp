@@ -30,39 +30,43 @@ void Input::PreUpdate()
 	{
 		ImGui_ImplSDL2_ProcessEvent(&e);
 
-		switch (e.type)
+		ImGuiIO& io = ImGui::GetIO();
+		if (!io.WantCaptureMouse)
 		{
-			case SDL_QUIT:
+			switch (e.type)
 			{
-				App->running = false;
-				
-				break;
-			}
-			case SDL_MOUSEBUTTONDOWN:
-			{
-				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_DOWN;
-				
-				break;
-			}
-			case SDL_MOUSEBUTTONUP:
-			{
-				this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
-				
-				break;
-			}
-			case SDL_MOUSEMOTION:
-			{
-				mouse_position_x = e.motion.x;
-				mouse_position_y = e.motion.y;
+				case SDL_QUIT:
+				{
+					App->running = false;
 
-				mouse_motion_x = e.motion.xrel;
-				mouse_motion_y = e.motion.yrel;
+					break;
+				}
+				case SDL_MOUSEBUTTONDOWN:
+				{
+					this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_DOWN;
 
-				break;
-			}
-			default:
-			{
-				break;
+					break;
+				}
+				case SDL_MOUSEBUTTONUP:
+				{
+					this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
+
+					break;
+				}
+				case SDL_MOUSEMOTION:
+				{
+					mouse_position_x = e.motion.x;
+					mouse_position_y = e.motion.y;
+
+					mouse_motion_x = e.motion.xrel;
+					mouse_motion_y = e.motion.yrel;
+
+					break;
+				}
+				default:
+				{
+					break;
+				}
 			}
 		}
 	}
