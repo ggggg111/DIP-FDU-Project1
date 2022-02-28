@@ -31,6 +31,12 @@ public:
 
 private:
 	SDL_Texture* bg;
+
+	int mouse_position_x;
+	int mouse_position_y;
+
+	int last_frame_mouse_position_x;
+	int last_frame_mouse_position_y;
 };
 
 #endif /* __EDITOR_H__ */

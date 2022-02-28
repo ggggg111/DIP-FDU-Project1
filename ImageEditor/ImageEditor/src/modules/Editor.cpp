@@ -24,31 +24,15 @@ Editor::~Editor()
 
 void Editor::Start()
 {
-
+	App->input->GetMousePosition(this->mouse_position_x, this->mouse_position_y);
+	App->input->GetMousePosition(this->last_frame_mouse_position_x, this->last_frame_mouse_position_y);
 }
 
 void Editor::Update()
 {
-	int mouse_position_x, mouse_position_y;
-	App->input->GetMousePosition(mouse_position_x, mouse_position_y);
-
-	int mouse_motion_x, mouse_motion_y;
-	App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
+	App->input->GetMousePosition(this->mouse_position_x, this->mouse_position_y);
 
 	App->renderer->SetRenderTarget(App->renderer->texture_target);
-
-	thickLineRGBA(
-		App->renderer->renderer,
-		0,
-		0,
-		250,
-		250,
-		this->tools.tool_size,
-		this->tools.GetColor().x,
-		this->tools.GetColor().y,
-		this->tools.GetColor().z,
-		255
-	);
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
@@ -62,10 +46,10 @@ void Editor::Update()
 
 		thickLineRGBA(
 			App->renderer->renderer,
-			mouse_position_x,
-			mouse_position_y,
-			mouse_position_x - mouse_motion_x,
-			mouse_position_y - mouse_motion_y,
+			this->last_frame_mouse_position_x,
+			this->last_frame_mouse_position_y,
+			this->mouse_position_x,
+			this->mouse_position_y,
 			this->tools.tool_size,
 			this->tools.GetColor().x,
 			this->tools.GetColor().y,
@@ -83,6 +67,9 @@ void Editor::Update()
 	}
 	
 	App->renderer->SetRenderTarget(nullptr);
+
+	this->last_frame_mouse_position_x = this->mouse_position_x;
+	this->last_frame_mouse_position_y = this->mouse_position_y;
 }
 
 void Editor::CleanUp()
