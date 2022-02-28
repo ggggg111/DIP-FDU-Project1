@@ -36,6 +36,7 @@ private:
 public:
 	KEY_STATE mouse_buttons[NUM_MOUSE_BUTTONS];
 
+private:
 	int mouse_position_x;
 	int mouse_position_y;
 	int mouse_motion_x;

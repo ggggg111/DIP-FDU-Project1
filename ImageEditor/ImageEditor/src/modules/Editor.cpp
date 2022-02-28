@@ -60,18 +60,6 @@ void Editor::Update()
 			255
 		);
 
-		/*thickLineRGBA(
-			App->renderer->renderer,
-			mouse_position_x - mouse_motion_x,
-			mouse_position_y - mouse_motion_y,
-			mouse_position_x,
-			mouse_position_y,
-			this->tools.tool_size,
-			this->tools.GetColor().x,
-			this->tools.GetColor().y,
-			this->tools.GetColor().z,
-			255
-		);*/
 		thickLineRGBA(
 			App->renderer->renderer,
 			mouse_position_x,
@@ -84,9 +72,6 @@ void Editor::Update()
 			this->tools.GetColor().z,
 			255
 		);
-
-		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
-		App->renderer->DrawCircleFill(mouse_position_x - mouse_motion_x, mouse_position_y - mouse_motion_y, this->tools.tool_size);
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
