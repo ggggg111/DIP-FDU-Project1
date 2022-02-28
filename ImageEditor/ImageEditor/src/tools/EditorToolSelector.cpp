@@ -1,7 +1,7 @@
 #include "EditorToolSelector.h"
 
 EditorToolSelector::EditorToolSelector()
-	: current_tool(TOOLS::PENCIL), tool_size(1)
+	: current_tool(TOOLS::BRUSH), tool_size(1), color(ImVec4(0.0f, 0.0f, 0.0f, 1.0f))
 {
 
 }

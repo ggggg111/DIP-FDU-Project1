@@ -1,11 +1,14 @@
 #ifndef __EDITOR_TOOL_SELECTOR_H__
 #define __EDITOR_TOOL_SELECTOR_H__
 
+#include <vector>
+#include <string>
+
 #include "Imgui.h"
 
 enum class TOOLS
 {
-	PENCIL = 0,
+	BRUSH = 0,
 	RUBBER
 };
 

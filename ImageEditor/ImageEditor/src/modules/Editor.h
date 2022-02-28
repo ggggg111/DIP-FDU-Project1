@@ -26,6 +26,9 @@ private:
 	void MainMenuBar();
 	void ToolSelection();
 
+	void UseBrush();
+	void UseRubber();
+
 public:
 	EditorToolSelector tools;
 

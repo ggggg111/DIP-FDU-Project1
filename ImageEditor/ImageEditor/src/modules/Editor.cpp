@@ -41,29 +41,34 @@ void Editor::Update()
 			this->tools.GetColor().x,
 			this->tools.GetColor().y,
 			this->tools.GetColor().z,
-			255
+			this->tools.GetColor().w
 		);
 
-		thickLineRGBA(
-			App->renderer->renderer,
-			this->last_frame_mouse_position_x,
-			this->last_frame_mouse_position_y,
-			this->mouse_position_x,
-			this->mouse_position_y,
-			this->tools.tool_size,
-			this->tools.GetColor().x,
-			this->tools.GetColor().y,
-			this->tools.GetColor().z,
-			255
-		);
+		switch (this->tools.current_tool)
+		{
+			case TOOLS::BRUSH:
+			{
+				this->UseBrush();
+
+				break;
+			}
+			case TOOLS::RUBBER:
+			{
+				this->UseRubber();
+
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 	{
-		App->renderer->SetRenderDrawColor(255, 255, 255, 255);
-
-		App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
+		this->UseRubber();
 	}
 	
 	App->renderer->SetRenderTarget(nullptr);
@@ -101,7 +106,7 @@ void Editor::MainMenuBar()
 				if (!selection.empty())
 				{
 					std::string path = selection[0];
-					printf("User selected file %s\n", path.c_str());
+					printf("User loaded file %s\n", path.c_str());
 					this->bg= this->LoadImg(path);
 
 					SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
@@ -119,8 +124,8 @@ void Editor::MainMenuBar()
 					{ "Image Files", "*.png *.jpg *.bmp" },
 					pfd::opt::force_overwrite).result();
 
-				printf("User selected file %s\n", destination.c_str());
 				this->SaveImg(App->renderer->texture_target, destination);
+				printf("User saved file %s\n", destination.c_str());
 			}
 
 			ImGui::EndMenu();
@@ -143,11 +148,36 @@ void Editor::MainMenuBar()
 void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
-	ImGui::Text("Tool selection");
-	ImGui::ColorEdit4("Current color", (float*)&this->tools.GetColorReference());
-	ImGui::DragInt("Tool size", &this->tools.tool_size, 1, 1, 100, "%d%", ImGuiSliderFlags_AlwaysClamp);
 
+	static const char* items[2] = { "Brush", "Rubber" };
+	ImGui::Combo("Current tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
+	ImGui::ColorEdit4("Current color", (float*)&this->tools.GetColorReference());
+	ImGui::DragInt("Tool size", &this->tools.tool_size, 0.1f, 1, 20, "%d", ImGuiSliderFlags_AlwaysClamp);
+	
 	ImGui::End();
+}
+
+void Editor::UseBrush()
+{
+	thickLineRGBA(
+		App->renderer->renderer,
+		this->last_frame_mouse_position_x,
+		this->last_frame_mouse_position_y,
+		this->mouse_position_x,
+		this->mouse_position_y,
+		this->tools.tool_size,
+		this->tools.GetColor().x,
+		this->tools.GetColor().y,
+		this->tools.GetColor().z,
+		this->tools.GetColor().w
+	);
+}
+
+void Editor::UseRubber()
+{
+	App->renderer->SetRenderDrawColor(255, 255, 255, 255);
+
+	App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
