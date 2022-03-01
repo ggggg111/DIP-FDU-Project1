@@ -155,7 +155,7 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[3] = { "Standard Brush", "Rubber", "Circle Brush"};
+	static const char* items[4] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill"};
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
 	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
 	ImGui::DragInt("Size", &this->tools.tool_size, 0.1f, 1, 20, "%d", ImGuiSliderFlags_AlwaysClamp);
@@ -175,19 +175,29 @@ void Editor::UseStandardBrush()
 
 void Editor::UseRubber()
 {
-	App->renderer->SetRenderDrawColor(255, 255, 255, 255);
-
-	App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
+	App->renderer->DrawCircleFill(
+		mouse_position_x, mouse_position_y, 
+		this->tools.tool_size,
+		ImVec4(255, 255, 255, 255)
+	);
 }
 
 void Editor::UseCirleBrush()
 {
-
+	App->renderer->DrawCircle(
+		mouse_position_x, mouse_position_y,
+		this->tools.tool_size,
+		this->tools.GetColor()
+	);
 }
 
 void Editor::UseCirleBrushFill()
 {
-
+	App->renderer->DrawCircleFill(
+		mouse_position_x, mouse_position_y,
+		this->tools.tool_size,
+		this->tools.GetColor()
+	);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

@@ -80,8 +80,10 @@ void Renderer::DrawLine(const int& x1, const int& y1, const int& x2, const int& 
 	);
 }
 
-void Renderer::DrawCircle(const int& x, const int& y, const int& radius)
+void Renderer::DrawCircle(const int& x, const int& y, const int& radius, const ImVec4& color)
 {
+	App->renderer->SetRenderDrawColor(color.x, color.y, color.z, color.w);
+
 	SDL_Point points[360];
 	float factor = (float)M_PI / 180.0f;
 
@@ -94,8 +96,10 @@ void Renderer::DrawCircle(const int& x, const int& y, const int& radius)
 	SDL_RenderDrawPoints(this->renderer, points, 360);
 }
 
-void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius)
+void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius, const ImVec4& color)
 {
+	App->renderer->SetRenderDrawColor(color.x, color.y, color.z, color.w);
+
 	for (int w = 0; w < radius * 2; ++w)
 	{
 		for (int h = 0; h < radius * 2; ++h)
