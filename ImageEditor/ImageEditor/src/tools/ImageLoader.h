@@ -1,4 +1,9 @@
+#ifndef __IMAGE_LOADER_H__
+#define __IMAGE_LOADER_H__
+
 #include <iostream>
+
+#include "SDL.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -12,3 +17,5 @@ public:
 	static void GetTextureDimensions(SDL_Texture* texture, int* width, int* height);
 	static void GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height);
 };
+
+#endif /* __IMAGE_LOADER_H__ */

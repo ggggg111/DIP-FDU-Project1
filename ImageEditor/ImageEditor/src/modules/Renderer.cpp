@@ -31,6 +31,8 @@ void Renderer::Start()
 		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());
 	}
 
+	this->texture_filter = SDL_CreateTexture(this->renderer, SDL_GetWindowPixelFormat(App->window->window), SDL_TEXTUREACCESS_STREAMING, App->window->width, App->window->height);
+
 	this->texture_target = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);

@@ -30,6 +30,7 @@ public:
 public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;
+	SDL_Texture* texture_filter;
 };
 
 #endif /* __RENDERER_H__ */

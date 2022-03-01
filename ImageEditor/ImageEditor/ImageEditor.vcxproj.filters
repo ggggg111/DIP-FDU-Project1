@@ -17,6 +17,7 @@
     <ClCompile Include="src\modules\Editor.cpp" />
     <ClCompile Include="src\tools\ImageLoader.cpp" />
     <ClCompile Include="src\tools\EditorToolSelector.cpp" />
+    <ClCompile Include="src\tools\Filters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -38,5 +39,6 @@
     <ClInclude Include="vendor\PortableFileDialogs\portable-file-dialogs.h" />
     <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\modules\Module.h" />
+    <ClInclude Include="src\tools\Filters.h" />
   </ItemGroup>
 </Project>

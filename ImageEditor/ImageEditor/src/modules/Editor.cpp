@@ -4,6 +4,7 @@
 #include "portable-file-dialogs.h"
 
 #include "tools/ImageLoader.h"
+#include "tools/Filters.h"
 #include "Application.h"
 #include "Editor.h"
 #include "Renderer.h"
@@ -141,7 +142,10 @@ void Editor::MainMenuBar()
 		{
 			if (ImGui::BeginMenu("Filters"))
 			{
-				ImGui::MenuItem("Greyscale");
+				if (ImGui::MenuItem("Grayscale"))
+				{
+					Filters::ApplyGrayScale(App->renderer->texture_filter);
+				}
 
 				ImGui::EndMenu();
 			}

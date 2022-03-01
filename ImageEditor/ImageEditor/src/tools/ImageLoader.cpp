@@ -1,7 +1,6 @@
 #include <iostream>
 #include <filesystem>
 
-#include "SDL.h"
 #include "SDL_image.h"
 
 #include "ImageLoader.h"
