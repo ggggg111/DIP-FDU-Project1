@@ -158,7 +158,7 @@ void Editor::ToolSelection()
 	static const char* items[4] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill"};
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
 	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
-	ImGui::DragInt("Size", &this->tools.tool_size, 0.1f, 1, 20, "%d", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::DragInt("Size", &this->tools.tool_size, 0.2f, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
 	
 	ImGui::End();
 }
