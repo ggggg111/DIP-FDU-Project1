@@ -42,7 +42,11 @@ void GUI::Draw()
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
+	App->renderer->SetRenderTarget(nullptr);
+
 	App->editor->DrawGUI();
+
+	App->renderer->SetRenderTarget(nullptr);
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
