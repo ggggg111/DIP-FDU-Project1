@@ -2,7 +2,6 @@
 #include "SDL_image.h"
 #include "imgui.h"
 #include "portable-file-dialogs.h"
-#include "SDL2_gfxPrimitives.h"
 
 #include "tools/ImageLoader.h"
 #include "Application.h"
@@ -46,15 +45,27 @@ void Editor::Update()
 
 		switch (this->tools.current_tool)
 		{
-			case TOOLS::BRUSH:
+			case TOOLS::STANDARD_BRUSH:
 			{
-				this->UseBrush();
+				this->UseStandardBrush();
 
 				break;
 			}
 			case TOOLS::RUBBER:
 			{
 				this->UseRubber();
+
+				break;
+			}
+			case TOOLS::CIRCLE_BRUSH:
+			{
+				this->UseCirleBrush();
+
+				break;
+			}
+			case TOOLS::CIRCLE_BRUSH_FILL:
+			{
+				this->UseCirleBrushFill();
 
 				break;
 			}
@@ -144,27 +155,21 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[2] = { "Brush", "Rubber" };
-	ImGui::Combo("Current tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
-	ImGui::ColorEdit4("Current color", (float*)&this->tools.GetColorReference());
-	ImGui::DragInt("Tool size", &this->tools.tool_size, 0.1f, 1, 20, "%d", ImGuiSliderFlags_AlwaysClamp);
+	static const char* items[3] = { "Standard Brush", "Rubber", "Circle Brush"};
+	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
+	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
+	ImGui::DragInt("Size", &this->tools.tool_size, 0.1f, 1, 20, "%d", ImGuiSliderFlags_AlwaysClamp);
 	
 	ImGui::End();
 }
 
-void Editor::UseBrush()
+void Editor::UseStandardBrush()
 {
-	thickLineRGBA(
-		App->renderer->renderer,
-		this->last_frame_mouse_position_x,
-		this->last_frame_mouse_position_y,
-		this->mouse_position_x,
-		this->mouse_position_y,
+	App->renderer->DrawLine(
+		this->last_frame_mouse_position_x, this->last_frame_mouse_position_y,
+		this->mouse_position_x, this->mouse_position_y,
 		this->tools.tool_size,
-		this->tools.GetColor().x,
-		this->tools.GetColor().y,
-		this->tools.GetColor().z,
-		this->tools.GetColor().w
+		this->tools.GetColor()
 	);
 }
 
@@ -173,6 +178,16 @@ void Editor::UseRubber()
 	App->renderer->SetRenderDrawColor(255, 255, 255, 255);
 
 	App->renderer->DrawCircleFill(mouse_position_x, mouse_position_y, this->tools.tool_size);
+}
+
+void Editor::UseCirleBrush()
+{
+
+}
+
+void Editor::UseCirleBrushFill()
+{
+
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

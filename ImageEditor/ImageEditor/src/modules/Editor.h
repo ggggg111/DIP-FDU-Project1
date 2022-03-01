@@ -28,8 +28,10 @@ private:
 	void MainMenuBar();
 	void ToolSelection();
 
-	void UseBrush();
+	void UseStandardBrush();
 	void UseRubber();
+	void UseCirleBrush();
+	void UseCirleBrushFill();
 
 public:
 	EditorToolSelector tools;

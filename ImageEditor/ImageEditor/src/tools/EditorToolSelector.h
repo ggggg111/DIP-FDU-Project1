@@ -8,8 +8,10 @@
 
 enum class TOOLS
 {
-	BRUSH = 0,
-	RUBBER
+	STANDARD_BRUSH = 0,
+	RUBBER,
+	CIRCLE_BRUSH,
+	CIRCLE_BRUSH_FILL
 };
 
 class EditorToolSelector

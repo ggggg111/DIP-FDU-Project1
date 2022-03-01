@@ -1,6 +1,8 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
+#include "imgui.h"
+
 #include "Module.h"
 
 struct SDL_Renderer;
@@ -18,6 +20,7 @@ public:
 	void PostUpdate() override;
 	void CleanUp() override;
 
+	void DrawLine(const int& x1, const int& y1, const int& x2, const int& y2, const int& size, const ImVec4& color);
 	void DrawCircle(const int& x, const int& y, const int& radius);
 	void DrawCircleFill(const int& x, const int& y, const int& radius);
 

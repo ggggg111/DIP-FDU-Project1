@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "SDL.h"
+#include "SDL2_gfxPrimitives.h"
 
 #include "Application.h"
 #include "Renderer.h"
@@ -66,6 +67,17 @@ void Renderer::CleanUp()
 {
 	SDL_DestroyTexture(this->texture_target);
 	SDL_DestroyRenderer(this->renderer);
+}
+
+void Renderer::DrawLine(const int& x1, const int& y1, const int& x2, const int& y2, const int& size, const ImVec4& color)
+{
+	thickLineRGBA(
+		App->renderer->renderer,
+		x1, y1,
+		x2, y2,
+		size,
+		color.x, color.y, color.z, color.w
+	);
 }
 
 void Renderer::DrawCircle(const int& x, const int& y, const int& radius)
