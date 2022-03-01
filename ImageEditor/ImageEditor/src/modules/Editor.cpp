@@ -137,6 +137,16 @@ void Editor::MainMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Image"))
+		{
+			if (ImGui::MenuItem("Filters"))
+			{
+
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("About"))
@@ -158,8 +168,8 @@ void Editor::ToolSelection()
 	static const char* items[4] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill"};
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
 	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
-	ImGui::DragInt("Size", &this->tools.tool_size, 0.2f, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
-	
+	ImGui::SliderInt("Size", &this->tools.tool_size, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
+
 	ImGui::End();
 }
 
