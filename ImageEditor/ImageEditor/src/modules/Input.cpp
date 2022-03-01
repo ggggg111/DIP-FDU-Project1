@@ -5,6 +5,8 @@
 
 #include "Application.h"
 #include "Input.h"
+#include "Editor.h"
+#include "Renderer.h"
 
 Input::Input() : Module()
 {
@@ -55,11 +57,21 @@ void Input::PreUpdate()
 				}
 				case SDL_MOUSEMOTION:
 				{
-					mouse_position_x = e.motion.x;
-					mouse_position_y = e.motion.y;
+					this->mouse_position_x = e.motion.x;
+					this->mouse_position_y = e.motion.y;
 
-					mouse_motion_x = e.motion.xrel;
-					mouse_motion_y = e.motion.yrel;
+					this->mouse_motion_x = e.motion.xrel;
+					this->mouse_motion_y = e.motion.yrel;
+
+					break;
+				}
+				case SDL_DROPFILE:
+				{
+					std::string dropped_file_path = e.drop.file;
+					printf("User loaded file %s\n", dropped_file_path.c_str());
+
+					App->editor->bg = App->editor->LoadImg(dropped_file_path);
+					App->editor->RenderImg(App->renderer->renderer, App->editor->bg, App->renderer->texture_target);
 
 					break;
 				}

@@ -19,10 +19,12 @@ public:
 public:
 	void DrawGUI();
 
-private:
 	SDL_Texture* LoadImg(const std::string& path) const;
 	void SaveImg(SDL_Texture* texture, const std::string& path) const;
 
+	void RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target);
+
+private:
 	void MainMenuBar();
 	void ToolSelection();
 
@@ -31,10 +33,9 @@ private:
 
 public:
 	EditorToolSelector tools;
-
-private:
 	SDL_Texture* bg;
 
+private:
 	int mouse_position_x;
 	int mouse_position_y;
 

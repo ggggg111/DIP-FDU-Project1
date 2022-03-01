@@ -107,14 +107,9 @@ void Editor::MainMenuBar()
 				{
 					std::string path = selection[0];
 					printf("User loaded file %s\n", path.c_str());
+
 					this->bg= this->LoadImg(path);
-
-					SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
-
-					if (this->bg)
-						SDL_RenderCopy(App->renderer->renderer, this->bg, nullptr, nullptr);
-
-					SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+					this->RenderImg(App->renderer->renderer, this->bg, App->renderer->texture_target);
 				}
 			}
 
@@ -191,7 +186,8 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 		App->renderer->renderer,
 		SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET,
-		width, height);
+		width, height
+	);
 
 	App->window->SetWindowSize(width, height);
 
@@ -202,4 +198,14 @@ void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
 {
 	SDL_SetRenderTarget(App->renderer->renderer, texture);
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
+}
+
+void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target)
+{
+	SDL_SetRenderTarget(renderer, target);
+
+	if (texture)
+		SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+
+	SDL_SetRenderTarget(renderer, nullptr);
 }
