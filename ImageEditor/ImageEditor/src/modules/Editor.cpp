@@ -139,9 +139,11 @@ void Editor::MainMenuBar()
 
 		if (ImGui::BeginMenu("Image"))
 		{
-			if (ImGui::MenuItem("Filters"))
+			if (ImGui::BeginMenu("Filters"))
 			{
+				ImGui::MenuItem("Greyscale");
 
+				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenu();
