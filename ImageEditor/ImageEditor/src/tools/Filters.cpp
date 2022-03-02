@@ -43,12 +43,12 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 		for (int i = 0; i < w * h; ++i)
 		{
-			u_filter_pixels[i] = 255u;
+			u_filter_pixels[i] = 125;
 		}
 
 		memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
 
-		SDL_UnlockTexture(target);
+		SDL_UnlockTexture(filter);
 	}
 
 	App->editor->RenderImg(App->renderer->renderer, filter, target);
