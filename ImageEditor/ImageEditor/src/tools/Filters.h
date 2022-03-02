@@ -4,12 +4,11 @@
 #include <iostream>
 
 struct SDL_Texture;
-struct SDL_Renderer;
 
 class Filters
 {
 public:
-	static void ApplyGrayScale(SDL_Texture* texture);
+	static void ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter);
 };
 
 #endif /* __FILTERS_H__ */

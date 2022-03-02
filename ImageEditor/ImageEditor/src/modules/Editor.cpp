@@ -144,7 +144,7 @@ void Editor::MainMenuBar()
 			{
 				if (ImGui::MenuItem("Grayscale"))
 				{
-					Filters::ApplyGrayScale(App->renderer->texture_filter);
+					Filters::ApplyGrayScale(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
 				ImGui::EndMenu();
