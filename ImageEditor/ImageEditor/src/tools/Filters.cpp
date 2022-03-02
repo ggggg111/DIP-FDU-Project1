@@ -10,8 +10,6 @@
 
 void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 {
-	//App->renderer->SetRenderTarget(target);
-
 	SDL_Surface* target_surface = SDL_CreateRGBSurface(
 		0,
 		App->window->width, App->window->height,
@@ -25,33 +23,29 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 	}
 
 	Uint32* target_pixels = (Uint32*)target_surface->pixels;
-	
-	{		
-		//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
+		
+	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
-		int pitch, w, h;
-		void* filter_pixels;
+	int pitch, w, h;
+	void* filter_pixels;
 
-		SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
+	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
 
-		if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
-		{
-			printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
-		}
-
-		Uint32* u_filter_pixels = (Uint32*)filter_pixels;
-
-		for (int i = 0; i < w * h; ++i)
-		{
-			u_filter_pixels[i] = 125;
-		}
-
-		memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
-
-		SDL_UnlockTexture(filter);
+	if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
+	{
+		printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
 	}
 
-	App->editor->RenderImg(App->renderer->renderer, filter, target);
+	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
-	//App->renderer->SetRenderTarget(nullptr);
+	for (int i = 0; i < w * h; ++i)
+	{
+		u_filter_pixels[i] = 125;
+	}
+
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
+
+	SDL_UnlockTexture(filter);
+
+	App->editor->RenderImg(App->renderer->renderer, filter, target);
 }
