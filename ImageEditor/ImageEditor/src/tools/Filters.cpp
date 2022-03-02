@@ -13,16 +13,14 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	int target_w;
-	SDL_QueryTexture(target, nullptr, nullptr, &target_w, nullptr);
-
-	int target_pitch = target_w * 4; // 4 is bytes per pixel of the texture, given we use SDL_PIXELFORMAT_RGBA8888
+	int target_w, target_h;
+	SDL_QueryTexture(target, nullptr, nullptr, &target_w, &target_h);
 
 	App->renderer->SetRenderTarget(target);
 
 	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
 		0,
-		App->window->width, App->window->height,
+		target_w, target_h,
 		32,
 		App->renderer->texture_format
 	);
@@ -32,7 +30,7 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 		nullptr,
 		App->renderer->texture_format,
 		target_surface->pixels,
-		target_pitch)
+		target_surface->pitch)
 		!= 0
 		)
 	{
@@ -43,7 +41,7 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 		
-	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
 	int pitch, w, h;
 	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
@@ -69,6 +67,8 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
 
 	SDL_UnlockTexture(filter);
+
+	SDL_FreeSurface(target_surface);
 
 	SDL_FreeFormat(pixel_format);
 
