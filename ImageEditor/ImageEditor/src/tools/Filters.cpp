@@ -24,19 +24,33 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 	}
 
 	Uint32* target_pixels = (Uint32*)target_surface->pixels;
-	{
-		/*int pitch;
-		void* pixels;
-		if (SDL_LockTexture(target, nullptr, (void**)&pixels, &pitch))
+	
+	{		
+		SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
+
+		int pitch, w, h;
+		void* filter_pixels;
+
+		SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
+
+		if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
 		{
 			printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
 		}
 
-		target_pixels = (Uint32*)pixels;
+		Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
-		SDL_UnlockTexture(target);*/
+		Uint32 transparent = SDL_MapRGBA(SDL_GetWindowSurface(App->window->window)->format, 255, 255, 255, 0x00);
 
-		if (target_pixels) printf("Not null, good!\n");
+		for (int i = 0; i < w * h; i++)
+		{
+			if (u_filter_pixels[i] == transparent)
+				u_filter_pixels[i] = target_pixels[i];
+		}
+
+		memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
+
+		SDL_UnlockTexture(target);
 	}
 
 	App->renderer->SetRenderTarget(nullptr);
