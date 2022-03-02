@@ -10,21 +10,25 @@
 
 void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 {
-	App->renderer->SetRenderTarget(target);
-
 	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	SDL_Surface* target_surface = SDL_GetWindowSurface(App->window->window);
-	
-	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, 0, target_surface->pixels, target_surface->pitch) != 0)
+	int target_w;
+	SDL_QueryTexture(target, nullptr, nullptr, &target_w, nullptr);
+
+	int target_pitch = target_w * 4; // 4 is bytes per pixel of the texture, given we use SDL_PIXELFORMAT_RGBA8888
+
+	App->renderer->SetRenderTarget(target);
+
+	void* target_pixels = nullptr;
+	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, 0, target_pixels, target_pitch) != 0)
 	{
 		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
 	}
 
-	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
-
 	App->renderer->SetRenderTarget(nullptr);
+
+	Uint32* u_target_pixels = (Uint32*)target_pixels;
 		
 	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
