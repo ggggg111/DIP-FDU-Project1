@@ -246,7 +246,12 @@ void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture
 	SDL_SetRenderTarget(renderer, target);
 
 	if (texture)
-		SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+	{
+		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) != 0)
+		{
+			printf("Render copy can't be performed. SDL_GetErrr: %s\n", SDL_GetError());
+		}
+	}
 
 	SDL_SetRenderTarget(renderer, nullptr);
 }
