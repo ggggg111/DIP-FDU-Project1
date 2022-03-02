@@ -41,7 +41,7 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 		
-	SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
+	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
 	int pitch, w, h;
 	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
