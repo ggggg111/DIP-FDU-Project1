@@ -14,7 +14,7 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 		0,
 		App->window->width, App->window->height,
 		32,
-		0, 0, 0, 255
+		0, 0, 0, 0
 	);
 
 	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, SDL_PIXELFORMAT_RGBA8888, target_surface->pixels, target_surface->pitch) != 0)
@@ -38,9 +38,16 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
+	Uint32 format = SDL_GetWindowPixelFormat(App->window->window);
+	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
+	
+	Uint32 color_rgb = SDL_MapRGB(pixel_format, 0, 0, 255);
+
+	SDL_FreeFormat(pixel_format);
+
 	for (int i = 0; i < w * h; ++i)
 	{
-		u_filter_pixels[i] = 125;
+		u_filter_pixels[i] = color_rgb;
 	}
 
 	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
