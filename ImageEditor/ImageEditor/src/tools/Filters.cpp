@@ -20,22 +20,35 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	App->renderer->SetRenderTarget(target);
 
-	void* target_pixels = nullptr;
-	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, 0, target_pixels, target_pitch) != 0)
+	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
+		0,
+		App->window->width, App->window->height,
+		32,
+		App->renderer->texture_format
+	);
+
+	if (SDL_RenderReadPixels(
+		App->renderer->renderer,
+		nullptr,
+		App->renderer->texture_format,
+		target_surface->pixels,
+		target_pitch)
+		!= 0
+		)
 	{
 		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
 	}
 
 	App->renderer->SetRenderTarget(nullptr);
 
-	Uint32* u_target_pixels = (Uint32*)target_pixels;
+	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 		
 	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
 	int pitch, w, h;
-	void* filter_pixels;
-
 	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
+
+	void* filter_pixels;
 
 	if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
 	{
