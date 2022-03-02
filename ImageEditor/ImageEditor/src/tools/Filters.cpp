@@ -12,17 +12,12 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 {
 	App->renderer->SetRenderTarget(target);
 
-	Uint32 format = SDL_GetWindowPixelFormat(App->window->window);
+	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	SDL_Surface* target_surface = SDL_CreateRGBSurface(
-		0,
-		App->window->width, App->window->height,
-		32,
-		0, 0, 0, 0
-	);
-
-	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, SDL_PIXELFORMAT_RGBA8888, target_surface->pixels, target_surface->pitch) != 0)
+	SDL_Surface* target_surface = SDL_GetWindowSurface(App->window->window);
+	
+	if (SDL_RenderReadPixels(App->renderer->renderer, nullptr, 0, target_surface->pixels, target_surface->pitch) != 0)
 	{
 		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
 	}

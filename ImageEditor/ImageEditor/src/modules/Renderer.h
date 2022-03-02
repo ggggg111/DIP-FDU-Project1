@@ -1,12 +1,10 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
+#include "SDL.h"
 #include "imgui.h"
 
 #include "Module.h"
-
-struct SDL_Renderer;
-struct SDL_Texture;
 
 class Renderer : public Module
 {
@@ -31,6 +29,8 @@ public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;
 	SDL_Texture* texture_filter;
+
+	Uint32 texture_format;
 };
 
 #endif /* __RENDERER_H__ */
