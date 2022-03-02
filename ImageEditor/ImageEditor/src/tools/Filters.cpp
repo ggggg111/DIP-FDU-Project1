@@ -10,6 +10,8 @@
 
 void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 {
+	App->renderer->SetRenderTarget(target);
+
 	Uint32 format = SDL_GetWindowPixelFormat(App->window->window);
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
@@ -25,7 +27,9 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
 	}
 
-	Uint32* target_pixels = (Uint32*)target_surface->pixels;
+	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
+
+	App->renderer->SetRenderTarget(nullptr);
 		
 	//SDL_SetTextureBlendMode(filter, SDL_BLENDMODE_BLEND);
 
@@ -41,11 +45,13 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 	
-	Uint32 color_rgb = SDL_MapRGB(pixel_format, 0, 0, 255);
-
 	for (int i = 0; i < w * h; ++i)
 	{
-		u_filter_pixels[i] = color_rgb;
+		Uint8 target_r, target_g, target_b;
+		SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
+		
+		Uint8 grayscale = (target_r + target_g + target_b) / 3;
+		u_filter_pixels[i] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);
 	}
 
 	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
