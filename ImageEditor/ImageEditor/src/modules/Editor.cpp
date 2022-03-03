@@ -96,9 +96,6 @@ void Editor::CleanUp()
 
 void Editor::DrawGUI()
 {
-	bool imgui_demo = true;
-	ImGui::ShowDemoWindow(&imgui_demo);
-
 	this->MainMenuBar();
 	this->ToolSelection();
 }

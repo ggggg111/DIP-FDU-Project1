@@ -157,38 +157,42 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 			filter_g = 0;
 			filter_b = 0;
 
-			if (row > kernel_size && col > kernel_size && row < h - kernel_size && col < w - kernel_size)
+			int krad = kernel_size / 2;
+			int k_ind = 0;
+
+			float sum_r = 0.0f;
+			float sum_g = 0.0f;
+			float sum_b = 0.0f;
+
+			for (int k_row = -krad; k_row <= krad; ++k_row)
 			{
-				int krad = kernel_size / 2;
-				int k_ind = 0;
-
-				float sum_r = 0.0f;
-				float sum_g = 0.0f;
-				float sum_b = 0.0f;
-
-				for (int k_row = -krad; k_row <= krad; ++k_row)
+				for (int k_col = -krad; k_col <= krad; ++k_col)
 				{
-					for (int k_col = -krad; k_col <= krad; ++k_col)
+					Uint8 target_r = 0, target_g = 0, target_b = 0;
+					int target_row = row + k_row;
+					int target_col = col + k_col;
+					
+					if (target_row >= 0 && target_col >= 0
+						&& target_row < h && target_col < w)
 					{
-						Uint8 target_r, target_g, target_b;
-						SDL_GetRGB(u_target_pixels_2d[row + k_row][col + k_col], pixel_format, &target_r, &target_g, &target_b);
-
-						float target_r_normalized = (float)target_r / 255.0f;
-						float target_g_normalized = (float)target_g / 255.0f;
-						float target_b_normalized = (float)target_b / 255.0f;
-
-						sum_r += kernel[k_ind] * target_r_normalized;
-						sum_g += kernel[k_ind] * target_g_normalized;
-						sum_b += kernel[k_ind] * target_b_normalized;
-
-						++k_ind;
+						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
 					}
-				}
 
-				filter_r = Uint8(sum_r * 255.0f);
-				filter_g = Uint8(sum_g * 255.0f);
-				filter_b = Uint8(sum_b * 255.0f);
+					float target_r_normalized = (float)target_r / 255.0f;
+					float target_g_normalized = (float)target_g / 255.0f;
+					float target_b_normalized = (float)target_b / 255.0f;
+
+					sum_r += kernel[k_ind] * target_r_normalized;
+					sum_g += kernel[k_ind] * target_g_normalized;
+					sum_b += kernel[k_ind] * target_b_normalized;
+
+					++k_ind;
+				}
 			}
+
+			filter_r = Uint8(sum_r * 255.0f);
+			filter_g = Uint8(sum_g * 255.0f);
+			filter_b = Uint8(sum_b * 255.0f);
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
 		}
