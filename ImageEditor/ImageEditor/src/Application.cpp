@@ -52,6 +52,8 @@ void Application::Start()
 
 void Application::Update()
 {
+    Uint64 start = SDL_GetPerformanceCounter();
+
     for (auto item = this->modules.begin(); item != this->modules.end(); ++item)
     {
         (*item)->PreUpdate();
@@ -66,6 +68,11 @@ void Application::Update()
     {
         (*item)->PostUpdate();
     }
+
+    Uint64 end = SDL_GetPerformanceCounter();
+
+    float elapsed_ms = (end - start) / (float)SDL_GetPerformanceFrequency();
+    SDL_Delay(floor(16.666f - elapsed_ms));
 }
 
 void Application::CleanUp()
