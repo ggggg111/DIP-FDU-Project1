@@ -83,19 +83,27 @@ void Editor::Update()
 		this->UseRubber();
 	}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN
-		|| App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+	static SDL_Point mouse_to_bg_initial_distance = { 0, 0 };
+	
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN)
 	{
-		int mouse_motion_x, mouse_motion_y;
-		App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
 
-		SDL_Point initial_pos;
-		initial_pos.x = this->bg_rect.x;
-		initial_pos.y = this->bg_rect.y;
+		mouse_to_bg_initial_distance = {
+			mouse_position_x - this->bg_rect.x,
+			mouse_position_y - this->bg_rect.y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
 
 		this->bg_rect = {
-			initial_pos.x += mouse_motion_x,
-			initial_pos.y += mouse_motion_y,
+			mouse_position_x - mouse_to_bg_initial_distance.x,
+			mouse_position_y - mouse_to_bg_initial_distance.y,
 			this->bg_rect.w, this->bg_rect.h
 		};
 	}

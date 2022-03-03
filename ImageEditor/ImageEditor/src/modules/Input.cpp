@@ -120,14 +120,14 @@ void Input::UpdateMouseState()
 {
 	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
-		if (this->mouse_buttons[i] == KEY_STATE::KEY_REPEAT)
+		if (this->mouse_buttons[i] == KEY_STATE::KEY_DOWN)
 		{
 			this->mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
 		}
 
-		if (this->mouse_buttons[i] == KEY_STATE::KEY_REPEAT)
+		if (this->mouse_buttons[i] == KEY_STATE::KEY_UP)
 		{
-			this->mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
+			this->mouse_buttons[i] = KEY_STATE::KEY_IDLE;
 		}
 	}
 }
