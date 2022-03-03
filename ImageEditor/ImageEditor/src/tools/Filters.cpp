@@ -162,11 +162,28 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 
 			if (row > kernel_size && col > kernel_size && row < h - kernel_size && col < w - kernel_size)
 			{
-				filter_r = 255;
-				filter_g = 255;
-				filter_b = 255;
+				int krad = kernel_size / 2;
+				int k_ind = 0;
 
-				int sum = 0;
+				int sum_r = 0;
+				int sum_g = 0;
+				int sum_b = 0;
+
+				for (int k_row = -krad; k_row <= krad; ++k_row)
+				{
+					for (int k_col = -krad; k_col <= krad; ++k_col)
+					{
+						sum_r += kernel[k_ind] * target_r;
+						sum_g += kernel[k_ind] * target_g;
+						sum_b += kernel[k_ind] * target_b;
+
+						++k_ind;
+					}
+				}
+
+				filter_r = sum_r;
+				filter_g = sum_g;
+				filter_b = sum_b;
 			}
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
