@@ -143,7 +143,7 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	{
 		for (int col = 0; col < w; ++col)
 		{
-			u_target_pixels_2d[row][col] = Filters::Convert1dTo2dArray(u_target_pixels, row, col, w);
+			u_target_pixels_2d[row][col] = u_target_pixels[(row * w + col)];
 		}
 	}
 
@@ -154,9 +154,10 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 			Uint8 target_r, target_g, target_b;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
 
-			Uint8 grayscale = (target_r + target_g + target_b) / 3;
 
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);;
+			Uint8 filter_r, filter_g, filter_b;
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, target_r, target_g, target_b);
 		}
 	}
 
@@ -191,9 +192,4 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	SDL_FreeFormat(pixel_format);
 
 	App->editor->RenderImg(App->renderer->renderer, filter, target);
-}
-
-Uint32 Filters::Convert1dTo2dArray(Uint32* array, const int& i, const int& j, const int& columns)
-{
-	return array[(i * columns + j)];
 }
