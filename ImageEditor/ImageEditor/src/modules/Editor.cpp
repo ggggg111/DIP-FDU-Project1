@@ -239,7 +239,8 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 		width, height
 	);
 
-	App->window->SetWindowSize(width, height);
+	App->renderer->texture_target_width = width;
+	App->renderer->texture_target_height = height;
 
 	return t;
 }

@@ -30,6 +30,9 @@ public:
 	SDL_Texture* texture_target;
 	SDL_Texture* texture_filter;
 
+	int texture_target_width;
+	int texture_target_height;
+
 	Uint32 texture_format;
 };
 
