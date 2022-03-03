@@ -151,9 +151,48 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	{
 		for (int col = 0; col < w; ++col)
 		{
-			out2d[row][col] = 2u;
+			out2d[row][col] = Filters::Convert1dTo2dArray(u_target_pixels, row, col, w);
 		}
 	}
+
+	std::cout << u_target_pixels[0] << std::endl;
+	std::cout << out2d[0][0] << std::endl;
+	Uint8 r, g, b;
+	SDL_GetRGB(u_target_pixels[0], pixel_format, &r, &g, &b);
+	printf("%d\n", r);
+	printf("%d\n", g);
+	printf("%d\n", b);
+
+	Uint8 r2, g2, b2;
+	SDL_GetRGB(out2d[0][0], pixel_format, &r2, &g2, &b2);
+	printf("%d\n", r2);
+	printf("%d\n", g2);
+	printf("%d\n", b2);
+
+	SDL_GetRGB(u_target_pixels[w * h - 1], pixel_format, &r, &g, &b);
+	printf("%d\n", r);
+	printf("%d\n", g);
+	printf("%d\n", b);
+
+	SDL_GetRGB(out2d[h - 1][w - 1], pixel_format, &r2, &g2, &b2);
+	printf("%d\n", r2);
+	printf("%d\n", g2);
+	printf("%d\n", b2);
+
+	/*for (int row = 0; row < h; ++row)
+	{
+		for (int col = 0; col < w; ++col)
+		{
+			Uint8 r, g, b;
+			SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
+			for (int channel = 0; channel < 3; ++channel)
+			{
+				out2d[row][col] = 2u;
+			}
+
+			out2d[row][col] = 2u;
+		}
+	}*/
 
 	/*for (int row = 0; row < w; ++row)
 	{
@@ -179,4 +218,9 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	SDL_FreeFormat(pixel_format);
 
 	App->editor->RenderImg(App->renderer->renderer, filter, target);
+}
+
+Uint32 Filters::Convert1dTo2dArray(Uint32* array, const int& i, const int& j, const int& columns)
+{
+	return array[(i * columns + j)];
 }
