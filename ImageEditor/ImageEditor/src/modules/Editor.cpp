@@ -201,8 +201,8 @@ void Editor::ToolSelection()
 void Editor::UseStandardBrush()
 {
 	App->renderer->DrawLine(
-		this->last_frame_mouse_position_x, this->last_frame_mouse_position_y,
-		this->mouse_position_x, this->mouse_position_y,
+		this->last_frame_mouse_position_x - this->bg_rect.x, this->last_frame_mouse_position_y - this->bg_rect.y,
+		this->mouse_position_x - this->bg_rect.x, this->mouse_position_y - this->bg_rect.y,
 		this->tools.tool_size,
 		this->tools.GetColor()
 	);
@@ -211,7 +211,7 @@ void Editor::UseStandardBrush()
 void Editor::UseRubber()
 {
 	App->renderer->DrawCircleFill(
-		mouse_position_x, mouse_position_y, 
+		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y, 
 		this->tools.tool_size,
 		ImVec4(255, 255, 255, 255)
 	);
@@ -220,7 +220,7 @@ void Editor::UseRubber()
 void Editor::UseCirleBrush()
 {
 	App->renderer->DrawCircle(
-		mouse_position_x, mouse_position_y,
+		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
 		this->tools.tool_size,
 		this->tools.GetColor()
 	);
@@ -229,7 +229,7 @@ void Editor::UseCirleBrush()
 void Editor::UseCirleBrushFill()
 {
 	App->renderer->DrawCircleFill(
-		mouse_position_x, mouse_position_y,
+		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
 		this->tools.tool_size,
 		this->tools.GetColor()
 	);
