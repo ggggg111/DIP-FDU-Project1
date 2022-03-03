@@ -147,6 +147,11 @@ void Editor::MainMenuBar()
 					Filters::ApplyGrayScale(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
+				if (ImGui::MenuItem("Blur"))
+				{
+					Filters::ApplyBlur(App->renderer->texture_target, App->renderer->texture_filter, 3);
+				}
+
 				ImGui::EndMenu();
 			}
 
