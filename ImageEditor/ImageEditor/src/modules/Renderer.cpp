@@ -24,7 +24,7 @@ void Renderer::Start()
 {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-	this->renderer = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_TARGETTEXTURE);
+	this->renderer = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
 	if (this->renderer == nullptr)
 	{
 		printf("Renderer can't be created. SDL_GetError: %s\n", SDL_GetError());

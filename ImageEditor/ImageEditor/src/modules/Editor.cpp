@@ -220,10 +220,10 @@ void Editor::UseCirleBrushFill()
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
 {
-	SDL_Texture* t = ImageLoader::LoadTexture(App->renderer->renderer, path);
+	SDL_Texture* texture = ImageLoader::LoadTexture(App->renderer->renderer, path);
 	
 	int width, height;
-	ImageLoader::GetTextureDimensions(t, &width, &height);
+	ImageLoader::GetTextureDimensions(texture, &width, &height);
 
 	App->renderer->texture_filter = SDL_CreateTexture(
 		App->renderer->renderer,
@@ -242,7 +242,7 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 	App->renderer->texture_target_width = width;
 	App->renderer->texture_target_height = height;
 
-	return t;
+	return texture;
 }
 
 void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
