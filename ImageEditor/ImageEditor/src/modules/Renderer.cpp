@@ -33,6 +33,8 @@ void Renderer::Start()
 	this->texture_target_width = App->window->width;
 	this->texture_target_height = App->window->height;
 
+	this->texture_workbench_target = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
+
 	this->texture_filter = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_STREAMING, App->window->width, App->window->height);
 
 	this->texture_target = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
@@ -48,6 +50,14 @@ void Renderer::Start()
 
 void Renderer::PreUpdate()
 {
+	SDL_SetRenderTarget(App->renderer->renderer, this->texture_workbench_target);
+
+	SDL_Rect rect_screen = { 0, 0, App->window->width, App->window->height };
+	SDL_SetRenderDrawColor(App->renderer->renderer, 175, 175, 175, 255);
+	SDL_RenderFillRect(App->renderer->renderer, &rect_screen);
+
+	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
+
 	SDL_SetRenderTarget(App->renderer->renderer, this->texture_target);
 }
 
@@ -70,6 +80,7 @@ void Renderer::PostUpdate()
 
 void Renderer::CleanUp()
 {
+	SDL_DestroyTexture(this->texture_workbench_target);
 	SDL_DestroyTexture(this->texture_filter);
 	SDL_DestroyTexture(this->texture_target);
 	SDL_DestroyRenderer(this->renderer);

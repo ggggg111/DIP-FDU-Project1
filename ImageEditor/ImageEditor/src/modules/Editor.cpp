@@ -225,16 +225,22 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 	int width, height;
 	ImageLoader::GetTextureDimensions(texture, &width, &height);
 
+	App->renderer->texture_workbench_target = SDL_CreateTexture(
+		App->renderer->renderer,
+		App->renderer->texture_format,
+		SDL_TEXTUREACCESS_STREAMING,
+		width, height);
+
 	App->renderer->texture_filter = SDL_CreateTexture(
 		App->renderer->renderer,
-		SDL_PIXELFORMAT_RGBA8888,
+		App->renderer->texture_format,
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height
 	);
 
 	App->renderer->texture_target = SDL_CreateTexture(
 		App->renderer->renderer,
-		SDL_PIXELFORMAT_RGBA8888,
+		App->renderer->texture_format,
 		SDL_TEXTUREACCESS_TARGET,
 		width, height
 	);

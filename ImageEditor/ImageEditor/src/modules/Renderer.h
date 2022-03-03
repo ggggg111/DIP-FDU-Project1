@@ -29,6 +29,7 @@ public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;
 	SDL_Texture* texture_filter;
+	SDL_Texture* texture_workbench_target;
 
 	int texture_target_width;
 	int texture_target_height;
