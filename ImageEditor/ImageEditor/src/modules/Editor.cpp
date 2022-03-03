@@ -86,7 +86,18 @@ void Editor::Update()
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN
 		|| App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
 	{
-		this->bg_rect = { 10, 10, this->bg_rect.w, this->bg_rect.h };
+		int mouse_motion_x, mouse_motion_y;
+		App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
+
+		SDL_Point initial_pos;
+		initial_pos.x = this->bg_rect.x;
+		initial_pos.y = this->bg_rect.y;
+
+		this->bg_rect = {
+			initial_pos.x += mouse_motion_x,
+			initial_pos.y += mouse_motion_y,
+			this->bg_rect.w, this->bg_rect.h
+		};
 	}
 	
 	App->renderer->SetRenderTarget(nullptr);
