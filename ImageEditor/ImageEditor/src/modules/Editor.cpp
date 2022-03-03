@@ -117,7 +117,7 @@ void Editor::MainMenuBar()
 					std::string path = selection[0];
 					printf("User loaded file %s\n", path.c_str());
 
-					this->bg= this->LoadImg(path);
+					this->bg = this->LoadImg(path);
 					this->RenderImg(App->renderer->renderer, this->bg, App->renderer->texture_target);
 				}
 			}
