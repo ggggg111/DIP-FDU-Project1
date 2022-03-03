@@ -2,6 +2,8 @@
 #include <windows.h>
 #endif
 
+#include "SDL.h"
+
 #include "Application.h"
 #include "modules/Module.h"
 #include "modules/Window.h"

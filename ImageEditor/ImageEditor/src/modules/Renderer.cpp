@@ -70,6 +70,7 @@ void Renderer::PostUpdate()
 
 void Renderer::CleanUp()
 {
+	SDL_DestroyTexture(this->texture_filter);
 	SDL_DestroyTexture(this->texture_target);
 	SDL_DestroyRenderer(this->renderer);
 }
