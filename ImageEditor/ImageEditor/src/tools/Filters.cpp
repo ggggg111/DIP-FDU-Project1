@@ -151,39 +151,43 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	{
 		for (int col = 0; col < w; ++col)
 		{
-			Uint8 target_r, target_g, target_b;
-			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
-
 			Uint8 filter_r, filter_g, filter_b;
 
-			filter_r = target_r;
-			filter_g = target_g;
-			filter_b = target_b;
+			filter_r = 0;
+			filter_g = 0;
+			filter_b = 0;
 
 			if (row > kernel_size && col > kernel_size && row < h - kernel_size && col < w - kernel_size)
 			{
 				int krad = kernel_size / 2;
 				int k_ind = 0;
 
-				int sum_r = 0;
-				int sum_g = 0;
-				int sum_b = 0;
+				float sum_r = 0.0f;
+				float sum_g = 0.0f;
+				float sum_b = 0.0f;
 
 				for (int k_row = -krad; k_row <= krad; ++k_row)
 				{
 					for (int k_col = -krad; k_col <= krad; ++k_col)
 					{
-						sum_r += kernel[k_ind] * target_r;
-						sum_g += kernel[k_ind] * target_g;
-						sum_b += kernel[k_ind] * target_b;
+						Uint8 target_r, target_g, target_b;
+						SDL_GetRGB(u_target_pixels_2d[row + k_row][col + k_col], pixel_format, &target_r, &target_g, &target_b);
+
+						float target_r_normalized = (float)target_r / 255.0f;
+						float target_g_normalized = (float)target_g / 255.0f;
+						float target_b_normalized = (float)target_b / 255.0f;
+
+						sum_r += kernel[k_ind] * target_r_normalized;
+						sum_g += kernel[k_ind] * target_g_normalized;
+						sum_b += kernel[k_ind] * target_b_normalized;
 
 						++k_ind;
 					}
 				}
 
-				filter_r = sum_r;
-				filter_g = sum_g;
-				filter_b = sum_b;
+				filter_r = Uint8(sum_r * 255.0f);
+				filter_g = Uint8(sum_g * 255.0f);
+				filter_b = Uint8(sum_b * 255.0f);
 			}
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
