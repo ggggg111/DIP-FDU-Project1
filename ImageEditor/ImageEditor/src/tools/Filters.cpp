@@ -160,53 +160,24 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		}
 	}
 
-	std::cout << u_target_pixels[0] << std::endl;
-	std::cout << u_target_pixels_2d[0][0] << std::endl;
-
-	Uint8 r, g, b;
-	SDL_GetRGB(u_target_pixels[0], pixel_format, &r, &g, &b);
-	printf("%d\n", r);
-	printf("%d\n", g);
-	printf("%d\n", b);
-
-	Uint8 r2, g2, b2;
-	SDL_GetRGB(u_target_pixels_2d[0][0], pixel_format, &r2, &g2, &b2);
-	printf("%d\n", r2);
-	printf("%d\n", g2);
-	printf("%d\n", b2);
-
-	SDL_GetRGB(u_filter_pixels[w * h - 1], pixel_format, &r, &g, &b);
-	printf("%d\n", r);
-	printf("%d\n", g);
-	printf("%d\n", b);
-
-	SDL_GetRGB(u_filter_pixels_2d[h - 1][w - 1], pixel_format, &r2, &g2, &b2);
-	printf("%d\n", r2);
-	printf("%d\n", g2);
-	printf("%d\n", b2);
-
 	for (int row = 0; row < h; ++row)
 	{
 		for (int col = 0; col < w; ++col)
 		{
 			Uint8 target_r, target_g, target_b;
-			SDL_GetRGB(filter_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
-			for (int channel = 0; channel < 3; ++channel)
-			{
-				
-			}
-
-			filter_pixels_2d[row][col] = 2u;
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
+			
+			u_filter_pixels_2d[row][col] = u_target_pixels_2d[row][col];
 		}
 	}
 
-	/*for (int row = 0; row < w; ++row)
+	for (int row = 0; row < h; ++row)
 	{
-		for (int col = 0; col < h; ++col)
+		for (int col = 0; col < w; ++col)
 		{
-			std::cout << out2d[row][col] << std::endl;
+			u_filter_pixels[row * w + col] = u_filter_pixels_2d[row][col];
 		}
-	}*/
+	}
 
 	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
 
