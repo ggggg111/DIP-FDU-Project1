@@ -142,21 +142,27 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		u_filter_pixels[i] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);
 	}*/
 
-	Uint32** out2d;
-	out2d = new Uint32*[h];
+	Uint32** u_target_pixels_2d;
+	u_target_pixels_2d = new Uint32*[h];
 	for (int i = 0; i < h; ++i)
-		out2d[i] = new Uint32[w];
+		u_target_pixels_2d[i] = new Uint32[w];
+
+	Uint32** u_filter_pixels_2d;
+	u_filter_pixels_2d = new Uint32 * [h];
+	for (int i = 0; i < h; ++i)
+		u_filter_pixels_2d[i] = new Uint32[w];
 
 	for (int row = 0; row < h; ++row)
 	{
 		for (int col = 0; col < w; ++col)
 		{
-			out2d[row][col] = Filters::Convert1dTo2dArray(u_target_pixels, row, col, w);
+			u_target_pixels_2d[row][col] = Filters::Convert1dTo2dArray(u_target_pixels, row, col, w);
 		}
 	}
 
 	std::cout << u_target_pixels[0] << std::endl;
-	std::cout << out2d[0][0] << std::endl;
+	std::cout << u_target_pixels_2d[0][0] << std::endl;
+
 	Uint8 r, g, b;
 	SDL_GetRGB(u_target_pixels[0], pixel_format, &r, &g, &b);
 	printf("%d\n", r);
@@ -164,35 +170,35 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	printf("%d\n", b);
 
 	Uint8 r2, g2, b2;
-	SDL_GetRGB(out2d[0][0], pixel_format, &r2, &g2, &b2);
+	SDL_GetRGB(u_target_pixels_2d[0][0], pixel_format, &r2, &g2, &b2);
 	printf("%d\n", r2);
 	printf("%d\n", g2);
 	printf("%d\n", b2);
 
-	SDL_GetRGB(u_target_pixels[w * h - 1], pixel_format, &r, &g, &b);
+	SDL_GetRGB(u_filter_pixels[w * h - 1], pixel_format, &r, &g, &b);
 	printf("%d\n", r);
 	printf("%d\n", g);
 	printf("%d\n", b);
 
-	SDL_GetRGB(out2d[h - 1][w - 1], pixel_format, &r2, &g2, &b2);
+	SDL_GetRGB(u_filter_pixels_2d[h - 1][w - 1], pixel_format, &r2, &g2, &b2);
 	printf("%d\n", r2);
 	printf("%d\n", g2);
 	printf("%d\n", b2);
 
-	/*for (int row = 0; row < h; ++row)
+	for (int row = 0; row < h; ++row)
 	{
 		for (int col = 0; col < w; ++col)
 		{
-			Uint8 r, g, b;
-			SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
+			Uint8 target_r, target_g, target_b;
+			SDL_GetRGB(filter_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
 			for (int channel = 0; channel < 3; ++channel)
 			{
-				out2d[row][col] = 2u;
+				
 			}
 
-			out2d[row][col] = 2u;
+			filter_pixels_2d[row][col] = 2u;
 		}
-	}*/
+	}
 
 	/*for (int row = 0; row < w; ++row)
 	{
@@ -204,14 +210,21 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 
 	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
 
+	SDL_UnlockTexture(filter);
+
 	for (int i = 0; i < h; ++i)
 	{
-		delete[] out2d[i];
+		delete[] u_target_pixels_2d[i];
 	}
 
-	delete[] out2d;
+	delete[] u_target_pixels_2d;
 
-	SDL_UnlockTexture(filter);
+	for (int i = 0; i < h; ++i)
+	{
+		delete[] u_filter_pixels_2d[i];
+	}
+
+	delete[] u_filter_pixels_2d;
 
 	SDL_FreeSurface(target_surface);
 
