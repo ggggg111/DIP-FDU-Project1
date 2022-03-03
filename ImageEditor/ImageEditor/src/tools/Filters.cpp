@@ -129,19 +129,6 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		}
 	}
 
-	/*for (int i = 0; i < w * h; ++i)
-	{
-		Uint8 target_r, target_g, target_b;
-		SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
-
-		for (int channel = 0; channel < 3; ++channel)
-		{
-			Uint8 grayscale = (target_r + target_g + target_b) / 3;
-		}
-
-		u_filter_pixels[i] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);
-	}*/
-
 	Uint32** u_target_pixels_2d;
 	u_target_pixels_2d = new Uint32*[h];
 	for (int i = 0; i < h; ++i)
@@ -166,8 +153,10 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		{
 			Uint8 target_r, target_g, target_b;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &target_r, &target_g, &target_b);
-			
-			u_filter_pixels_2d[row][col] = u_target_pixels_2d[row][col];
+
+			Uint8 grayscale = (target_r + target_g + target_b) / 3;
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);;
 		}
 	}
 
