@@ -68,8 +68,15 @@ void Renderer::Update()
 
 void Renderer::PostUpdate()
 {
-	SDL_Rect target_texture_rect = { 0, 0, this->texture_target_width, this->texture_target_height };
-	SDL_RenderCopy(App->renderer->renderer, this->texture_target, nullptr, &target_texture_rect);
+	if (App->editor->bg == nullptr)
+	{
+		SDL_Rect target_texture_rect = { 0, 0, this->texture_target_width, this->texture_target_height };
+		SDL_RenderCopy(App->renderer->renderer, this->texture_target, nullptr, &target_texture_rect);
+	}
+	else
+	{
+		SDL_RenderCopy(App->renderer->renderer, this->texture_target, nullptr, &App->editor->bg_rect);
+	}
 
 	SDL_SetRenderTarget(App->renderer->renderer, nullptr);
 
@@ -83,6 +90,7 @@ void Renderer::CleanUp()
 	SDL_DestroyTexture(this->texture_workbench_target);
 	SDL_DestroyTexture(this->texture_filter);
 	SDL_DestroyTexture(this->texture_target);
+
 	SDL_DestroyRenderer(this->renderer);
 }
 

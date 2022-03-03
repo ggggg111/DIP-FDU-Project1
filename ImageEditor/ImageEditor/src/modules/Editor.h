@@ -5,6 +5,7 @@
 #include "Module.h"
 
 struct SDL_Texture;
+struct SDL_Rect;
 
 class Editor : public Module
 {
@@ -36,6 +37,7 @@ private:
 public:
 	EditorToolSelector tools;
 	SDL_Texture* bg;
+	SDL_Rect bg_rect;
 
 private:
 	int mouse_position_x;

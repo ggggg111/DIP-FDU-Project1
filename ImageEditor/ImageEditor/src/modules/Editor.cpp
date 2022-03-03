@@ -82,6 +82,12 @@ void Editor::Update()
 	{
 		this->UseRubber();
 	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+	{
+		this->bg_rect = { 10, 10, this->bg_rect.w, this->bg_rect.h };
+	}
 	
 	App->renderer->SetRenderTarget(nullptr);
 
@@ -260,6 +266,11 @@ void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
 void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target)
 {
 	SDL_SetRenderTarget(renderer, target);
+
+	int w, h;
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+
+	this->bg_rect = { 0, 0, w, h };
 
 	if (texture)
 	{
