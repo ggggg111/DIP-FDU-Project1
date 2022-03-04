@@ -140,6 +140,26 @@ void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius, con
 	}
 }
 
+void Renderer::DrawEllipse(const int& x, const int& y, const int& radius_x, const int& radius_y, const ImVec4& color)
+{
+	ellipseRGBA(
+		this->renderer,
+		x, y,
+		radius_x, radius_y,
+		color.x, color.y, color.z, color.w
+	);
+}
+
+void Renderer::DrawEllipseFill(const int& x, const int& y, const int& radius_x, const int& radius_y, const ImVec4& color)
+{
+	filledEllipseRGBA(
+		this->renderer,
+		x, y,
+		radius_x, radius_y,
+		color.x, color.y, color.z, color.w
+	);
+}
+
 void Renderer::SetRenderTarget(SDL_Texture* texture) const
 {
 	SDL_SetRenderTarget(this->renderer, texture);

@@ -34,6 +34,8 @@ private:
 	void UseCirleBrush();
 	void UseCirleBrushFill();
 	void UseLine();
+	void UseEllipse();
+	void UseEllipseFill();
 
 public:
 	EditorToolSelector tools;

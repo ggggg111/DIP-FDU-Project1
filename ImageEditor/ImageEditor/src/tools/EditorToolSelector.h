@@ -12,7 +12,9 @@ enum class TOOLS
 	RUBBER,
 	CIRCLE_BRUSH,
 	CIRCLE_BRUSH_FILL,
-	LINE
+	LINE,
+	ELLIPSE,
+	ELLIPSE_FILL
 };
 
 class EditorToolSelector

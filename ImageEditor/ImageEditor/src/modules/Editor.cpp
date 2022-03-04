@@ -73,6 +73,18 @@ void Editor::Update()
 
 			break;
 		}
+		case TOOLS::ELLIPSE:
+		{
+			this->UseEllipse();
+
+			break;
+		}
+		case TOOLS::ELLIPSE_FILL:
+		{
+			this->UseEllipseFill();
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -204,7 +216,16 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[5] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill", "Line"};
+	static const char* items[7] = {
+		"Standard Brush",
+		"Rubber",
+		"Circle Brush",
+		"Circle Brush Fill",
+		"Line",
+		"Ellipse",
+		"Ellipse Fill"
+	};
+
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
 	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
 	ImGui::SliderInt("Size", &this->tools.tool_size, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
@@ -298,6 +319,46 @@ void Editor::UseLine()
 			this->tools.GetColor()
 		);
 	}
+}
+
+void Editor::UseEllipse()
+{
+	static SDL_Point initial_mouse_position = { 0, 0 };
+	static SDL_Point final_mouse_position = { 0, 0 };
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		initial_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		final_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+
+		/*App->renderer->DrawCircle(
+			initial_mouse_position.x, initial_mouse_position.y,
+			final_mouse_position.x, final_mouse_position.y,
+			this->tools.tool_size,
+			this->tools.GetColor()
+		);*/
+	}
+}
+
+void Editor::UseEllipseFill()
+{
+
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
