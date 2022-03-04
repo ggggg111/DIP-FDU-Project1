@@ -306,7 +306,7 @@ void Editor::UseRectangleBrush()
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
 		App->renderer->DrawRectangle(
-			mouse_position_x - this->tools.tool_size / 2, mouse_position_y - this->tools.tool_size / 2,
+			mouse_position_x - this->tools.tool_size / 2 - this->bg_rect.x, mouse_position_y - this->tools.tool_size / 2 - this->bg_rect.y,
 			this->tools.tool_size, this->tools.tool_size,
 			this->tools.GetColor()
 		);
@@ -319,7 +319,7 @@ void Editor::UseRectangleBrushFill()
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
 		App->renderer->DrawRectangleFill(
-			mouse_position_x - this->tools.tool_size / 2, mouse_position_y - this->tools.tool_size / 2,
+			mouse_position_x - this->tools.tool_size / 2 - this->bg_rect.x, mouse_position_y - this->tools.tool_size / 2 - this->bg_rect.y,
 			this->tools.tool_size, this->tools.tool_size,
 			this->tools.GetColor()
 		);
@@ -353,8 +353,8 @@ void Editor::UseLine()
 		};
 
 		App->renderer->DrawLine(
-			initial_mouse_position.x, initial_mouse_position.y,
-			final_mouse_position.x, final_mouse_position.y,
+			initial_mouse_position.x - this->bg_rect.x, initial_mouse_position.y - this->bg_rect.y,
+			final_mouse_position.x - this->bg_rect.x, final_mouse_position.y - this->bg_rect.y,
 			this->tools.tool_size,
 			this->tools.GetColor()
 		);
@@ -398,7 +398,7 @@ void Editor::UseEllipse()
 		};
 
 		App->renderer->DrawEllipse(
-			mid_point.x, mid_point.y,
+			mid_point.x - this->bg_rect.x, mid_point.y - this->bg_rect.y,
 			radius.x, radius.y,
 			this->tools.GetColor()
 		);
@@ -442,7 +442,7 @@ void Editor::UseEllipseFill()
 		};
 
 		App->renderer->DrawEllipseFill(
-			mid_point.x, mid_point.y,
+			mid_point.x - this->bg_rect.x, mid_point.y - this->bg_rect.y,
 			radius.x, radius.y,
 			this->tools.GetColor()
 		);
