@@ -72,7 +72,7 @@ To run the release, do:
 
 ## Releases
 
-The latest releases can be viewed [here](https://github.com/nngg11/DIP-FDU-Project1/releases).
+The latest releases can be downloaded [here](https://github.com/nngg11/DIP-FDU-Project1/releases).
 
 ## Respository
 
