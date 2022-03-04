@@ -407,8 +407,8 @@ void Editor::UseEllipse()
 		};
 
 		SDL_Point radius = {
-			(final_mouse_position.x - initial_mouse_position.x) / 2,
-			(final_mouse_position.y - initial_mouse_position.y) / 2
+			abs((final_mouse_position.x - initial_mouse_position.x) / 2),
+			abs((final_mouse_position.y - initial_mouse_position.y) / 2)
 		};
 
 		App->renderer->DrawEllipse(
@@ -451,8 +451,8 @@ void Editor::UseEllipseFill()
 		};
 
 		SDL_Point radius = {
-			(final_mouse_position.x - initial_mouse_position.x) / 2,
-			(final_mouse_position.y - initial_mouse_position.y) / 2
+			abs((final_mouse_position.x - initial_mouse_position.x) / 2),
+			abs((final_mouse_position.y - initial_mouse_position.y) / 2)
 		};
 
 		App->renderer->DrawEllipseFill(
