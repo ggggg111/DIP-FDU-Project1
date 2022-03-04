@@ -11,7 +11,8 @@ enum class TOOLS
 	STANDARD_BRUSH = 0,
 	RUBBER,
 	CIRCLE_BRUSH,
-	CIRCLE_BRUSH_FILL
+	CIRCLE_BRUSH_FILL,
+	LINE
 };
 
 class EditorToolSelector

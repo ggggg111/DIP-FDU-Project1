@@ -20,6 +20,11 @@ Input::~Input()
 
 void Input::Start()
 {
+	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	{
+		printf("SDL events can't be initialized. SDL_GetError: %s\n", SDL_GetError());
+	}
+
 	memset(this->mouse_buttons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * NUM_MOUSE_BUTTONS);
 }
 
@@ -52,6 +57,7 @@ void Input::PreUpdate()
 				case SDL_MOUSEBUTTONUP:
 				{
 					this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
+					printf("Mouse button %d up(%d)\n", e.button.button - 1, KEY_STATE::KEY_UP);
 
 					break;
 				}
@@ -96,7 +102,7 @@ void Input::PostUpdate()
 
 void Input::CleanUp()
 {
-
+	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 }
 
 KEY_STATE Input::GetMouseButton(const int& id) const

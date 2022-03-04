@@ -34,59 +34,57 @@ void Editor::Update()
 
 	App->renderer->SetRenderTarget(App->renderer->texture_target);
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
-		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	App->renderer->SetRenderDrawColor(
+		this->tools.GetColor().x,
+		this->tools.GetColor().y,
+		this->tools.GetColor().z,
+		this->tools.GetColor().w
+	);
+
+	switch (this->tools.current_tool)
 	{
-		App->renderer->SetRenderDrawColor(
-			this->tools.GetColor().x,
-			this->tools.GetColor().y,
-			this->tools.GetColor().z,
-			this->tools.GetColor().w
-		);
-
-		switch (this->tools.current_tool)
+		case TOOLS::STANDARD_BRUSH:
 		{
-			case TOOLS::STANDARD_BRUSH:
-			{
-				this->UseStandardBrush();
+			this->UseStandardBrush();
 
-				break;
-			}
-			case TOOLS::RUBBER:
-			{
-				this->UseRubber();
+			break;
+		}
+		case TOOLS::RUBBER:
+		{
+			this->UseRubber(SDL_BUTTON_LEFT);
 
-				break;
-			}
-			case TOOLS::CIRCLE_BRUSH:
-			{
-				this->UseCirleBrush();
+			break;
+		}
+		case TOOLS::CIRCLE_BRUSH:
+		{
+			this->UseCirleBrush();
 
-				break;
-			}
-			case TOOLS::CIRCLE_BRUSH_FILL:
-			{
-				this->UseCirleBrushFill();
+			break;
+		}
+		case TOOLS::CIRCLE_BRUSH_FILL:
+		{
+			this->UseCirleBrushFill();
 
-				break;
-			}
-			default:
-			{
-				break;
-			}
+			break;
+		}
+		case TOOLS::LINE:
+		{
+			this->UseLine();
+
+			break;
+		}
+		default:
+		{
+			break;
 		}
 	}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_DOWN
-		|| App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
-	{
-		this->UseRubber();
-	}
-
-	static SDL_Point mouse_to_bg_initial_distance = { 0, 0 };
+	this->UseRubber(SDL_BUTTON_RIGHT);
 	
 	if (this->bg != nullptr)
 	{
+		static SDL_Point mouse_to_bg_initial_distance = { 0, 0 };
+
 		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN)
 		{
 			int mouse_position_x, mouse_position_y;
@@ -206,7 +204,7 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[4] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill"};
+	static const char* items[5] = { "Standard Brush", "Rubber", "Circle Brush", "Circle Brush Fill", "Line"};
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
 	ImGui::ColorEdit4("Color", (float*)&this->tools.GetColorReference());
 	ImGui::SliderInt("Size", &this->tools.tool_size, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
@@ -216,39 +214,90 @@ void Editor::ToolSelection()
 
 void Editor::UseStandardBrush()
 {
-	App->renderer->DrawLine(
-		this->last_frame_mouse_position_x - this->bg_rect.x, this->last_frame_mouse_position_y - this->bg_rect.y,
-		this->mouse_position_x - this->bg_rect.x, this->mouse_position_y - this->bg_rect.y,
-		this->tools.tool_size,
-		this->tools.GetColor()
-	);
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawLine(
+			this->last_frame_mouse_position_x - this->bg_rect.x, this->last_frame_mouse_position_y - this->bg_rect.y,
+			this->mouse_position_x - this->bg_rect.x, this->mouse_position_y - this->bg_rect.y,
+			this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
 }
 
-void Editor::UseRubber()
+void Editor::UseRubber(const int& button)
 {
-	App->renderer->DrawCircleFill(
-		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y, 
-		this->tools.tool_size,
-		ImVec4(255, 255, 255, 255)
-	);
+	if (App->input->GetMouseButton(button) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(button) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawCircleFill(
+			mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
+			this->tools.tool_size,
+			ImVec4(255, 255, 255, 255)
+		);
+	}
 }
 
 void Editor::UseCirleBrush()
 {
-	App->renderer->DrawCircle(
-		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
-		this->tools.tool_size,
-		this->tools.GetColor()
-	);
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawCircle(
+			mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
+			this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
 }
 
 void Editor::UseCirleBrushFill()
 {
-	App->renderer->DrawCircleFill(
-		mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
-		this->tools.tool_size,
-		this->tools.GetColor()
-	);
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawCircleFill(
+			mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
+			this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
+}
+
+void Editor::UseLine()
+{
+	static SDL_Point initial_mouse_position = { 0, 0 };
+	static SDL_Point final_mouse_position = { 0, 0 };
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		initial_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		final_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+
+		App->renderer->DrawLine(
+			initial_mouse_position.x, initial_mouse_position.y,
+			final_mouse_position.x, final_mouse_position.y,
+			this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

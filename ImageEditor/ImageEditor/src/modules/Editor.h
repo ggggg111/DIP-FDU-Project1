@@ -30,9 +30,10 @@ private:
 	void ToolSelection();
 
 	void UseStandardBrush();
-	void UseRubber();
+	void UseRubber(const int& button);
 	void UseCirleBrush();
 	void UseCirleBrushFill();
+	void UseLine();
 
 public:
 	EditorToolSelector tools;
