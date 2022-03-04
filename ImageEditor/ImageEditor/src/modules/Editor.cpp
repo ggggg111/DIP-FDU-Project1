@@ -146,7 +146,7 @@ void Editor::MainMenuBar()
 					printf("User loaded file %s\n", path.c_str());
 
 					this->bg = this->LoadImg(path);
-					this->RenderImg(App->renderer->renderer, this->bg, App->renderer->texture_target);
+					this->RenderImg(this->bg, App->renderer->texture_target);
 				}
 			}
 
@@ -258,21 +258,19 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 	int width, height;
 	ImageLoader::GetTextureDimensions(texture, &width, &height);
 
-	App->renderer->texture_workbench_target = SDL_CreateTexture(
-		App->renderer->renderer,
-		App->renderer->texture_format,
-		SDL_TEXTUREACCESS_STREAMING,
-		width, height);
-
-	App->renderer->texture_filter = SDL_CreateTexture(
-		App->renderer->renderer,
+	App->renderer->texture_workbench_target = App->renderer->CreateTexture(
 		App->renderer->texture_format,
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height
 	);
 
-	App->renderer->texture_target = SDL_CreateTexture(
-		App->renderer->renderer,
+	App->renderer->texture_filter = App->renderer->CreateTexture(
+		App->renderer->texture_format,
+		SDL_TEXTUREACCESS_STREAMING,
+		width, height
+	);
+
+	App->renderer->texture_target = App->renderer->CreateTexture(
 		App->renderer->texture_format,
 		SDL_TEXTUREACCESS_TARGET,
 		width, height
@@ -286,27 +284,24 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 
 void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
 {
-	SDL_SetRenderTarget(App->renderer->renderer, texture);
+	App->renderer->SetRenderTarget(texture);
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
 }
 
-void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target, const bool& assign_new_bg_rect)
+void Editor::RenderImg(SDL_Texture* texture, SDL_Texture* target, const bool& assign_new_bg_rect)
 {
-	SDL_SetRenderTarget(renderer, target);
+	App->renderer->SetRenderTarget(target);
 
 	int w, h;
-	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	ImageLoader::GetTextureDimensions(texture, &w, &h);
 
 	if(assign_new_bg_rect)
 		this->bg_rect = { 0, 0, w, h };
 
 	if (texture)
 	{
-		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) != 0)
-		{
-			printf("Render copy can't be performed. SDL_GetError(): %s\n", SDL_GetError());
-		}
+		App->renderer->RenderTexture(texture, nullptr, nullptr);
 	}
 
-	SDL_SetRenderTarget(renderer, nullptr);
+	App->renderer->SetRenderTarget(nullptr);
 }

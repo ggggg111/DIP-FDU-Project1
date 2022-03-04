@@ -25,6 +25,10 @@ public:
 	void SetRenderTarget(SDL_Texture* texture) const;
 	void SetRenderDrawColor(const int& r, const int& g, const int& b, const int& a) const;
 
+	SDL_Texture* CreateTexture(const Uint32& format, const int& access, const int& width, const int& height);
+
+	void RenderTexture(SDL_Texture* texture, SDL_Rect* source_rect, SDL_Rect* destination_rect);
+
 public:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture_target;

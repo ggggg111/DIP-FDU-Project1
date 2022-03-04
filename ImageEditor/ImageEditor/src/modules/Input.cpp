@@ -71,7 +71,7 @@ void Input::PreUpdate()
 					printf("User loaded file %s\n", dropped_file_path.c_str());
 
 					App->editor->bg = App->editor->LoadImg(dropped_file_path);
-					App->editor->RenderImg(App->renderer->renderer, App->editor->bg, App->renderer->texture_target);
+					App->editor->RenderImg(App->editor->bg, App->renderer->texture_target);
 
 					break;
 				}

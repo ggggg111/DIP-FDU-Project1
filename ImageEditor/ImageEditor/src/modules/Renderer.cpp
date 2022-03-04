@@ -149,3 +149,21 @@ void Renderer::SetRenderDrawColor(const int& r, const int& g, const int& b, cons
 {
 	SDL_SetRenderDrawColor(this->renderer, r, g, b, a);
 }
+
+SDL_Texture* Renderer::CreateTexture(const Uint32& format, const int& access, const int& width, const int& height)
+{
+	return SDL_CreateTexture(
+		this->renderer,
+		format,
+		access,
+		width, height
+	);
+}
+
+void Renderer::RenderTexture(SDL_Texture* texture, SDL_Rect* source_rect, SDL_Rect* destination_rect)
+{
+	if (SDL_RenderCopy(this->renderer, texture, source_rect, destination_rect) != 0)
+	{
+		printf("Render copy can't be performed. SDL_GetError(): %s\n", SDL_GetError());
+	}
+}
