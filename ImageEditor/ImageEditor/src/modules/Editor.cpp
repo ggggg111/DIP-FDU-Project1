@@ -97,6 +97,18 @@ void Editor::Update()
 
 			break;
 		}
+		case TOOLS::RECTANGLE:
+		{
+			this->UseRectangle();
+
+			break;
+		}
+		case TOOLS::RECTANGLE_FILL:
+		{
+			this->UseRectangleFill();
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -228,7 +240,7 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[9] = {
+	static const char* items[11] = {
 		"Standard Brush",
 		"Rubber",
 		"Circle Brush",
@@ -237,7 +249,9 @@ void Editor::ToolSelection()
 		"Square Brush Fill",
 		"Line",
 		"Ellipse",
-		"Ellipse Fill"
+		"Ellipse Fill",
+		"Rectangle",
+		"Rectangle Fill"
 	};
 
 	ImGui::Combo("Tool", (int*)&this->tools.current_tool, items, IM_ARRAYSIZE(items));
@@ -444,6 +458,84 @@ void Editor::UseEllipseFill()
 		App->renderer->DrawEllipseFill(
 			mid_point.x - this->bg_rect.x, mid_point.y - this->bg_rect.y,
 			radius.x, radius.y,
+			this->tools.GetColor()
+		);
+	}
+}
+
+void Editor::UseRectangle()
+{
+	static SDL_Point initial_mouse_position = { 0, 0 };
+	static SDL_Point final_mouse_position = { 0, 0 };
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		initial_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		final_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+
+		SDL_Point diff_point = {
+			final_mouse_position.x - initial_mouse_position.x,
+			final_mouse_position.y - initial_mouse_position.y
+		};
+
+		App->renderer->DrawRectangle(
+			initial_mouse_position.x - this->bg_rect.x, initial_mouse_position.y - this->bg_rect.y,
+			diff_point.x, diff_point.y,
+			this->tools.GetColor()
+		);
+	}
+}
+
+void Editor::UseRectangleFill()
+{
+	static SDL_Point initial_mouse_position = { 0, 0 };
+	static SDL_Point final_mouse_position = { 0, 0 };
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		initial_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		final_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+
+		SDL_Point diff_point = {
+			final_mouse_position.x - initial_mouse_position.x,
+			final_mouse_position.y - initial_mouse_position.y
+		};
+
+		App->renderer->DrawRectangleFill(
+			initial_mouse_position.x - this->bg_rect.x, initial_mouse_position.y - this->bg_rect.y,
+			diff_point.x, diff_point.y,
 			this->tools.GetColor()
 		);
 	}

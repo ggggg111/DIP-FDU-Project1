@@ -38,6 +38,8 @@ private:
 	void UseLine();
 	void UseEllipse();
 	void UseEllipseFill();
+	void UseRectangle();
+	void UseRectangleFill();
 
 public:
 	EditorToolSelector tools;
