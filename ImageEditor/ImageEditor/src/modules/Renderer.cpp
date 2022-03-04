@@ -140,6 +140,28 @@ void Renderer::DrawCircleFill(const int& x, const int& y, const int& radius, con
 	}
 }
 
+void Renderer::DrawRectangle(const int& x, const int& y, const int& width, const int& height, const ImVec4& color)
+{
+	rectangleRGBA(
+		this->renderer,
+		x, y,
+		x + width,
+		y + height,
+		color.x, color.y, color.z, color.w
+	);
+}
+
+void Renderer::DrawRectangleFill(const int& x, const int& y, const int& width, const int& height, const ImVec4& color)
+{
+	boxRGBA(
+		this->renderer,
+		x, y,
+		x + width,
+		y + height,
+		color.x, color.y, color.z, color.w
+	);
+}
+
 void Renderer::DrawEllipse(const int& x, const int& y, const int& radius_x, const int& radius_y, const ImVec4& color)
 {
 	ellipseRGBA(

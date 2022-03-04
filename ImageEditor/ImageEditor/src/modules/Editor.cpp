@@ -67,6 +67,18 @@ void Editor::Update()
 
 			break;
 		}
+		case TOOLS::RECTANGLE_BRUSH:
+		{
+			this->UseRectangleBrush();
+
+			break;
+		}
+		case TOOLS::RECTANGLE_BRUSH_FILL:
+		{
+			this->UseRectangleBrushFill();
+
+			break;
+		}
 		case TOOLS::LINE:
 		{
 			this->UseLine();
@@ -216,11 +228,13 @@ void Editor::ToolSelection()
 {
 	ImGui::Begin("Tools");
 
-	static const char* items[7] = {
+	static const char* items[9] = {
 		"Standard Brush",
 		"Rubber",
 		"Circle Brush",
 		"Circle Brush Fill",
+		"Square Brush",
+		"Square Brush Fill",
 		"Line",
 		"Ellipse",
 		"Ellipse Fill"
@@ -281,6 +295,32 @@ void Editor::UseCirleBrushFill()
 		App->renderer->DrawCircleFill(
 			mouse_position_x - this->bg_rect.x, mouse_position_y - this->bg_rect.y,
 			this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
+}
+
+void Editor::UseRectangleBrush()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawRectangle(
+			mouse_position_x, mouse_position_y,
+			this->tools.tool_size, this->tools.tool_size,
+			this->tools.GetColor()
+		);
+	}
+}
+
+void Editor::UseRectangleBrushFill()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN
+		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
+	{
+		App->renderer->DrawRectangleFill(
+			mouse_position_x, mouse_position_y,
+			this->tools.tool_size, this->tools.tool_size,
 			this->tools.GetColor()
 		);
 	}

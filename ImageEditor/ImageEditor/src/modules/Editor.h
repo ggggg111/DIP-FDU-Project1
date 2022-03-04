@@ -33,6 +33,8 @@ private:
 	void UseRubber(const int& button);
 	void UseCirleBrush();
 	void UseCirleBrushFill();
+	void UseRectangleBrush();
+	void UseRectangleBrushFill();
 	void UseLine();
 	void UseEllipse();
 	void UseEllipseFill();

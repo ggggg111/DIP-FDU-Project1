@@ -57,7 +57,6 @@ void Input::PreUpdate()
 				case SDL_MOUSEBUTTONUP:
 				{
 					this->mouse_buttons[e.button.button - 1] = KEY_STATE::KEY_UP;
-					printf("Mouse button %d up(%d)\n", e.button.button - 1, KEY_STATE::KEY_UP);
 
 					break;
 				}

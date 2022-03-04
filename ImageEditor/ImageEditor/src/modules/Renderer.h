@@ -21,6 +21,8 @@ public:
 	void DrawLine(const int& x1, const int& y1, const int& x2, const int& y2, const int& size, const ImVec4& color);
 	void DrawCircle(const int& x, const int& y, const int& radius, const ImVec4& color);
 	void DrawCircleFill(const int& x, const int& y, const int& radius, const ImVec4& color);
+	void DrawRectangle(const int& x, const int& y, const int& width, const int& height, const ImVec4& color);
+	void DrawRectangleFill(const int& x, const int& y, const int& width, const int& height, const ImVec4& color);
 	void DrawEllipse(const int& x, const int& y, const int& radius_x, const int& radius_y, const ImVec4& color);
 	void DrawEllipseFill(const int& x, const int& y, const int& radius_x, const int& radius_y, const ImVec4& color);
 
