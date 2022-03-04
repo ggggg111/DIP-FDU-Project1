@@ -306,7 +306,7 @@ void Editor::UseRectangleBrush()
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
 		App->renderer->DrawRectangle(
-			mouse_position_x, mouse_position_y,
+			mouse_position_x - this->tools.tool_size / 2, mouse_position_y - this->tools.tool_size / 2,
 			this->tools.tool_size, this->tools.tool_size,
 			this->tools.GetColor()
 		);
@@ -319,7 +319,7 @@ void Editor::UseRectangleBrushFill()
 		|| App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT)
 	{
 		App->renderer->DrawRectangleFill(
-			mouse_position_x, mouse_position_y,
+			mouse_position_x - this->tools.tool_size / 2, mouse_position_y - this->tools.tool_size / 2,
 			this->tools.tool_size, this->tools.tool_size,
 			this->tools.GetColor()
 		);
