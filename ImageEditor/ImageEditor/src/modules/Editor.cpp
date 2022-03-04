@@ -85,27 +85,30 @@ void Editor::Update()
 
 	static SDL_Point mouse_to_bg_initial_distance = { 0, 0 };
 	
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN)
+	if (this->bg != nullptr)
 	{
-		int mouse_position_x, mouse_position_y;
-		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_DOWN)
+		{
+			int mouse_position_x, mouse_position_y;
+			App->input->GetMousePosition(mouse_position_x, mouse_position_y);
 
-		mouse_to_bg_initial_distance = {
-			mouse_position_x - this->bg_rect.x,
-			mouse_position_y - this->bg_rect.y
-		};
-	}
+			mouse_to_bg_initial_distance = {
+				mouse_position_x - this->bg_rect.x,
+				mouse_position_y - this->bg_rect.y
+			};
+		}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
-	{
-		int mouse_position_x, mouse_position_y;
-		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+		{
+			int mouse_position_x, mouse_position_y;
+			App->input->GetMousePosition(mouse_position_x, mouse_position_y);
 
-		this->bg_rect = {
-			mouse_position_x - mouse_to_bg_initial_distance.x,
-			mouse_position_y - mouse_to_bg_initial_distance.y,
-			this->bg_rect.w, this->bg_rect.h
-		};
+			this->bg_rect = {
+				mouse_position_x - mouse_to_bg_initial_distance.x,
+				mouse_position_y - mouse_to_bg_initial_distance.y,
+				this->bg_rect.w, this->bg_rect.h
+			};
+		}
 	}
 	
 	App->renderer->SetRenderTarget(nullptr);
