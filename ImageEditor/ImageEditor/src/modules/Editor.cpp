@@ -290,14 +290,15 @@ void Editor::SaveImg(SDL_Texture* texture, const std::string& path) const
 	ImageLoader::SaveTexture(App->renderer->renderer, texture, path);
 }
 
-void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target)
+void Editor::RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target, const bool& assign_new_bg_rect)
 {
 	SDL_SetRenderTarget(renderer, target);
 
 	int w, h;
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
-	this->bg_rect = { 0, 0, w, h };
+	if(assign_new_bg_rect)
+		this->bg_rect = { 0, 0, w, h };
 
 	if (texture)
 	{

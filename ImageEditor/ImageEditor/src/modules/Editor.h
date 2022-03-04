@@ -23,7 +23,7 @@ public:
 	SDL_Texture* LoadImg(const std::string& path) const;
 	void SaveImg(SDL_Texture* texture, const std::string& path) const;
 
-	void RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target);
+	void RenderImg(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Texture* target, const bool& assign_new_bg_rect=true);
 
 private:
 	void MainMenuBar();

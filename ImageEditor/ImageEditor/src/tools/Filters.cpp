@@ -72,7 +72,7 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 
 	SDL_FreeFormat(pixel_format);
 
-	App->editor->RenderImg(App->renderer->renderer, filter, target);
+	App->editor->RenderImg(App->renderer->renderer, filter, target, false);
 }
 
 void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& kernel_size)
@@ -229,7 +229,7 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 
 	SDL_FreeFormat(pixel_format);
 
-	App->editor->RenderImg(App->renderer->renderer, filter, target);
+	App->editor->RenderImg(App->renderer->renderer, filter, target, false);
 }
 
 void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
@@ -297,5 +297,5 @@ void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 
 	SDL_FreeFormat(pixel_format);
 
-	App->editor->RenderImg(App->renderer->renderer, filter, target);
+	App->editor->RenderImg(App->renderer->renderer, filter, target, false);
 }
