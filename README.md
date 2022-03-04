@@ -10,9 +10,9 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 ## Features
 
-- Load images in *.jpg/.png/.bmp* formats.
+- Load images in *.jpg*/*.png*/*.bmp* formats.
   
-- Save images in *.jpg/.png/.bmp* formats.
+- Save images in *.jpg*/*.png*/*.bmp* formats.
 
 - Editing tools, including a standard brush, a rubber, circle and square brushes, lines, ellipses, and rectangles. The color and size of the tool can be tweaked.
   
