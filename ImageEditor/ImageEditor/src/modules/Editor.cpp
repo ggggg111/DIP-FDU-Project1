@@ -347,18 +347,66 @@ void Editor::UseEllipse()
 			mouse_position_y
 		};
 
-		/*App->renderer->DrawCircle(
-			initial_mouse_position.x, initial_mouse_position.y,
-			final_mouse_position.x, final_mouse_position.y,
-			this->tools.tool_size,
+		SDL_Point mid_point = {
+			(final_mouse_position.x - initial_mouse_position.x) / 2 + initial_mouse_position.x,
+			(final_mouse_position.y - initial_mouse_position.y) / 2 + initial_mouse_position.y
+		};
+
+		SDL_Point radius = {
+			(final_mouse_position.x - initial_mouse_position.x) / 2,
+			(final_mouse_position.y - initial_mouse_position.y) / 2
+		};
+
+		App->renderer->DrawEllipse(
+			mid_point.x, mid_point.y,
+			radius.x, radius.y,
 			this->tools.GetColor()
-		);*/
+		);
 	}
 }
 
 void Editor::UseEllipseFill()
 {
+	static SDL_Point initial_mouse_position = { 0, 0 };
+	static SDL_Point final_mouse_position = { 0, 0 };
 
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		initial_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP)
+	{
+		int mouse_position_x, mouse_position_y;
+		App->input->GetMousePosition(mouse_position_x, mouse_position_y);
+
+		final_mouse_position = {
+			mouse_position_x,
+			mouse_position_y
+		};
+
+		SDL_Point mid_point = {
+			(final_mouse_position.x - initial_mouse_position.x) / 2 + initial_mouse_position.x,
+			(final_mouse_position.y - initial_mouse_position.y) / 2 + initial_mouse_position.y
+		};
+
+		SDL_Point radius = {
+			(final_mouse_position.x - initial_mouse_position.x) / 2,
+			(final_mouse_position.y - initial_mouse_position.y) / 2
+		};
+
+		App->renderer->DrawEllipseFill(
+			mid_point.x, mid_point.y,
+			radius.x, radius.y,
+			this->tools.GetColor()
+		);
+	}
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
