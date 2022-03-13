@@ -192,6 +192,7 @@
     <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\tools\Filters.h" />
     <ClInclude Include="src\tools\ImageLoader.h" />
+    <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdlrenderer.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />

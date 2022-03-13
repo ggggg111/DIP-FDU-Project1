@@ -6,6 +6,7 @@
 #include "modules/Renderer.h"
 #include "modules/Window.h"
 #include "modules/Editor.h"
+#include "utils/Utils.h"
 #include "Application.h"
 #include "Filters.h"
 
@@ -110,15 +111,8 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		}
 	}
 
-	Uint32** u_target_pixels_2d;
-	u_target_pixels_2d = new Uint32*[height];
-	for (int i = 0; i < height; ++i)
-		u_target_pixels_2d[i] = new Uint32[width];
-
-	Uint32** u_filter_pixels_2d;
-	u_filter_pixels_2d = new Uint32 * [height];
-	for (int i = 0; i < height; ++i)
-		u_filter_pixels_2d[i] = new Uint32[width];
+	Uint32** u_target_pixels_2d = Array2D<Uint32>(width, height);
+	Uint32** u_filter_pixels_2d = Array2D<Uint32>(width, height);
 
 	for (int row = 0; row < height; ++row)
 	{

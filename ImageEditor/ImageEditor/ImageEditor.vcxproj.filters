@@ -40,5 +40,6 @@
     <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\modules\Module.h" />
     <ClInclude Include="src\tools\Filters.h" />
+    <ClInclude Include="src\utils\Utils.h" />
   </ItemGroup>
 </Project>
