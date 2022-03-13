@@ -174,19 +174,8 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 
 	SDL_UnlockTexture(filter);
 
-	for (int i = 0; i < height; ++i)
-	{
-		delete[] u_target_pixels_2d[i];
-	}
-
-	delete[] u_target_pixels_2d;
-
-	for (int i = 0; i < height; ++i)
-	{
-		delete[] u_filter_pixels_2d[i];
-	}
-
-	delete[] u_filter_pixels_2d;
+	RELEASE_ARRAY2D(u_target_pixels_2d, height);
+	RELEASE_ARRAY2D(u_filter_pixels_2d, height);
 
 	SDL_FreeSurface(target_surface);
 

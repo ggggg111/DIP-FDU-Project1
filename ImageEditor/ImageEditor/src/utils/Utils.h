@@ -1,6 +1,13 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#define RELEASE_ARRAY2D(arr, h) \
+	for (int i = 0; i < h; ++i) \
+	{ \
+		delete[] arr[i]; \
+	} \
+	delete[] arr;
+
 template<typename T>
 T** Array2D(const int& width, const int& height)
 {
