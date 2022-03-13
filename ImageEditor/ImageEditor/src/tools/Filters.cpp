@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-
 #include "SDL.h"
 
 #include "modules/Renderer.h"
@@ -101,15 +98,7 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
-	std::vector<float> kernel(kernel_size * kernel_size, 0.0f);
-	
-	for (int i = 0; i < kernel_size; ++i)
-	{
-		for (int j = 0; j < kernel_size; ++j)
-		{
-			kernel[i * kernel_size + j] = 1.0f / 9.0f;
-		}
-	}
+	std::vector<float> kernel = Filters::CreateKernel(3, 1.0f / 9.0f);
 
 	Uint32** u_target_pixels_2d = Array2D<Uint32>(width, height);
 	Uint32** u_filter_pixels_2d = Array2D<Uint32>(width, height);
@@ -263,4 +252,19 @@ void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 	SDL_FreeFormat(pixel_format);
 
 	App->editor->RenderImg(filter, target, false);
+}
+
+std::vector<float> Filters::CreateKernel(const int& kernel_size, const float& value)
+{
+	std::vector<float> kernel(kernel_size * kernel_size, 0.0f);
+
+	for (int i = 0; i < kernel_size; ++i)
+	{
+		for (int j = 0; j < kernel_size; ++j)
+		{
+			kernel[i * kernel_size + j] = value;
+		}
+	}
+
+	return kernel;
 }
