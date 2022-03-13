@@ -14,47 +14,38 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	int target_w, target_h;
-	SDL_QueryTexture(target, nullptr, nullptr, &target_w, &target_h);
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
 
 	App->renderer->SetRenderTarget(target);
 
 	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
 		0,
-		target_w, target_h,
+		width, height,
 		32,
 		App->renderer->texture_format
 	);
 
-	if (SDL_RenderReadPixels(
+	SDL_RenderReadPixels(
 		App->renderer->renderer,
 		nullptr,
 		App->renderer->texture_format,
 		target_surface->pixels,
-		target_surface->pitch)
-		!= 0
-		)
-	{
-		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
-	}
+		target_surface->pitch
+	);
 
 	App->renderer->SetRenderTarget(nullptr);
 
 	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 	
-	int pitch, w, h;
-	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
-
+	int pitch;
 	void* filter_pixels;
 
-	if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
-	{
-		printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
-	}
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
-	
-	for (int i = 0; i < w * h; ++i)
+
+	for (int i = 0; i < width * height; ++i)
 	{
 		Uint8 target_r, target_g, target_b;
 		SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
@@ -64,12 +55,10 @@ void Filters::ApplyGrayScale(SDL_Texture* target, SDL_Texture* filter)
 		u_filter_pixels[i] = SDL_MapRGB(pixel_format, grayscale, grayscale, grayscale);
 	}
 
-	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
 
 	SDL_UnlockTexture(filter);
-
 	SDL_FreeSurface(target_surface);
-
 	SDL_FreeFormat(pixel_format);
 
 	App->editor->RenderImg(filter, target, false);
@@ -80,43 +69,34 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	int target_w, target_h;
-	SDL_QueryTexture(target, nullptr, nullptr, &target_w, &target_h);
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
 
 	App->renderer->SetRenderTarget(target);
 
 	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
 		0,
-		target_w, target_h,
+		width, height,
 		32,
 		App->renderer->texture_format
 	);
 
-	if (SDL_RenderReadPixels(
+	SDL_RenderReadPixels(
 		App->renderer->renderer,
 		nullptr,
 		App->renderer->texture_format,
 		target_surface->pixels,
-		target_surface->pitch)
-		!= 0
-		)
-	{
-		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
-	}
+		target_surface->pitch
+	);
 
 	App->renderer->SetRenderTarget(nullptr);
 
 	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 
-	int pitch, w, h;
-	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
-
+	int pitch;
 	void* filter_pixels;
 
-	if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
-	{
-		printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
-	}
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
@@ -131,26 +111,26 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	}
 
 	Uint32** u_target_pixels_2d;
-	u_target_pixels_2d = new Uint32*[h];
-	for (int i = 0; i < h; ++i)
-		u_target_pixels_2d[i] = new Uint32[w];
+	u_target_pixels_2d = new Uint32*[height];
+	for (int i = 0; i < height; ++i)
+		u_target_pixels_2d[i] = new Uint32[width];
 
 	Uint32** u_filter_pixels_2d;
-	u_filter_pixels_2d = new Uint32 * [h];
-	for (int i = 0; i < h; ++i)
-		u_filter_pixels_2d[i] = new Uint32[w];
+	u_filter_pixels_2d = new Uint32 * [height];
+	for (int i = 0; i < height; ++i)
+		u_filter_pixels_2d[i] = new Uint32[width];
 
-	for (int row = 0; row < h; ++row)
+	for (int row = 0; row < height; ++row)
 	{
-		for (int col = 0; col < w; ++col)
+		for (int col = 0; col < width; ++col)
 		{
-			u_target_pixels_2d[row][col] = u_target_pixels[(row * w + col)];
+			u_target_pixels_2d[row][col] = u_target_pixels[(row * width + col)];
 		}
 	}
 
-	for (int row = 0; row < h; ++row)
+	for (int row = 0; row < height; ++row)
 	{
-		for (int col = 0; col < w; ++col)
+		for (int col = 0; col < width; ++col)
 		{
 			Uint8 filter_r, filter_g, filter_b;
 
@@ -174,7 +154,7 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 					int target_col = col + k_col;
 					
 					if (target_row >= 0 && target_col >= 0
-						&& target_row < h && target_col < w)
+						&& target_row < height && target_col < width)
 					{
 						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
 					}
@@ -199,26 +179,26 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 		}
 	}
 
-	for (int row = 0; row < h; ++row)
+	for (int row = 0; row < height; ++row)
 	{
-		for (int col = 0; col < w; ++col)
+		for (int col = 0; col < width; ++col)
 		{
-			u_filter_pixels[row * w + col] = u_filter_pixels_2d[row][col];
+			u_filter_pixels[row * width + col] = u_filter_pixels_2d[row][col];
 		}
 	}
 
-	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
 
 	SDL_UnlockTexture(filter);
 
-	for (int i = 0; i < h; ++i)
+	for (int i = 0; i < height; ++i)
 	{
 		delete[] u_target_pixels_2d[i];
 	}
 
 	delete[] u_target_pixels_2d;
 
-	for (int i = 0; i < h; ++i)
+	for (int i = 0; i < height; ++i)
 	{
 		delete[] u_filter_pixels_2d[i];
 	}
@@ -237,47 +217,38 @@ void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 	Uint32 format = App->renderer->texture_format;
 	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
 
-	int target_w, target_h;
-	SDL_QueryTexture(target, nullptr, nullptr, &target_w, &target_h);
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
 
 	App->renderer->SetRenderTarget(target);
 
 	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
 		0,
-		target_w, target_h,
+		width, height,
 		32,
 		App->renderer->texture_format
 	);
 
-	if (SDL_RenderReadPixels(
+	SDL_RenderReadPixels(
 		App->renderer->renderer,
 		nullptr,
 		App->renderer->texture_format,
 		target_surface->pixels,
-		target_surface->pitch)
-		!= 0
-		)
-	{
-		printf("Error reading pixels. SDL_GetError: %s\n", SDL_GetError());
-	}
+		target_surface->pitch
+	);
 
 	App->renderer->SetRenderTarget(nullptr);
 
 	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
 
-	int pitch, w, h;
-	SDL_QueryTexture(filter, nullptr, nullptr, &w, &h);
-
+	int pitch;
 	void* filter_pixels;
 
-	if (SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch))
-	{
-		printf("Texture can't be locked. SDL_GetError: %s\n", SDL_GetError());
-	}
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
 
 	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
 
-	for (int i = 0; i < w * h; ++i)
+	for (int i = 0; i < width * height; ++i)
 	{
 		Uint8 target_r, target_g, target_b;
 		SDL_GetRGB(u_target_pixels[i], pixel_format, &target_r, &target_g, &target_b);
@@ -289,7 +260,7 @@ void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 		u_filter_pixels[i] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
 	}
 
-	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * h);
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
 
 	SDL_UnlockTexture(filter);
 
