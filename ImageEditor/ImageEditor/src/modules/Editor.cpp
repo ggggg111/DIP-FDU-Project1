@@ -216,6 +216,18 @@ void Editor::MainMenuBar()
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
+				if (ImGui::MenuItem("Test"))
+				{
+					ShellExecuteA(
+						NULL,
+						"open",
+						".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe",
+						"-i .\\vendor\\bin\\realesrgan-ncnn-vulkan\\input.jpg -o .\\vendor\\bin\\realesrgan-ncnn-vulkan\\input_out.jpg -n realesrgan-x4plus",
+						NULL,
+						NULL
+					);
+				}
+
 				ImGui::EndMenu();
 			}
 
