@@ -218,6 +218,50 @@ void Editor::MainMenuBar()
 
 				if (ImGui::MenuItem("Test"))
 				{
+					App->renderer->SetRenderTarget(App->renderer->texture_target);
+
+					int width, height;
+					ImageLoader::GetTextureDimensions(App->renderer->texture_target, &width, &height);
+
+					SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
+						0,
+						App->window->height, height,
+						32,
+						App->renderer->texture_format
+					);
+
+					SDL_RenderReadPixels(
+						App->renderer->renderer,
+						nullptr,
+						App->renderer->texture_format,
+						target_surface->pixels,
+						target_surface->pitch
+					);
+
+					App->renderer->SetRenderTarget(nullptr);
+
+					//Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
+
+					//FILE* tmp = tmpfile();
+
+					char temp_path_file_ext[MAX_PATH] = { 0 };
+					
+					char temp_path[MAX_PATH] = { 0 };
+					GetTempPathA(MAX_PATH, temp_path);
+					printf("%s\n", temp_path);
+
+					char temp_filename[MAX_PATH] = { 0 };
+					tmpnam_s(temp_filename);
+					printf("%s\n", temp_filename);
+
+					char extension[MAX_PATH] = ".jpg";
+
+					strcat_s(temp_path_file_ext, temp_path);
+					strcat_s(temp_path_file_ext, temp_filename);
+					strcat_s(temp_path_file_ext, extension);
+					
+					printf("%s\n", temp_path_file_ext);
+
 					ShellExecuteA(
 						NULL,
 						"open",
