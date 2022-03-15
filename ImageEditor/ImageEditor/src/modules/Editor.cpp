@@ -220,43 +220,45 @@ void Editor::MainMenuBar()
 				{
 					App->renderer->SetRenderTarget(App->renderer->texture_target);
 
-					const char* extension = ".jpg";
+					std::string extension = ".jpg";
 
-					char temp_path_file_ext[MAX_PATH] = { 0 };
+					std::string input_path;
 
 					char temp_filename[MAX_PATH] = { 0 };
 					tmpnam_s(temp_filename);
-					printf("%s\n", temp_filename);
 
-					strcat_s(temp_path_file_ext, temp_filename);
-					strcat_s(temp_path_file_ext, extension);
+					input_path.append(temp_filename).append(extension);
+					printf("%s\n", input_path.c_str());
 
-					printf("%s\n", temp_path_file_ext);
+					ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
 
-					ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, temp_path_file_ext);
+					std::string out_path;
 
-					char out_path_file_ext[MAX_PATH] = { 0 };
 					char out_temp_filename[MAX_PATH] = { 0 };
 					tmpnam_s(out_temp_filename);
-					strcat_s(out_path_file_ext, out_temp_filename);
-					strcat_s(out_path_file_ext, extension);
 
-					char command[MAX_PATH] = { 0 };
-					snprintf(command, MAX_PATH, "-n realesrgan-x4plus -i %s -o %s", temp_path_file_ext, out_path_file_ext);
-					printf("%s\n", command);
+					out_path.append(out_temp_filename).append(extension);
+
+					std::string command = std::string("-n ").append("realesrgan-x4plus")
+						.append(" -i ").append(input_path)
+						.append(" -o ").append(out_path);
+
+					printf("Command: %s\n", command.c_str());
 
 					ShellExecuteA(
 						NULL,
 						"open",
 						".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe",
-						command,
+						command.c_str(),
 						NULL,
 						NULL
 					);
 
 					App->renderer->SetRenderTarget(nullptr);
 
-					this->bg = this->LoadImg(out_path_file_ext);
+					printf("Out path: %s\n", out_path.c_str());
+
+					this->bg = this->LoadImg(out_path);
 					this->RenderImg(this->bg, App->renderer->texture_target);
 				}
 
