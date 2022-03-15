@@ -28,6 +28,7 @@ public:
 private:
 	void MainMenuBar();
 	void ToolSelection();
+	void PopUps();
 
 	void UseStandardBrush();
 	void UseRubber(const int& button);
@@ -41,6 +42,8 @@ private:
 	void UseRectangle();
 	void UseRectangleFill();
 
+	void ApplySuperResolution();
+
 public:
 	EditorToolSelector tools;
 	SDL_Texture* bg;
@@ -52,6 +55,8 @@ private:
 
 	int last_frame_mouse_position_x;
 	int last_frame_mouse_position_y;
+
+	bool super_resolution_popup;
 };
 
 #endif /* __EDITOR_H__ */

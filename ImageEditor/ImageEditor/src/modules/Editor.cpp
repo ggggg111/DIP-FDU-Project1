@@ -11,6 +11,7 @@
 #include "Renderer.h"
 #include "Window.h"
 #include "Input.h"
+#include "GUI.h"
 
 Editor::Editor()
 	: Module(), bg(nullptr)
@@ -27,6 +28,8 @@ void Editor::Start()
 {
 	App->input->GetMousePosition(this->mouse_position_x, this->mouse_position_y);
 	App->input->GetMousePosition(this->last_frame_mouse_position_x, this->last_frame_mouse_position_y);
+
+	super_resolution_popup = false;
 }
 
 void Editor::Update()
@@ -159,8 +162,10 @@ void Editor::CleanUp()
 
 void Editor::DrawGUI()
 {
+	ImGui::ShowDemoWindow();
 	this->MainMenuBar();
 	this->ToolSelection();
+	this->PopUps();
 }
 
 void Editor::MainMenuBar()
@@ -219,58 +224,7 @@ void Editor::MainMenuBar()
 
 				if (ImGui::MenuItem("Super Resolution"))
 				{
-					App->renderer->SetRenderTarget(App->renderer->texture_target);
-
-					std::string extension = ".jpg";
-
-					std::string input_path;
-
-					char temp_filename[MAX_PATH] = { 0 };
-					tmpnam_s(temp_filename);
-
-					input_path.append(temp_filename).append(extension);
-					printf("%s\n", input_path.c_str());
-
-					ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
-
-					std::string out_path;
-
-					char out_temp_filename[MAX_PATH] = { 0 };
-					tmpnam_s(out_temp_filename);
-
-					out_path.append(out_temp_filename).append(extension);
-
-					std::string command = std::string("-n ").append("realesrgan-x4plus")
-						.append(" -i ").append(input_path)
-						.append(" -o ").append(out_path);
-					
-					wchar_t* cmd = CharArrayToLPCWSTR(command.c_str());
-
-					SHELLEXECUTEINFO ShExecInfo = { 0 };
-					ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-					ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-					ShExecInfo.hwnd = NULL;
-					ShExecInfo.lpVerb = NULL;
-					ShExecInfo.lpFile = L".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe";
-					ShExecInfo.lpParameters = cmd;
-					ShExecInfo.lpDirectory = NULL;
-					ShExecInfo.nShow = SW_HIDE;
-					ShExecInfo.hInstApp = NULL;
-
-					printf("Loading...\n");
-
-					ShellExecuteEx(&ShExecInfo);
-					WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
-					CloseHandle(ShExecInfo.hProcess);
-
-					delete cmd;
-
-					App->renderer->SetRenderTarget(nullptr);
-
-					printf("Out path: %s\n", out_path.c_str());
-
-					this->bg = this->LoadImg(out_path);
-					this->RenderImg(this->bg, App->renderer->texture_target);
+					this->super_resolution_popup = true;
 				}
 
 				ImGui::EndMenu();
@@ -316,6 +270,65 @@ void Editor::ToolSelection()
 	ImGui::SliderInt("Size", &this->tools.tool_size, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
 
 	ImGui::End();
+}
+
+void Editor::PopUps()
+{
+	if (this->super_resolution_popup)
+	{
+		ImGui::OpenPopup("Apply Super Resolution");
+
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("Apply Super Resolution", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Options");
+
+			ImGui::Separator();
+
+			enum class SCALE_CONTENTS_TYPE { X2, X4 };
+			static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+			static int scale_contents_type = (int)SCALE_CONTENTS_TYPE::X4;
+
+			ImGui::AlignTextToFramePadding();
+			
+			ImGui::Text("Scale");
+			ImGui::SameLine(); ImGui::RadioButton("x2", &scale_contents_type, (int)SCALE_CONTENTS_TYPE::X2);
+			ImGui::SameLine(); ImGui::RadioButton("x4", &scale_contents_type, (int)SCALE_CONTENTS_TYPE::X4);
+			ImGui::SameLine(); App->gui->HelpMarker("Upscale ratio. Default: 4");
+
+			enum class TILE_NUM { TILE_0, TILE_128, TILE_256, TILE_512, TILE_1024, TILE_COUNT };
+			static int tile_elem = (int)TILE_NUM::TILE_0;
+			const char* tile_elems_names[(int)TILE_NUM::TILE_COUNT] = { "0", "128", "256", "512", "1024"};
+			const char* tile_elem_name = (tile_elem >= 0 && tile_elem < (int)TILE_NUM::TILE_COUNT)
+				? tile_elems_names[tile_elem]
+				: "Unknown";
+
+			ImGui::Text("Tile");
+			ImGui::SameLine(); ImGui::SliderInt("##Tile", &tile_elem, 0, (int)TILE_NUM::TILE_COUNT - 1, tile_elem_name);
+			ImGui::SameLine(); App->gui->HelpMarker("Tile size. Default: 0, meaning no tiles are used");
+
+			if (ImGui::Button("OK", ImVec2(100, 0)))
+			{
+				this->super_resolution_popup = false;
+				this->ApplySuperResolution();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(100, 0)))
+			{
+				this->super_resolution_popup = false;
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
 }
 
 void Editor::UseStandardBrush()
@@ -596,6 +609,62 @@ void Editor::UseRectangleFill()
 			this->tools.GetColor()
 		);
 	}
+}
+
+void Editor::ApplySuperResolution()
+{
+	App->renderer->SetRenderTarget(App->renderer->texture_target);
+
+	std::string extension = ".jpg";
+
+	std::string input_path;
+
+	char temp_filename[MAX_PATH] = { 0 };
+	tmpnam_s(temp_filename);
+
+	input_path.append(temp_filename).append(extension);
+	printf("%s\n", input_path.c_str());
+
+	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
+
+	std::string out_path;
+
+	char out_temp_filename[MAX_PATH] = { 0 };
+	tmpnam_s(out_temp_filename);
+
+	out_path.append(out_temp_filename).append(extension);
+
+	std::string command = std::string("-n ").append("realesrgan-x4plus")
+		.append(" -i ").append(input_path)
+		.append(" -o ").append(out_path);
+
+	wchar_t* cmd = CharArrayToLPCWSTR(command.c_str());
+
+	SHELLEXECUTEINFO ShExecInfo = { 0 };
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+	ShExecInfo.hwnd = NULL;
+	ShExecInfo.lpVerb = NULL;
+	ShExecInfo.lpFile = L".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe";
+	ShExecInfo.lpParameters = cmd;
+	ShExecInfo.lpDirectory = NULL;
+	ShExecInfo.nShow = SW_HIDE;
+	ShExecInfo.hInstApp = NULL;
+
+	printf("Loading...\n");
+
+	ShellExecuteEx(&ShExecInfo);
+	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+	CloseHandle(ShExecInfo.hProcess);
+
+	delete cmd;
+
+	App->renderer->SetRenderTarget(nullptr);
+
+	printf("Out path: %s\n", out_path.c_str());
+
+	this->bg = this->LoadImg(out_path);
+	this->RenderImg(this->bg, App->renderer->texture_target);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
