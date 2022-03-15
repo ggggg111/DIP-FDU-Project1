@@ -220,56 +220,44 @@ void Editor::MainMenuBar()
 				{
 					App->renderer->SetRenderTarget(App->renderer->texture_target);
 
-					int width, height;
-					ImageLoader::GetTextureDimensions(App->renderer->texture_target, &width, &height);
-
-					SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
-						0,
-						App->window->height, height,
-						32,
-						App->renderer->texture_format
-					);
-
-					SDL_RenderReadPixels(
-						App->renderer->renderer,
-						nullptr,
-						App->renderer->texture_format,
-						target_surface->pixels,
-						target_surface->pitch
-					);
-
-					App->renderer->SetRenderTarget(nullptr);
-
-					//Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
-
-					//FILE* tmp = tmpfile();
+					const char* extension = ".jpg";
 
 					char temp_path_file_ext[MAX_PATH] = { 0 };
-					
-					char temp_path[MAX_PATH] = { 0 };
-					GetTempPathA(MAX_PATH, temp_path);
-					printf("%s\n", temp_path);
 
 					char temp_filename[MAX_PATH] = { 0 };
 					tmpnam_s(temp_filename);
 					printf("%s\n", temp_filename);
 
-					char extension[MAX_PATH] = ".jpg";
-
-					strcat_s(temp_path_file_ext, temp_path);
 					strcat_s(temp_path_file_ext, temp_filename);
 					strcat_s(temp_path_file_ext, extension);
-					
+
 					printf("%s\n", temp_path_file_ext);
+
+					ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, temp_path_file_ext);
+
+					char out_path_file_ext[MAX_PATH] = { 0 };
+					char out_temp_filename[MAX_PATH] = { 0 };
+					tmpnam_s(out_temp_filename);
+					strcat_s(out_path_file_ext, out_temp_filename);
+					strcat_s(out_path_file_ext, extension);
+
+					char command[MAX_PATH] = { 0 };
+					snprintf(command, MAX_PATH, "-n realesrgan-x4plus -i %s -o %s", temp_path_file_ext, out_path_file_ext);
+					printf("%s\n", command);
 
 					ShellExecuteA(
 						NULL,
 						"open",
 						".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe",
-						"-i .\\vendor\\bin\\realesrgan-ncnn-vulkan\\input.jpg -o .\\vendor\\bin\\realesrgan-ncnn-vulkan\\input_out.jpg -n realesrgan-x4plus",
+						command,
 						NULL,
 						NULL
 					);
+
+					App->renderer->SetRenderTarget(nullptr);
+
+					this->bg = this->LoadImg(out_path_file_ext);
+					this->RenderImg(this->bg, App->renderer->texture_target);
 				}
 
 				ImGui::EndMenu();

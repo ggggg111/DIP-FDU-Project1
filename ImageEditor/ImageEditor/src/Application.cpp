@@ -13,7 +13,7 @@
 #include "modules/Editor.h"
 
 Application::Application()
-    : running(true)
+    : running(true), name("Image Editor")
 {
     this->AssignPlatform();
 

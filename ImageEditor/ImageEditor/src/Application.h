@@ -49,6 +49,7 @@ public:
     Editor* editor;
 
     bool running;
+    std::string name;
 
 private:
     std::list<Module*> modules;
