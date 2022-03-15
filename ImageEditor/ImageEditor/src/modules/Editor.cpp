@@ -622,7 +622,6 @@ void Editor::ApplySuperResolution()
 	tmpnam_s(temp_filename);
 
 	input_path.append(temp_filename).append(extension);
-	printf("%s\n", input_path.c_str());
 
 	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
 
@@ -659,8 +658,6 @@ void Editor::ApplySuperResolution()
 	delete cmd;
 
 	App->renderer->SetRenderTarget(nullptr);
-
-	printf("Out path: %s\n", out_path.c_str());
 
 	this->bg = this->LoadImg(out_path);
 	this->RenderImg(this->bg, App->renderer->texture_target);
