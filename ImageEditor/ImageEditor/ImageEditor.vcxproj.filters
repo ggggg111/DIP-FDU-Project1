@@ -18,6 +18,7 @@
     <ClCompile Include="src\tools\ImageLoader.cpp" />
     <ClCompile Include="src\tools\EditorToolSelector.cpp" />
     <ClCompile Include="src\tools\Filters.cpp" />
+    <ClCompile Include="src\utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />

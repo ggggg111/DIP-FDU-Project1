@@ -27,7 +27,6 @@ SDL_Texture* ImageLoader::LoadTexture(SDL_Renderer* renderer, const std::string&
 void ImageLoader::SaveTexture(SDL_Renderer* renderer, SDL_Texture* texture, const std::string& path)
 {
     std::string extension = std::filesystem::path(path).extension().string();
-    printf("Extension of file is: %s\n", extension.c_str());
 
     SDL_Texture* target = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, texture);

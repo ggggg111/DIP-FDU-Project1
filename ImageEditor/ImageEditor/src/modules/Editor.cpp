@@ -5,6 +5,7 @@
 
 #include "tools/ImageLoader.h"
 #include "tools/Filters.h"
+#include "utils/Utils.h"
 #include "Application.h"
 #include "Editor.h"
 #include "Renderer.h"
@@ -216,7 +217,7 @@ void Editor::MainMenuBar()
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
-				if (ImGui::MenuItem("Test"))
+				if (ImGui::MenuItem("Super Resolution"))
 				{
 					App->renderer->SetRenderTarget(App->renderer->texture_target);
 
@@ -242,17 +243,27 @@ void Editor::MainMenuBar()
 					std::string command = std::string("-n ").append("realesrgan-x4plus")
 						.append(" -i ").append(input_path)
 						.append(" -o ").append(out_path);
+					
+					wchar_t* cmd = CharArrayToLPCWSTR(command.c_str());
 
-					printf("Command: %s\n", command.c_str());
+					SHELLEXECUTEINFO ShExecInfo = { 0 };
+					ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+					ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+					ShExecInfo.hwnd = NULL;
+					ShExecInfo.lpVerb = NULL;
+					ShExecInfo.lpFile = L".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe";
+					ShExecInfo.lpParameters = cmd;
+					ShExecInfo.lpDirectory = NULL;
+					ShExecInfo.nShow = SW_HIDE;
+					ShExecInfo.hInstApp = NULL;
 
-					ShellExecuteA(
-						NULL,
-						"open",
-						".\\vendor\\bin\\realesrgan-ncnn-vulkan\\realesrgan-ncnn-vulkan.exe",
-						command.c_str(),
-						NULL,
-						NULL
-					);
+					printf("Loading...\n");
+
+					ShellExecuteEx(&ShExecInfo);
+					WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+					CloseHandle(ShExecInfo.hProcess);
+
+					delete cmd;
 
 					App->renderer->SetRenderTarget(nullptr);
 
