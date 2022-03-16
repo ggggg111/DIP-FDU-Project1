@@ -29,7 +29,8 @@ void Editor::Start()
 	App->input->GetMousePosition(this->mouse_position_x, this->mouse_position_y);
 	App->input->GetMousePosition(this->last_frame_mouse_position_x, this->last_frame_mouse_position_y);
 
-	super_resolution_popup = false;
+	this->preferences_panel = false;
+	this->super_resolution_popup = false;
 }
 
 void Editor::Update()
@@ -165,6 +166,7 @@ void Editor::DrawGUI()
 	ImGui::ShowDemoWindow();
 	this->MainMenuBar();
 	this->ToolSelection();
+	this->Panels();
 	this->PopUps();
 }
 
@@ -238,6 +240,16 @@ void Editor::MainMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Settings"))
+		{
+			if (ImGui::MenuItem("Preferences"))
+			{
+				this->preferences_panel = true;
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("About"))
@@ -275,6 +287,29 @@ void Editor::ToolSelection()
 	ImGui::SliderInt("Size", &this->tools.tool_size, 1, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
 
 	ImGui::End();
+}
+
+void Editor::Panels()
+{
+	if (this->preferences_panel)
+	{
+		if (ImGui::Begin("Preferences", &this->preferences_panel))
+		{
+			ImGui::Text("User Interface");
+
+			static const char* items[] = { "Dark", "Green", "Blue"};
+			static UI_STYLE item = App->gui->style;
+
+			ImGui::Text("Style");
+			ImGui::SameLine();
+			if (ImGui::Combo("##Combo", (int*)&item, items, IM_ARRAYSIZE(items)))
+			{
+				App->gui->SetUIStyle(item);
+			}
+
+			ImGui::End();
+		}
+	}
 }
 
 void Editor::PopUps()

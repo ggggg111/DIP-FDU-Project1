@@ -28,6 +28,7 @@ public:
 private:
 	void MainMenuBar();
 	void ToolSelection();
+	void Panels();
 	void PopUps();
 
 	void UseStandardBrush();
@@ -56,6 +57,7 @@ private:
 	int last_frame_mouse_position_x;
 	int last_frame_mouse_position_y;
 
+	bool preferences_panel;
 	bool super_resolution_popup;
 };
 
