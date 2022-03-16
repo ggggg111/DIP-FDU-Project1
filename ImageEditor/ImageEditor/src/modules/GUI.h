@@ -9,7 +9,8 @@ enum class UI_STYLE
 {
 	DARK = 0,
 	GREEN,
-	DARK_BLUE
+	DARK_BLUE,
+	DARKER
 };
 
 class GUI : public Module

@@ -297,7 +297,7 @@ void Editor::Panels()
 		{
 			ImGui::Text("User Interface");
 
-			static const char* items[] = { "Dark", "Green", "Blue"};
+			static const char* items[] = { "Dark", "Green", "Blue", "Darker"};
 			static UI_STYLE item = App->gui->style;
 
 			ImGui::Text("Style");
