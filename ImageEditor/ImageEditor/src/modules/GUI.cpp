@@ -27,7 +27,7 @@ void GUI::Start()
 	io.Fonts->AddFontFromFileTTF("fonts/NotoSans-Regular.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesDefault());
 
 	ImGui::StyleColorsDark();
-	this->style = UI_STYLE::DARKER;
+	this->style = UI_STYLE::DARK_BLUE;
 	this->SetUIStyle(this->style);
 
 	ImGui_ImplSDL2_InitForSDLRenderer(App->window->window, App->renderer->renderer);
