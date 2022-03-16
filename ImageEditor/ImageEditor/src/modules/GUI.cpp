@@ -22,7 +22,10 @@ void GUI::Start()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
 	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontFromFileTTF("fonts/NotoSans-Regular.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesDefault());
+
 	ImGui::StyleColorsDark();
 	this->style = UI_STYLE::DARK;
 	this->SetUIStyle(this->style);
