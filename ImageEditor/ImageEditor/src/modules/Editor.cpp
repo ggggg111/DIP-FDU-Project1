@@ -162,6 +162,7 @@ void Editor::CleanUp()
 
 void Editor::DrawGUI()
 {
+	ImGui::ShowDemoWindow();
 	this->MainMenuBar();
 	this->ToolSelection();
 	this->PopUps();
@@ -221,6 +222,11 @@ void Editor::MainMenuBar()
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Enhancement"))
+			{
 				if (ImGui::MenuItem("Super Resolution"))
 				{
 					this->super_resolution_popup = true;
