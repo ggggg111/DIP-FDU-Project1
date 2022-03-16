@@ -652,8 +652,11 @@ void Editor::ApplySuperResolution()
 	printf("Loading...\n");
 
 	ShellExecuteEx(&ShExecInfo);
-	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
-	CloseHandle(ShExecInfo.hProcess);
+	if (ShExecInfo.hProcess != NULL)
+	{
+		WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+		CloseHandle(ShExecInfo.hProcess);
+	}
 
 	delete cmd;
 
