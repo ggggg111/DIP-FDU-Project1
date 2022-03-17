@@ -30,6 +30,14 @@ void GUI::Start()
 	this->style = UI_STYLE::DARK_BLUE;
 	this->SetUIStyle(this->style);
 
+	ImGuiStyle* imgui_style = &ImGui::GetStyle();
+	imgui_style->WindowRounding = 5;
+	imgui_style->ChildRounding = 5;
+	imgui_style->FrameRounding = 5;
+	imgui_style->PopupRounding = 5;
+	imgui_style->ScrollbarRounding = 5;
+	imgui_style->TabRounding = 5;
+
 	ImGui_ImplSDL2_InitForSDLRenderer(App->window->window, App->renderer->renderer);
 	ImGui_ImplSDLRenderer_Init(App->renderer->renderer);
 }
@@ -73,13 +81,13 @@ void GUI::HelpMarker(const std::string& desc)
 
 void GUI::SetUIStyle(const UI_STYLE& style)
 {
+	ImVec4* colors = ImGui::GetStyle().Colors;
+	
 	switch (style)
 	{
+
 		case UI_STYLE::DARK:
 		{
-			ImGuiStyle* style = &ImGui::GetStyle();
-			ImVec4* colors = style->Colors;
-
 			colors[ImGuiCol_Text] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
 			colors[ImGuiCol_TextDisabled] = ImVec4(0.500f, 0.500f, 0.500f, 1.000f);
 			colors[ImGuiCol_WindowBg] = ImVec4(0.180f, 0.180f, 0.180f, 1.000f);
@@ -129,25 +137,11 @@ void GUI::SetUIStyle(const UI_STYLE& style)
 			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
 			colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.000f, 0.000f, 0.000f, 0.586f);
 
-			style->ChildRounding = 4.0f;
-			style->FrameBorderSize = 1.0f;
-			style->FrameRounding = 2.0f;
-			style->GrabMinSize = 7.0f;
-			style->PopupRounding = 2.0f;
-			style->ScrollbarRounding = 12.0f;
-			style->ScrollbarSize = 13.0f;
-			style->TabBorderSize = 1.0f;
-			style->TabRounding = 0.0f;
-			style->WindowRounding = 4.0f;
-
 			break;
 		}
 
 		case UI_STYLE::GREEN:
 		{
-			ImGuiStyle* style = &ImGui::GetStyle();
-			ImVec4* colors = style->Colors;
-
 			colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 			colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
 			colors[ImGuiCol_WindowBg] = ImVec4(0.86f, 0.86f, 0.86f, 1.00f);
@@ -190,32 +184,11 @@ void GUI::SetUIStyle(const UI_STYLE& style)
 			colors[ImGuiCol_NavHighlight] = colors[ImGuiCol_HeaderHovered];
 			colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
 
-			style->WindowRounding = 2.0f;
-			style->ScrollbarRounding = 3.0f;
-			style->GrabRounding = 2.0f;
-			style->AntiAliasedLines = true;
-			style->AntiAliasedFill = true;
-			style->WindowRounding = 2;
-			style->ChildRounding = 2;
-			style->ScrollbarSize = 16;
-			style->ScrollbarRounding = 3;
-			style->GrabRounding = 2;
-			style->ItemSpacing.x = 10;
-			style->ItemSpacing.y = 4;
-			style->IndentSpacing = 22;
-			style->FramePadding.x = 6;
-			style->FramePadding.y = 4;
-			style->Alpha = 1.0f;
-			style->FrameRounding = 3.0f;
-
 			break;
 		}
 
 		case UI_STYLE::DARK_BLUE:
 		{
-			ImGuiStyle* style = &ImGui::GetStyle();
-			ImVec4* colors = ImGui::GetStyle().Colors;
-
 			colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
 			colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
 			colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
@@ -265,17 +238,11 @@ void GUI::SetUIStyle(const UI_STYLE& style)
 			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 			colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-			style->FrameRounding = 4.0f;
-			style->GrabRounding = 4.0f;
-
 			break;
 		}
 
 		case UI_STYLE::DARKER:
 		{
-			ImGuiStyle* style = &ImGui::GetStyle();
-			ImVec4* colors = ImGui::GetStyle().Colors;
-
 			colors[ImGuiCol_Text] = ImVec4(0.92f, 0.92f, 0.92f, 1.00f);
 			colors[ImGuiCol_TextDisabled] = ImVec4(0.44f, 0.44f, 0.44f, 1.00f);
 			colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
@@ -324,23 +291,6 @@ void GUI::SetUIStyle(const UI_STYLE& style)
 			colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
 			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 			colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-
-			style->FramePadding = ImVec2(4, 2);
-			style->ItemSpacing = ImVec2(10, 2);
-			style->IndentSpacing = 12;
-			style->ScrollbarSize = 10;
-
-			style->WindowRounding = 4;
-			style->FrameRounding = 4;
-			style->PopupRounding = 4;
-			style->ScrollbarRounding = 6;
-			style->GrabRounding = 4;
-			style->TabRounding = 4;
-
-			style->WindowTitleAlign = ImVec2(1.0f, 0.5f);
-			style->WindowMenuButtonPosition = ImGuiDir_Right;
-
-			style->DisplaySafeAreaPadding = ImVec2(4, 4);
 
 			break;
 		}

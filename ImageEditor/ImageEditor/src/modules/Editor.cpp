@@ -349,6 +349,8 @@ void Editor::PopUps()
 			ImGui::SameLine(); ImGui::SliderInt("##Tile", &tile_elem, 0, (int)TILE_NUM::TILE_COUNT - 1, tile_elem_name);
 			ImGui::SameLine(); App->gui->HelpMarker("Tile size. Default: 0, meaning no tiles are used");
 
+			ImGui::Separator();
+
 			if (ImGui::Button("OK", ImVec2(100, 0)))
 			{
 				this->super_resolution_popup = false;
