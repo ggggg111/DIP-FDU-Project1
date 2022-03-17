@@ -24,7 +24,7 @@ void GUI::Start()
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontFromFileTTF("fonts/NotoSans-Regular.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesDefault());
+	io.Fonts->AddFontFromFileTTF("fonts/NotoSans-Regular.ttf", 16.0f, NULL, io.Fonts->GetGlyphRangesDefault());
 
 	ImGui::StyleColorsDark();
 	this->style = UI_STYLE::DARK_BLUE;
