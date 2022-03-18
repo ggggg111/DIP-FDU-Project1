@@ -419,7 +419,7 @@ void Editor::PopUps()
 
 				if (!selection.empty())
 				{
-					strcpy(path_1, selection[0].c_str());
+					strcpy_s(path_1, selection[0].c_str());
 				}
 			}
 
@@ -436,7 +436,7 @@ void Editor::PopUps()
 
 				if (!selection.empty())
 				{
-					strcpy(path_2, selection[0].c_str());
+					strcpy_s(path_2, selection[0].c_str());
 				}
 			}
 
@@ -453,7 +453,7 @@ void Editor::PopUps()
 
 				if (!selection.empty())
 				{
-					strcpy(path_3, selection[0].c_str());
+					strcpy_s(path_3, selection[0].c_str());
 				}
 			}
 
@@ -471,6 +471,10 @@ void Editor::PopUps()
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel", ImVec2(100, 0)))
 			{
+				strcpy_s(path_1, "");
+				strcpy_s(path_2, "");
+				strcpy_s(path_3, "");
+
 				this->load_hdr_image_popup = false;
 
 				ImGui::CloseCurrentPopup();
