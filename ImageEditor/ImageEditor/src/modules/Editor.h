@@ -58,6 +58,7 @@ private:
 	int last_frame_mouse_position_y;
 
 	bool preferences_panel;
+	bool load_hdr_image_popup;
 	bool super_resolution_popup;
 };
 

@@ -30,6 +30,7 @@ void Editor::Start()
 	App->input->GetMousePosition(this->last_frame_mouse_position_x, this->last_frame_mouse_position_y);
 
 	this->preferences_panel = false;
+	this->load_hdr_image_popup = false;
 	this->super_resolution_popup = false;
 }
 
@@ -202,6 +203,11 @@ void Editor::MainMenuBar()
 				printf("User saved file %s\n", destination.c_str());
 			}
 
+			if (ImGui::MenuItem("Load HDR image"))
+			{
+				this->load_hdr_image_popup = true;
+			}
+
 			ImGui::EndMenu();
 		}
 
@@ -293,6 +299,9 @@ void Editor::Panels()
 {
 	if (this->preferences_panel)
 	{
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
 		if (ImGui::Begin("Preferences", &this->preferences_panel))
 		{
 			ImGui::Text("User Interface");
@@ -364,6 +373,105 @@ void Editor::PopUps()
 			if (ImGui::Button("Cancel", ImVec2(100, 0)))
 			{
 				this->super_resolution_popup = false;
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	if (this->load_hdr_image_popup)
+	{
+		/*auto selection = pfd::open_file("Select a file", ".",
+			{ "Image Files", "*.png *.jpg *.bmp" })
+			.result();
+
+		if (!selection.empty())
+		{
+			std::string path = selection[0];
+			printf("User loaded file %s\n", path.c_str());
+
+			this->bg = this->LoadImg(path);
+			this->RenderImg(this->bg, App->renderer->texture_target);
+		}*/
+		ImGui::OpenPopup("Load HDR Image");
+
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("Load HDR Image", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Setup");
+
+			ImGui::Separator();
+
+			static char path_1[256] = "";
+			ImGui::Text("Image 1");
+			ImGui::SameLine();
+			ImGui::InputTextWithHint("##t1", "Input path", path_1, IM_ARRAYSIZE(path_1));
+			ImGui::SameLine();
+			if (ImGui::Button("...##b1"))
+			{
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg *.bmp" })
+					.result();
+
+				if (!selection.empty())
+				{
+					strcpy(path_1, selection[0].c_str());
+				}
+			}
+
+			static char path_2[256] = "";
+			ImGui::Text("Image 2");
+			ImGui::SameLine();
+			ImGui::InputTextWithHint("##t2", "Input path", path_2, IM_ARRAYSIZE(path_2));
+			ImGui::SameLine();
+			if (ImGui::Button("...##b2"))
+			{
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg *.bmp" })
+					.result();
+
+				if (!selection.empty())
+				{
+					strcpy(path_2, selection[0].c_str());
+				}
+			}
+
+			static char path_3[256] = "";
+			ImGui::Text("Image 3");
+			ImGui::SameLine();
+			ImGui::InputTextWithHint("##t3", "Input path", path_3, IM_ARRAYSIZE(path_3));
+			ImGui::SameLine();
+			if (ImGui::Button("...##b3"))
+			{
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg *.bmp" })
+					.result();
+
+				if (!selection.empty())
+				{
+					strcpy(path_3, selection[0].c_str());
+				}
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("OK", ImVec2(100, 0)))
+			{
+				this->load_hdr_image_popup = false;
+				this->ApplySuperResolution();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(100, 0)))
+			{
+				this->load_hdr_image_popup = false;
 
 				ImGui::CloseCurrentPopup();
 			}

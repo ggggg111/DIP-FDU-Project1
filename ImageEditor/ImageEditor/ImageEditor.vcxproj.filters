@@ -19,6 +19,7 @@
     <ClCompile Include="src\tools\EditorToolSelector.cpp" />
     <ClCompile Include="src\tools\Filters.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
+    <ClCompile Include="src\tools\HDRLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -42,5 +43,6 @@
     <ClInclude Include="src\modules\Module.h" />
     <ClInclude Include="src\tools\Filters.h" />
     <ClInclude Include="src\utils\Utils.h" />
+    <ClInclude Include="src\tools\HDRLoader.h" />
   </ItemGroup>
 </Project>

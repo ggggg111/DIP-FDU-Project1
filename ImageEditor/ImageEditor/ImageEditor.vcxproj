@@ -172,6 +172,7 @@
     <ClCompile Include="src\modules\Window.cpp" />
     <ClCompile Include="src\tools\EditorToolSelector.cpp" />
     <ClCompile Include="src\tools\Filters.cpp" />
+    <ClCompile Include="src\tools\HDRLoader.cpp" />
     <ClCompile Include="src\tools\ImageLoader.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
     <ClCompile Include="vendor\ImGui\backends\imgui_impl_sdl.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\modules\Window.h" />
     <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\tools\Filters.h" />
+    <ClInclude Include="src\tools\HDRLoader.h" />
     <ClInclude Include="src\tools\ImageLoader.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="vendor\ImGui\backends\imgui_impl_sdl.h" />
