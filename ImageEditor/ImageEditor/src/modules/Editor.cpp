@@ -306,9 +306,11 @@ void Editor::Panels()
 		{
 			ImGui::Text("User Interface");
 
+			ImGui::Separator();
+
 			static const char* items[] = { "Dark", "Green", "Blue", "Darker"};
 			static UI_STYLE item = App->gui->style;
-
+			
 			ImGui::Text("Style");
 			ImGui::SameLine();
 			if (ImGui::Combo("##Combo", (int*)&item, items, IM_ARRAYSIZE(items)))
