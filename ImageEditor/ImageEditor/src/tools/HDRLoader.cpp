@@ -20,6 +20,12 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 	cv::Ptr<cv::MergeDebevec> merge_debevec = cv::createMergeDebevec();
 	merge_debevec->process(images, hdr_debevec, times, response_debevec);
 	cv::imwrite("image.hdr", hdr_debevec);
+
+	cv::Mat ldr_drago;
+	cv::Ptr<cv::TonemapDrago> tonemap_drago = cv::createTonemapDrago(1.0f, 0.7f);
+	tonemap_drago->process(hdr_debevec, ldr_drago);
+	ldr_drago = 3 * ldr_drago;
+	cv::imwrite("ldr-Drago.jpg", ldr_drago * 255);
 }
 
 std::vector<cv::Mat> HDRLoader::ReadImages(const std::vector<std::string>& image_paths)
