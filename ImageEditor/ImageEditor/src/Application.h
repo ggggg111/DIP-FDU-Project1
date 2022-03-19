@@ -11,16 +11,6 @@ class GUI;
 class Input;
 class Editor;
 
-enum class PLATFORM
-{
-    WINDOWS_32 = 0,
-    WINDOWS_64,
-    LINUX,
-    APPLE,
-
-    UNKNOWN = -1
-};
-
 class Application
 {
 public:
@@ -36,12 +26,9 @@ public:
     void RequestBrowser(const std::string& url) const;
 
 private:
-    void AssignPlatform();
     void AddModule(Module* module);
 
 public:
-    PLATFORM platform;
-
     Window* window;
     Renderer* renderer;
     GUI* gui;

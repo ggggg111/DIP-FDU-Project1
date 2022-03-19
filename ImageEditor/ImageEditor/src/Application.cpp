@@ -15,8 +15,6 @@
 Application::Application()
     : running(true), name("Image Editor")
 {
-    this->AssignPlatform();
-
     this->AddModule(this->input = new Input());
     this->AddModule(this->window = new Window("Image Editor", 1024, 768));
     this->AddModule(this->editor = new Editor());
@@ -87,47 +85,7 @@ void Application::CleanUp()
 
 void Application::RequestBrowser(const std::string& url) const
 {
-    switch (App->platform)
-    {
-        case PLATFORM::WINDOWS_32:
-        case PLATFORM::WINDOWS_64:
-        {
-            ShellExecuteA(0, "open", url.c_str(), 0, 0, SW_SHOWNORMAL);
-
-            break;
-        }
-        case PLATFORM::LINUX:
-        {
-            std::system(std::string("xdg-open").append(" ").append(url).c_str());
-
-            break;
-        }
-        case PLATFORM::APPLE:
-        {
-            std::system(std::string("open").append(" ").append(url).c_str());
-
-            break;
-        }
-        default:
-        {
-            break;
-        }
-    }
-}
-
-void Application::AssignPlatform()
-{
-#ifdef _WIN32
-    this->platform = PLATFORM::WINDOWS_32;
-#elif _WIN64
-    this->platform = PLATFORM::WINDOWS_64;
-#elif __linux__
-    this->platform = PLATFORM::LINUX;
-#elif __APPLE__
-    this->platform = PLATFORM::APPLE;
-#else
-    this->platform = PLATFORM::UNKNOWN;
-#endif
+    ShellExecuteA(0, "open", url.c_str(), 0, 0, SW_SHOWNORMAL);
 }
 
 void Application::AddModule(Module* module)
