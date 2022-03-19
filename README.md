@@ -40,13 +40,19 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 - [OpenCV](https://github.com/opencv/opencv).
 
-*Note: The dependencies are already included in the project, for Windows 10+ x64 targets.*
-
 ## Compatibility
 
 At the moment, the project supports Windows 10+ environments and is compiled for x64 platforms.
 
 ## Instructions
+
+Before starting, it is needed to add the OpenCV library manually:
+
+**1.** Download [OpenCV 4.5.5](https://github.com/opencv/opencv/releases/tag/4.5.5) library and install it.
+
+**2.** Place the downloaded files along with the *build* and *sources* files inside *ImageEditor/ImageEditor/vendor/OpenCV/*.
+
+**3.** Place both *opencv_world455.dll* and *opencv_world455d.dll* DLLs inside *ImageEditor/ImageEditor/vendor/workdir/*.
 
 To compile the project, follow the steps below:
 
@@ -63,6 +69,8 @@ To run the release, do:
 **1.** Extract the release files to any directory.
 
 **2.** Execute *ImageEditor.exe*.
+
+*Note: The dependencies are already included in the project, for Windows 10+ x64 targets, but not for OpenCV as it is quite a heavy library. Please follow the instructions above.*
 
 ## Requirements
 
