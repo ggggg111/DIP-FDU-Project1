@@ -163,7 +163,6 @@ void Editor::CleanUp()
 
 void Editor::DrawGUI()
 {
-	ImGui::ShowDemoWindow();
 	this->MainMenuBar();
 	this->ToolSelection();
 	this->Panels();
