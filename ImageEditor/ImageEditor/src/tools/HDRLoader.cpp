@@ -4,7 +4,7 @@
 
 #include "HDRLoader.h"
 
-void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times)
+void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type)
 {
 	std::vector<cv::Mat> images = HDRLoader::ReadImages(image_paths);
 	std::vector<float> times = ReadTimes(exposure_times);
@@ -21,11 +21,7 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 	merge_debevec->process(images, hdr_debevec, times, response_debevec);
 	cv::imwrite("image.hdr", hdr_debevec);
 
-	cv::Mat ldr_drago;
-	cv::Ptr<cv::TonemapDrago> tonemap_drago = cv::createTonemapDrago(1.0f, 0.7f);
-	tonemap_drago->process(hdr_debevec, ldr_drago);
-	ldr_drago = 3 * ldr_drago;
-	cv::imwrite("ldr-Drago.jpg", ldr_drago * 255);
+
 }
 
 std::vector<cv::Mat> HDRLoader::ReadImages(const std::vector<std::string>& image_paths)
@@ -42,4 +38,13 @@ std::vector<cv::Mat> HDRLoader::ReadImages(const std::vector<std::string>& image
 std::vector<float> HDRLoader::ReadTimes(const std::vector<float>& exposure_times)
 {
 	return std::vector<float>(exposure_times);
+}
+
+void HDRLoader::ApplyDragoTonemap(const cv::Mat& hdr_debevec)
+{
+	cv::Mat ldr_drago;
+	cv::Ptr<cv::TonemapDrago> tonemap_drago = cv::createTonemapDrago(1.0f, 0.7f);
+	tonemap_drago->process(hdr_debevec, ldr_drago);
+	ldr_drago = 3 * ldr_drago;
+	cv::imwrite("ldr-Drago.jpg", ldr_drago * 255);
 }

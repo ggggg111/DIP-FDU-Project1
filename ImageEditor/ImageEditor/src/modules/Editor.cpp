@@ -5,7 +5,6 @@
 
 #include "tools/ImageLoader.h"
 #include "tools/Filters.h"
-#include "tools/HDRLoader.h"
 #include "utils/Utils.h"
 #include "Application.h"
 #include "Editor.h"
@@ -456,12 +455,27 @@ void Editor::PopUps()
 			App->gui->HelpMarker("Locked between 1-10 values");
 
 			ImGui::Separator();
+			
+			static TONEMAP_TYPE tonemap_type = TONEMAP_TYPE::DRAGO;
+
+			static const char* tonemaps[4] = {
+				"Drago",
+				"Durand",
+				"Reinhard",
+				"Mantiuk"
+			};
+
+			ImGui::Text("Tonemap");
+			ImGui::SameLine();
+			ImGui::Combo("##Tonemap", (int*)&tonemap_type, tonemaps, IM_ARRAYSIZE(tonemaps));
+
+			ImGui::Separator();
 
 			if (ImGui::Button("OK", ImVec2(100, 0)))
 			{
 				this->load_hdr_image_popup = false;
 
-				this->ApplyLoadHDRImage(image_paths, exposure_times);
+				this->ApplyLoadHDRImage(image_paths, exposure_times, tonemap_type);
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -822,9 +836,9 @@ void Editor::ApplySuperResolution()
 	this->RenderImg(this->bg, App->renderer->texture_target);
 }
 
-void Editor::ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times)
+void Editor::ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type)
 {
-	HDRLoader::LoadHDRImage(image_paths, exposure_times);
+	HDRLoader::LoadHDRImage(image_paths, exposure_times, tonemap_type);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

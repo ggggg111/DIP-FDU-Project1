@@ -2,6 +2,7 @@
 #define __EDITOR_H__
 
 #include "tools/EditorToolSelector.h"
+#include "tools/HDRLoader.h"
 #include "Module.h"
 
 struct SDL_Texture;
@@ -44,7 +45,7 @@ private:
 	void UseRectangleFill();
 
 	void ApplySuperResolution();
-	void ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times);
+	void ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type);
 
 public:
 	EditorToolSelector tools;
