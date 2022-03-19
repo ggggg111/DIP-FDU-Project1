@@ -458,9 +458,8 @@ void Editor::PopUps()
 			
 			static TONEMAP_TYPE tonemap_type = TONEMAP_TYPE::DRAGO;
 
-			static const char* tonemaps[4] = {
+			static const char* tonemaps[3] = {
 				"Drago",
-				"Durand",
 				"Reinhard",
 				"Mantiuk"
 			};
@@ -473,9 +472,10 @@ void Editor::PopUps()
 
 			if (ImGui::Button("OK", ImVec2(100, 0)))
 			{
+				this->ApplyLoadHDRImage(image_paths, exposure_times, tonemap_type);
+				
 				this->load_hdr_image_popup = false;
 
-				this->ApplyLoadHDRImage(image_paths, exposure_times, tonemap_type);
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -486,7 +486,7 @@ void Editor::PopUps()
 			{				
 				for (int i = 0; i < hdr_element_number; ++i)
 				{
-					image_paths[i] = "";
+					image_paths[i].clear();
 					exposure_times[i] = 1.0f;
 				}
 
