@@ -1,4 +1,3 @@
-#include "SDL.h"
 #include "SDL_image.h"
 #include "imgui.h"
 #include "portable-file-dialogs.h"

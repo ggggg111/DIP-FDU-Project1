@@ -5,8 +5,7 @@
 #include "tools/HDRLoader.h"
 #include "Module.h"
 
-struct SDL_Texture;
-struct SDL_Rect;
+#include "SDL.h"
 
 class Editor : public Module
 {
