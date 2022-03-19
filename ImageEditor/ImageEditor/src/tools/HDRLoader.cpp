@@ -24,7 +24,6 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 	cv::Mat hdr_debevec;
 	cv::Ptr<cv::MergeDebevec> merge_debevec = cv::createMergeDebevec();
 	merge_debevec->process(images, hdr_debevec, times, response_debevec);
-	//cv::imwrite("image.hdr", hdr_debevec);
 
 	cv::Mat ldr = HDRLoader::ApplyTonemap(tonemap_type, hdr_debevec);
 
@@ -86,7 +85,6 @@ cv::Mat HDRLoader::ApplyDragoTonemap(const cv::Mat& hdr_debevec)
 	cv::Ptr<cv::TonemapDrago> tonemap_drago = cv::createTonemapDrago(1.0f, 0.7f);
 	tonemap_drago->process(hdr_debevec, ldr_drago);
 	ldr_drago *= 3;
-	//cv::imwrite("ldr-Drago.jpg", ldr_drago * 255);
 
 	return ldr_drago;
 }
@@ -96,7 +94,6 @@ cv::Mat HDRLoader::ApplyReinhardTonemap(const cv::Mat& hdr_debevec)
 	cv::Mat ldr_reinhard;
 	cv::Ptr<cv::TonemapReinhard> tonemap_reinhard = cv::createTonemapReinhard(1.5f, 0.0f, 0.0f, 0.0f);
 	tonemap_reinhard->process(hdr_debevec, ldr_reinhard);
-	//cv::imwrite("ldr-Reinhard.jpg", ldr_reinhard * 255);
 
 	return ldr_reinhard;
 }
@@ -107,7 +104,6 @@ cv::Mat HDRLoader::ApplyMantiukTonemap(const cv::Mat& hdr_debevec)
 	cv::Ptr<cv::TonemapMantiuk> tonemap_mantiuk = cv::createTonemapMantiuk(2.2f, 0.85f, 1.2f);
 	tonemap_mantiuk->process(hdr_debevec, ldr_mantiuk);
 	ldr_mantiuk *= 3;
-	//cv::imwrite("ldr-Mantiuk.jpg", ldr_mantiuk * 255);
 
 	return ldr_mantiuk;
 }
