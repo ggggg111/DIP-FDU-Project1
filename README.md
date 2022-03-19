@@ -28,21 +28,23 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 ## Dependencies
 
-- [SDL2](https://www.libsdl.org/)
+- [SDL2](https://www.libsdl.org/).
 
-- [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/)
+- [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/).
 
-- [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/)
+- [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/).
 
-- [Dear ImGui](https://github.com/ocornut/imgui)
+- [Dear ImGui](https://github.com/ocornut/imgui).
   
-- [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs)
+- [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs).
 
-*Note: The dependencies are already included in the project, for Windows 10+ x86 targets.*
+- [OpenCV](https://github.com/opencv/opencv).
+
+*Note: The dependencies are already included in the project, for Windows 10+ x64 targets.*
 
 ## Compatibility
 
-At the moment, the project supports Windows 10+ environments and is compiled for x86 platforms. Note that the source code and libraries used are cross-platform friendly, so they can also be compiled for Linux or Apple systems.
+At the moment, the project supports Windows 10+ environments and is compiled for x64 platforms.
 
 ## Instructions
 
@@ -50,7 +52,7 @@ To compile the project, follow the steps below:
 
 **1.** Run *ImageEditor.sln* to open the Visual Studio 2022 solution.
 
-**2.** Set the solution platform to *x86*.
+**2.** Set the solution platform to *x64*. You can use both debug or release configurations.
 
 **3.** On the solution explorer, right-click *ImageEditor* and select *Properties*.
 

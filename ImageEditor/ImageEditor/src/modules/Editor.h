@@ -44,6 +44,7 @@ private:
 	void UseRectangleFill();
 
 	void ApplySuperResolution();
+	void ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times);
 
 public:
 	EditorToolSelector tools;

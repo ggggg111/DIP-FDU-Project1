@@ -5,6 +5,7 @@
 
 #include "tools/ImageLoader.h"
 #include "tools/Filters.h"
+#include "tools/HDRLoader.h"
 #include "utils/Utils.h"
 #include "Application.h"
 #include "Editor.h"
@@ -385,18 +386,6 @@ void Editor::PopUps()
 
 	if (this->load_hdr_image_popup)
 	{
-		/*auto selection = pfd::open_file("Select a file", ".",
-			{ "Image Files", "*.png *.jpg *.bmp" })
-			.result();
-
-		if (!selection.empty())
-		{
-			std::string path = selection[0];
-			printf("User loaded file %s\n", path.c_str());
-
-			this->bg = this->LoadImg(path);
-			this->RenderImg(this->bg, App->renderer->texture_target);
-		}*/
 		ImGui::OpenPopup("Load HDR Image");
 
 		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -409,6 +398,7 @@ void Editor::PopUps()
 			ImGui::Separator();
 
 			static char path_1[256] = "";
+			static float exposure_time_1 = 1.0f;
 			ImGui::Text("Image 1");
 			ImGui::SameLine();
 			ImGui::InputTextWithHint("##t1", "Input path", path_1, IM_ARRAYSIZE(path_1));
@@ -424,8 +414,11 @@ void Editor::PopUps()
 					strcpy_s(path_1, selection[0].c_str());
 				}
 			}
+			ImGui::SameLine(); ImGui::Text("Exposure time 1");
+			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_1", &exposure_time_1, 0.001f, 0.0f, 10.0f);
 
 			static char path_2[256] = "";
+			static float exposure_time_2 = 1.0f;
 			ImGui::Text("Image 2");
 			ImGui::SameLine();
 			ImGui::InputTextWithHint("##t2", "Input path", path_2, IM_ARRAYSIZE(path_2));
@@ -441,8 +434,11 @@ void Editor::PopUps()
 					strcpy_s(path_2, selection[0].c_str());
 				}
 			}
+			ImGui::SameLine(); ImGui::Text("Exposure time 2");
+			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_2", &exposure_time_2, 0.001f, 0.0f, 10.0f);
 
 			static char path_3[256] = "";
+			static float exposure_time_3 = 1.0f;
 			ImGui::Text("Image 3");
 			ImGui::SameLine();
 			ImGui::InputTextWithHint("##t3", "Input path", path_3, IM_ARRAYSIZE(path_3));
@@ -458,13 +454,19 @@ void Editor::PopUps()
 					strcpy_s(path_3, selection[0].c_str());
 				}
 			}
+			ImGui::SameLine(); ImGui::Text("Exposure time 3");
+			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_3", &exposure_time_3, 0.001f, 0.0f, 10.0f);
 
 			ImGui::Separator();
 
 			if (ImGui::Button("OK", ImVec2(100, 0)))
 			{
 				this->load_hdr_image_popup = false;
-				this->ApplySuperResolution();
+
+				const std::vector<std::string>& image_paths = { path_1, path_2, path_3 };
+				const std::vector<float>& exposure_times = { exposure_time_1, exposure_time_2, exposure_time_3 };
+
+				this->ApplyLoadHDRImage(image_paths, exposure_times);
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -821,6 +823,11 @@ void Editor::ApplySuperResolution()
 
 	this->bg = this->LoadImg(out_path);
 	this->RenderImg(this->bg, App->renderer->texture_target);
+}
+
+void Editor::ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times)
+{
+	HDRLoader::LoadHDRImage(image_paths, exposure_times);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
