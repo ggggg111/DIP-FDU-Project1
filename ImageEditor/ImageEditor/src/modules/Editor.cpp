@@ -397,94 +397,69 @@ void Editor::PopUps()
 
 			ImGui::Separator();
 
-			static char path_1[256] = "";
-			static float exposure_time_1 = 1.0f;
-			ImGui::Text("Image 1");
-			ImGui::SameLine();
-			ImGui::InputTextWithHint("##t1", "Input path", path_1, IM_ARRAYSIZE(path_1));
-			ImGui::SameLine();
-			if (ImGui::Button("...##b1"))
-			{
-				auto selection = pfd::open_file("Select a file", ".",
-					{ "Image Files", "*.png *.jpg *.bmp" })
-					.result();
+			static int hdr_element_number = 4;
 
-				if (!selection.empty())
+			static std::vector<std::string> image_paths = { "", "", "", ""};
+			static std::vector<float> exposure_times = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+			for (int i = 0; i < hdr_element_number; ++i)
+			{
+				ImGui::Text("Image %d", i + 1);
+				
+				ImGui::SameLine();
+				ImGui::PushID(std::string(std::to_string(i).append("Input_Path")).c_str());
+				ImGui::InputTextWithHint("", "Input path", (char*)image_paths[i].c_str(), image_paths[i].size());
+				ImGui::PopID();
+
+				ImGui::SameLine();
+				ImGui::PushID(std::string(std::to_string(i).append("Button_More")).c_str());
+				if (ImGui::Button("..."))
 				{
-					strcpy_s(path_1, selection[0].c_str());
+					auto selection = pfd::open_file("Select a file", ".",
+						{ "Image Files", "*.png *.jpg *.bmp" })
+						.result();
+
+					if (!selection.empty())
+					{
+						image_paths[i] = selection[0];
+					}
+				}
+				ImGui::PopID();
+
+				ImGui::SameLine(); ImGui::Text("Exposure time %d", i + 1);
+				ImGui::SameLine();
+				ImGui::PushID(std::string(std::to_string(i).append("Drag_Exposure_Time")).c_str());
+				ImGui::DragFloat("", &exposure_times[i], 0.001f, 0.0f, 20.0f);
+				ImGui::PopID();
+			}
+
+			if(ImGui::Button("+", ImVec2(20, 20)))
+			{
+				if (hdr_element_number < 10)
+				{
+					++hdr_element_number;
+					image_paths.push_back("");
+					exposure_times.push_back(1.0f);
 				}
 			}
-			ImGui::SameLine(); ImGui::Text("Exposure time 1");
-			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_1", &exposure_time_1, 0.001f, 0.0f, 10.0f);
-
-			static char path_2[256] = "";
-			static float exposure_time_2 = 1.0f;
-			ImGui::Text("Image 2");
 			ImGui::SameLine();
-			ImGui::InputTextWithHint("##t2", "Input path", path_2, IM_ARRAYSIZE(path_2));
-			ImGui::SameLine();
-			if (ImGui::Button("...##b2"))
+			if (ImGui::Button("-", ImVec2(20, 20)))
 			{
-				auto selection = pfd::open_file("Select a file", ".",
-					{ "Image Files", "*.png *.jpg *.bmp" })
-					.result();
-
-				if (!selection.empty())
+				if (hdr_element_number > 1)
 				{
-					strcpy_s(path_2, selection[0].c_str());
+					--hdr_element_number;
+					image_paths.pop_back();
+					exposure_times.pop_back();
 				}
 			}
-			ImGui::SameLine(); ImGui::Text("Exposure time 2");
-			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_2", &exposure_time_2, 0.001f, 0.0f, 10.0f);
-
-			static char path_3[256] = "";
-			static float exposure_time_3 = 1.0f;
-			ImGui::Text("Image 3");
 			ImGui::SameLine();
-			ImGui::InputTextWithHint("##t3", "Input path", path_3, IM_ARRAYSIZE(path_3));
-			ImGui::SameLine();
-			if (ImGui::Button("...##b3"))
-			{
-				auto selection = pfd::open_file("Select a file", ".",
-					{ "Image Files", "*.png *.jpg *.bmp" })
-					.result();
-
-				if (!selection.empty())
-				{
-					strcpy_s(path_3, selection[0].c_str());
-				}
-			}
-			ImGui::SameLine(); ImGui::Text("Exposure time 3");
-			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_3", &exposure_time_3, 0.001f, 0.0f, 10.0f);
-
-			static char path_4[256] = "";
-			static float exposure_time_4 = 1.0f;
-			ImGui::Text("Image 4");
-			ImGui::SameLine();
-			ImGui::InputTextWithHint("##t4", "Input path", path_4, IM_ARRAYSIZE(path_4));
-			ImGui::SameLine();
-			if (ImGui::Button("...##b4"))
-			{
-				auto selection = pfd::open_file("Select a file", ".",
-					{ "Image Files", "*.png *.jpg *.bmp" })
-					.result();
-
-				if (!selection.empty())
-				{
-					strcpy_s(path_4, selection[0].c_str());
-				}
-			}
-			ImGui::SameLine(); ImGui::Text("Exposure time 4");
-			ImGui::SameLine(); ImGui::DragFloat("##exposure_time_4", &exposure_time_4, 0.001f, 0.0f, 10.0f);
+			App->gui->HelpMarker("Locked between 1-10 values");
 
 			ImGui::Separator();
 
 			if (ImGui::Button("OK", ImVec2(100, 0)))
 			{
 				this->load_hdr_image_popup = false;
-
-				const std::vector<std::string>& image_paths = { path_1, path_2, path_3, path_4 };
-				const std::vector<float>& exposure_times = { exposure_time_1, exposure_time_2, exposure_time_3, exposure_time_4 };
 
 				this->ApplyLoadHDRImage(image_paths, exposure_times);
 
@@ -494,10 +469,12 @@ void Editor::PopUps()
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel", ImVec2(100, 0)))
-			{
-				strcpy_s(path_1, "");
-				strcpy_s(path_2, "");
-				strcpy_s(path_3, "");
+			{				
+				for (int i = 0; i < hdr_element_number; ++i)
+				{
+					image_paths[i] = "";
+					exposure_times[i] = 1.0f;
+				}
 
 				this->load_hdr_image_popup = false;
 
