@@ -4,6 +4,7 @@
 #define __UTILS_H__
 
 #include <Windows.h>
+#include <vector>
 
 #define RELEASE_ARRAY2D(arr, h) \
 	for (int i = 0; i < h; ++i) \
@@ -23,5 +24,7 @@ T** Array2D(const int& width, const int& height)
 }
 
 wchar_t* CharArrayToLPCWSTR(const char* charArray, const int& buffer_size = 4096);
+
+int Median(std::vector<int>& vector);
 
 #endif /* __UTILS_H__ */

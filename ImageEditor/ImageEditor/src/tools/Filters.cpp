@@ -184,6 +184,122 @@ void Filters::ApplyBlur(SDL_Texture* target, SDL_Texture* filter, const int& ker
 	App->editor->RenderImg(filter, target, false);
 }
 
+void Filters::ApplyMedianBlur(SDL_Texture* target, SDL_Texture* filter, const int& kernel_size)
+{
+	Uint32 format = App->renderer->texture_format;
+	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
+
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
+
+	App->renderer->SetRenderTarget(target);
+
+	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
+		0,
+		width, height,
+		32,
+		App->renderer->texture_format
+	);
+
+	SDL_RenderReadPixels(
+		App->renderer->renderer,
+		nullptr,
+		App->renderer->texture_format,
+		target_surface->pixels,
+		target_surface->pitch
+	);
+
+	App->renderer->SetRenderTarget(nullptr);
+
+	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
+
+	int pitch;
+	void* filter_pixels;
+
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
+
+	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
+
+	Uint32** u_target_pixels_2d = Array2D<Uint32>(width, height);
+	Uint32** u_filter_pixels_2d = Array2D<Uint32>(width, height);
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_target_pixels_2d[row][col] = u_target_pixels[(row * width + col)];
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			Uint8 filter_r, filter_g, filter_b;
+
+			filter_r = 0;
+			filter_g = 0;
+			filter_b = 0;
+
+			int krad = kernel_size / 2;
+			int k_ind = 0;
+
+			std::vector<int> r_list(9);
+			std::vector<int> g_list(9);
+			std::vector<int> b_list(9);
+
+			for (int k_row = -krad; k_row <= krad; ++k_row)
+			{
+				for (int k_col = -krad; k_col <= krad; ++k_col)
+				{
+					Uint8 target_r = 0, target_g = 0, target_b = 0;
+					int target_row = row + k_row;
+					int target_col = col + k_col;
+
+					if (target_row >= 0 && target_col >= 0
+						&& target_row < height && target_col < width)
+					{
+						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
+					}
+
+					r_list[k_ind] = target_r;
+					g_list[k_ind] = target_g;
+					b_list[k_ind] = target_b;
+
+					filter_r = (Uint8)Median(r_list);
+					filter_g = (Uint8)Median(g_list);
+					filter_b = (Uint8)Median(b_list);
+
+					++k_ind;
+				}
+			}
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_filter_pixels[row * width + col] = u_filter_pixels_2d[row][col];
+		}
+	}
+
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
+
+	SDL_UnlockTexture(filter);
+
+	RELEASE_ARRAY2D(u_target_pixels_2d, height);
+	RELEASE_ARRAY2D(u_filter_pixels_2d, height);
+
+	SDL_FreeSurface(target_surface);
+
+	SDL_FreeFormat(pixel_format);
+
+	App->editor->RenderImg(filter, target, false);
+}
+
 void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 {
 	Uint32 format = App->renderer->texture_format;
