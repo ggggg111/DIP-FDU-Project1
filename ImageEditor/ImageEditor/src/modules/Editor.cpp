@@ -223,11 +223,6 @@ void Editor::MainMenuBar()
 					Filters::ApplyBlur(App->renderer->texture_target, App->renderer->texture_filter, 3);
 				}
 
-				if (ImGui::MenuItem("Median Blur"))
-				{
-					Filters::ApplyMedianBlur(App->renderer->texture_target, App->renderer->texture_filter, 3);
-				}
-
 				if (ImGui::MenuItem("Negative"))
 				{
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
@@ -238,6 +233,16 @@ void Editor::MainMenuBar()
 
 			if (ImGui::BeginMenu("Enhancement"))
 			{
+				if (ImGui::BeginMenu("Denoise"))
+				{
+					if (ImGui::MenuItem("Median Blur"))
+					{
+						Filters::ApplyMedianBlur(App->renderer->texture_target, App->renderer->texture_filter, 5);
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Super Resolution"))
 				{
 					this->super_resolution_popup = true;

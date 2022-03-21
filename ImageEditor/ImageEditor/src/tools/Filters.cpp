@@ -244,9 +244,9 @@ void Filters::ApplyMedianBlur(SDL_Texture* target, SDL_Texture* filter, const in
 			int krad = kernel_size / 2;
 			int k_ind = 0;
 
-			std::vector<int> r_list(9);
-			std::vector<int> g_list(9);
-			std::vector<int> b_list(9);
+			std::vector<int> r_list(kernel_size * kernel_size);
+			std::vector<int> g_list(kernel_size * kernel_size);
+			std::vector<int> b_list(kernel_size * kernel_size);
 
 			for (int k_row = -krad; k_row <= krad; ++k_row)
 			{
@@ -266,13 +266,13 @@ void Filters::ApplyMedianBlur(SDL_Texture* target, SDL_Texture* filter, const in
 					g_list[k_ind] = target_g;
 					b_list[k_ind] = target_b;
 
-					filter_r = (Uint8)Median(r_list);
-					filter_g = (Uint8)Median(g_list);
-					filter_b = (Uint8)Median(b_list);
-
 					++k_ind;
 				}
 			}
+
+			filter_r = (Uint8)Median(r_list);
+			filter_g = (Uint8)Median(g_list);
+			filter_b = (Uint8)Median(b_list);
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r, filter_g, filter_b);
 		}
