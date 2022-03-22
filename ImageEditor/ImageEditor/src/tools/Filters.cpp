@@ -424,6 +424,127 @@ void Filters::ApplyMedianBlur(SDL_Texture* target, SDL_Texture* filter, const in
 	App->editor->RenderImg(filter, target, false);
 }
 
+void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
+{
+	Uint32 format = App->renderer->texture_format;
+	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
+
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
+
+	App->renderer->SetRenderTarget(target);
+
+	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
+		0,
+		width, height,
+		32,
+		App->renderer->texture_format
+	);
+
+	SDL_RenderReadPixels(
+		App->renderer->renderer,
+		nullptr,
+		App->renderer->texture_format,
+		target_surface->pixels,
+		target_surface->pitch
+	);
+
+	App->renderer->SetRenderTarget(nullptr);
+
+	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
+
+	int pitch;
+	void* filter_pixels;
+
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
+
+	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
+
+	std::vector<int> kernel = Filters::CreateLaplaceKernel();
+	int kernel_size = 3;
+
+	Uint32** u_target_pixels_2d = Array2D<Uint32>(width, height);
+	Uint32** u_filter_pixels_2d = Array2D<Uint32>(width, height);
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_target_pixels_2d[row][col] = u_target_pixels[(row * width + col)];
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			Uint8 filter_r, filter_g, filter_b;
+
+			filter_r = 0;
+			filter_g = 0;
+			filter_b = 0;
+
+			int krad = kernel_size / 2;
+			int k_ind = 0;
+
+			int sum_r = 0.0f;
+			int sum_g = 0.0f;
+			int sum_b = 0.0f;
+
+			for (int k_row = -krad; k_row <= krad; ++k_row)
+			{
+				for (int k_col = -krad; k_col <= krad; ++k_col)
+				{
+					Uint8 target_r = 0, target_g = 0, target_b = 0;
+					int target_row = row + k_row;
+					int target_col = col + k_col;
+
+					if (target_row >= 0 && target_col >= 0
+						&& target_row < height && target_col < width)
+					{
+						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
+					}
+
+					sum_r += kernel[k_ind] * target_r;
+					sum_g += kernel[k_ind] * target_g;
+					sum_b += kernel[k_ind] * target_b;
+
+					++k_ind;
+				}
+			}
+
+			filter_r = Uint8(sum_r / 9);
+			filter_g = Uint8(sum_g / 9);
+			filter_b = Uint8(sum_b / 9);
+
+			Uint8 greyscale_value = (filter_r + filter_g + filter_b) / 3;
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, greyscale_value, greyscale_value, greyscale_value);
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_filter_pixels[row * width + col] = u_filter_pixels_2d[row][col];
+		}
+	}
+
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
+
+	SDL_UnlockTexture(filter);
+
+	RELEASE_ARRAY2D(u_target_pixels_2d, height);
+	RELEASE_ARRAY2D(u_filter_pixels_2d, height);
+
+	SDL_FreeSurface(target_surface);
+
+	SDL_FreeFormat(pixel_format);
+
+	App->editor->RenderImg(filter, target, false);
+}
+
 void Filters::ApplyNegative(SDL_Texture* target, SDL_Texture* filter)
 {
 	Uint32 format = App->renderer->texture_format;
@@ -534,4 +655,23 @@ std::vector<float> Filters::CreateGaussianKernel(const int& kernel_size)
 	}
 
 	return kernel;
+}
+
+std::vector<int> Filters::CreateLaplaceKernel()
+{
+	std::vector<int> kernel(3 * 3, 0);
+
+	kernel[0] = 0;
+	kernel[1] = 1;
+	kernel[2] = 0;
+	kernel[3] = 1;
+	kernel[4] = -4;
+	kernel[5] = 1;
+	kernel[6] = 0;
+	kernel[7] = 1;
+	kernel[8] = 0;
+
+	return kernel;
+
+	//return std::vector<int> { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
 }

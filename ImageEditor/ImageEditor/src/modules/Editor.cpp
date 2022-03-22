@@ -248,6 +248,16 @@ void Editor::MainMenuBar()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Deblur"))
+				{
+					if (ImGui::MenuItem("Laplace"))
+					{
+						Filters::ApplyLaplace(App->renderer->texture_target, App->renderer->texture_filter);
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Super Resolution"))
 				{
 					this->super_resolution_popup = true;
