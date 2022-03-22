@@ -533,11 +533,5 @@ std::vector<float> Filters::CreateGaussianKernel(const int& kernel_size)
 		}
 	}
 
-	std::cout << "Gaussian kernel" << std::endl;
-	for (auto& kernel_element : kernel)
-	{
-		std::cout << kernel_element << std::endl;
-	}
-
 	return kernel;
 }
