@@ -223,6 +223,11 @@ void Editor::MainMenuBar()
 					Filters::ApplyBlur(App->renderer->texture_target, App->renderer->texture_filter, 3);
 				}
 
+				if (ImGui::MenuItem("Gaussian Blur"))
+				{
+					Filters::ApplyGaussianBlur(App->renderer->texture_target, App->renderer->texture_filter, 5);
+				}
+
 				if (ImGui::MenuItem("Negative"))
 				{
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
