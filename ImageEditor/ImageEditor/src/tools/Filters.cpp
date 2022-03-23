@@ -513,13 +513,24 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 				}
 			}
 
+			Uint8 current_target_r = 0;
+			Uint8 current_target_g = 0;
+			Uint8 current_target_b = 0;
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
+			Uint8 target_greyscale = (current_target_r + current_target_g + current_target_b) / 3;
+
+
 			filter_r = Uint8(sum_r / 9);
 			filter_g = Uint8(sum_g / 9);
 			filter_b = Uint8(sum_b / 9);
 
 			Uint8 greyscale_value = (filter_r + filter_g + filter_b) / 3;
 
+			Uint8 final_value = target_greyscale - greyscale_value;
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, target_greyscale - greyscale_value, target_greyscale - greyscale_value, target_greyscale - greyscale_value);
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, greyscale_value, greyscale_value, greyscale_value);
+			//u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, final_value, final_value, final_value);
 		}
 	}
 
