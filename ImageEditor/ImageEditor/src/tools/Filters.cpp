@@ -518,12 +518,12 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 			Uint8 current_target_b = 0;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
 
-			Uint8 final_value_r = current_target_r - (Uint8)sum / 3;
-			Uint8 final_value_g = current_target_g - (Uint8)sum / 3;
-			Uint8 final_value_b = current_target_b - (Uint8)sum / 3;
+			Uint8 final_value_r = current_target_r - (Uint8)sum;
+			Uint8 final_value_g = current_target_g - (Uint8)sum;
+			Uint8 final_value_b = current_target_b - (Uint8)sum;
 
-			//u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum, sum, sum);
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, final_value_r, final_value_g, final_value_b);
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum, sum, sum);
+			//u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, final_value_r, final_value_g, final_value_b);
 		}
 	}
 
