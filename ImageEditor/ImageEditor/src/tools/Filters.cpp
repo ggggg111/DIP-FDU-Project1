@@ -487,9 +487,7 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 			int krad = kernel_size / 2;
 			int k_ind = 0;
 
-			int sum_r = 0.0f;
-			int sum_g = 0.0f;
-			int sum_b = 0.0f;
+			int sum = 0.0f;
 
 			for (int k_row = -krad; k_row <= krad; ++k_row)
 			{
@@ -505,32 +503,27 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
 					}
 
-					sum_r += kernel[k_ind] * target_r;
-					sum_g += kernel[k_ind] * target_g;
-					sum_b += kernel[k_ind] * target_b;
+					Uint8 target_grayscale = (target_r + target_g + target_b) / 3;
+
+					sum += kernel[k_ind] * target_grayscale;
 
 					++k_ind;
 				}
 			}
 
+			sum /= (kernel_size * kernel_size);
+
 			Uint8 current_target_r = 0;
 			Uint8 current_target_g = 0;
 			Uint8 current_target_b = 0;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
-			Uint8 target_greyscale = (current_target_r + current_target_g + current_target_b) / 3;
 
+			Uint8 final_value_r = current_target_r - (Uint8)sum / 3;
+			Uint8 final_value_g = current_target_g - (Uint8)sum / 3;
+			Uint8 final_value_b = current_target_b - (Uint8)sum / 3;
 
-			filter_r = Uint8(sum_r / 9);
-			filter_g = Uint8(sum_g / 9);
-			filter_b = Uint8(sum_b / 9);
-
-			Uint8 greyscale_value = (filter_r + filter_g + filter_b) / 3;
-
-			Uint8 final_value = target_greyscale - greyscale_value;
-
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, target_greyscale - greyscale_value, target_greyscale - greyscale_value, target_greyscale - greyscale_value);
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, greyscale_value, greyscale_value, greyscale_value);
-			//u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, final_value, final_value, final_value);
+			//u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum, sum, sum);
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, final_value_r, final_value_g, final_value_b);
 		}
 	}
 
@@ -681,6 +674,16 @@ std::vector<int> Filters::CreateLaplaceKernel()
 	kernel[6] = 0;
 	kernel[7] = 1;
 	kernel[8] = 0;
+
+	/*kernel[0] = 1;
+	kernel[1] = 1;
+	kernel[2] = 1;
+	kernel[3] = 1;
+	kernel[4] = -8;
+	kernel[5] = 1;
+	kernel[6] = 1;
+	kernel[7] = 1;
+	kernel[8] = 1;*/
 
 	return kernel;
 
