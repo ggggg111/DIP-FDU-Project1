@@ -663,29 +663,5 @@ std::vector<float> Filters::CreateGaussianKernel(const int& kernel_size)
 
 std::vector<int> Filters::CreateLaplaceKernel()
 {
-	std::vector<int> kernel(3 * 3, 0);
-
-	kernel[0] = 0;
-	kernel[1] = 1;
-	kernel[2] = 0;
-	kernel[3] = 1;
-	kernel[4] = -4;
-	kernel[5] = 1;
-	kernel[6] = 0;
-	kernel[7] = 1;
-	kernel[8] = 0;
-
-	/*kernel[0] = 1;
-	kernel[1] = 1;
-	kernel[2] = 1;
-	kernel[3] = 1;
-	kernel[4] = -8;
-	kernel[5] = 1;
-	kernel[6] = 1;
-	kernel[7] = 1;
-	kernel[8] = 1;*/
-
-	return kernel;
-
-	//return std::vector<int> { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
+	return std::vector<int> { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
 }
