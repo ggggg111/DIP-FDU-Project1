@@ -474,6 +474,124 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 		}
 	}
 
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			int krad = kernel_size / 2;
+			int k_ind = 0;
+
+			int sum_r = 0;
+			int sum_g = 0;
+			int sum_b = 0;
+
+			for (int k_row = -krad; k_row <= krad; ++k_row)
+			{
+				for (int k_col = -krad; k_col <= krad; ++k_col)
+				{
+					Uint8 k_r = 0, k_g = 0, k_b = 0;
+					int target_row = row + k_row;
+					int target_col = col + k_col;
+
+					if (target_row >= 0 && target_col >= 0
+						&& target_row < height && target_col < width)
+					{
+						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &k_r, &k_g, &k_b);
+					}
+
+					sum_r += kernel[k_ind] * (int)k_r;
+					sum_g += kernel[k_ind] * (int)k_g;
+					sum_b += kernel[k_ind] * (int)k_b;
+
+					++k_ind;
+				}
+			}
+
+			CLAMP(sum_r, 0, 255);
+			CLAMP(sum_g, 0, 255);
+			CLAMP(sum_b, 0, 255);
+
+			Uint8 current_target_r = 0;
+			Uint8 current_target_g = 0;
+			Uint8 current_target_b = 0;
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum_r, sum_g, sum_b);
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_filter_pixels[row * width + col] = u_filter_pixels_2d[row][col];
+		}
+	}
+
+	memcpy(filter_pixels, u_filter_pixels, (pitch / 4) * height);
+
+	SDL_UnlockTexture(filter);
+
+	RELEASE_ARRAY2D(u_target_pixels_2d, height);
+	RELEASE_ARRAY2D(u_filter_pixels_2d, height);
+
+	SDL_FreeSurface(target_surface);
+
+	SDL_FreeFormat(pixel_format);
+
+	App->editor->RenderImg(filter, target, false);;
+}
+
+void Filters::ApplyLaplaceEnhancement(SDL_Texture* target, SDL_Texture* filter)
+{
+	Uint32 format = App->renderer->texture_format;
+	SDL_PixelFormat* pixel_format = SDL_AllocFormat(format);
+
+	int width, height;
+	SDL_QueryTexture(target, nullptr, nullptr, &width, &height);
+
+	App->renderer->SetRenderTarget(target);
+
+	SDL_Surface* target_surface = SDL_CreateRGBSurfaceWithFormat(
+		0,
+		width, height,
+		32,
+		App->renderer->texture_format
+	);
+
+	SDL_RenderReadPixels(
+		App->renderer->renderer,
+		nullptr,
+		App->renderer->texture_format,
+		target_surface->pixels,
+		target_surface->pitch
+	);
+
+	App->renderer->SetRenderTarget(nullptr);
+
+	Uint32* u_target_pixels = (Uint32*)target_surface->pixels;
+
+	int pitch;
+	void* filter_pixels;
+
+	SDL_LockTexture(filter, nullptr, (void**)&filter_pixels, &pitch);
+
+	Uint32* u_filter_pixels = (Uint32*)filter_pixels;
+
+	std::vector<int> kernel = Filters::CreateLaplaceKernel();
+	int kernel_size = 3;
+
+	Uint32** u_target_pixels_2d = Array2D<Uint32>(width, height);
+	Uint32** u_filter_pixels_2d = Array2D<Uint32>(width, height);
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			u_target_pixels_2d[row][col] = u_target_pixels[(row * width + col)];
+		}
+	}
+
 	Uint8** initial_target_r = Array2D<Uint8>(width, height);
 	Uint8** initial_target_g = Array2D<Uint8>(width, height);
 	Uint8** initial_target_b = Array2D<Uint8>(width, height);

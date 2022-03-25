@@ -14,6 +14,7 @@ public:
 	static void ApplyGaussianBlur(SDL_Texture* target, SDL_Texture* filter, const int& kernel_size);
 	static void ApplyMedianBlur(SDL_Texture* target, SDL_Texture* filter, const int& kernel_size);
 	static void ApplyLaplace(SDL_Texture* target, SDL_Texture* filter);
+	static void ApplyLaplaceEnhancement(SDL_Texture* target, SDL_Texture* filter);
 	static void ApplyNegative(SDL_Texture* target, SDL_Texture* filter);
 
 private:
