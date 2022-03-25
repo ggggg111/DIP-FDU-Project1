@@ -474,9 +474,9 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 		}
 	}
 
-	Uint8 initial_target_r = 0;
-	Uint8 initial_target_g = 0;
-	Uint8 initial_target_b = 0;
+	Uint8** initial_target_r = Array2D<Uint8>(width, height);
+	Uint8** initial_target_g = Array2D<Uint8>(width, height);
+	Uint8** initial_target_b = Array2D<Uint8>(width, height);
 
 	int min_r = 0;
 	int min_g = 0;
@@ -490,7 +490,7 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 	{
 		for (int col = 0; col < width; ++col)
 		{
-			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &initial_target_r, &initial_target_g, &initial_target_b);
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &initial_target_r[row][col], &initial_target_g[row][col], &initial_target_b[row][col]);
 
 			int krad = kernel_size / 2;
 			int k_ind = 0;
@@ -569,28 +569,15 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 	{
 		for (int col = 0; col < width; ++col)
 		{
-			/*Uint8 r = sums_r_min[row][col] * (255.0f / max_r);
-			Uint8 g = sums_g_min[row][col] * (255.0f / max_g);
-			Uint8 b = sums_b_min[row][col] * (255.0f / max_b);
-
-			Uint8 wh = (r + g + b) / 3;*/
-
-			/*u_filter_pixels_2d[row][col] = SDL_MapRGB(
-				pixel_format,
-				wh,
-				wh,
-				wh
-			);*/
-
 			int r = sums_r_min[row][col] * (255.0f / max_r);
 			int g = sums_g_min[row][col] * (255.0f / max_g);
 			int b = sums_b_min[row][col] * (255.0f / max_b);
 
 			Uint8 wh = (r + g + b) / 3;
 
-			initial_sharpened_r[row][col] = (int)initial_target_r + r;
-			initial_sharpened_g[row][col] = (int)initial_target_g + g;
-			initial_sharpened_b[row][col] = (int)initial_target_b + b;
+			initial_sharpened_r[row][col] = (int)initial_target_r[row][col] + wh;
+			initial_sharpened_g[row][col] = (int)initial_target_g[row][col] + wh;
+			initial_sharpened_b[row][col] = (int)initial_target_b[row][col] + wh;
 
 			if (min_sharpened_r > initial_sharpened_r[row][col]) min_sharpened_r = initial_sharpened_r[row][col];
 			if (min_sharpened_g > initial_sharpened_g[row][col]) min_sharpened_g = initial_sharpened_g[row][col];
