@@ -753,9 +753,32 @@ void Filters::ApplyLaplaceEnhancement(SDL_Texture* target, SDL_Texture* filter)
 	RELEASE_ARRAY2D(u_target_pixels_2d, height);
 	RELEASE_ARRAY2D(u_filter_pixels_2d, height);
 
+	RELEASE_ARRAY2D(initial_target_r, height);
+	RELEASE_ARRAY2D(initial_target_g, height);
+	RELEASE_ARRAY2D(initial_target_b, height);
+
+	RELEASE_ARRAY2D(sums_r, height);
+	RELEASE_ARRAY2D(sums_g, height);
+	RELEASE_ARRAY2D(sums_b, height);
+
+	RELEASE_ARRAY2D(sums_r_min, height);
+	RELEASE_ARRAY2D(sums_g_min, height);
+	RELEASE_ARRAY2D(sums_b_min, height);
+
+	RELEASE_ARRAY2D(initial_sharpened_r, height);
+	RELEASE_ARRAY2D(initial_sharpened_g, height);
+	RELEASE_ARRAY2D(initial_sharpened_b, height);
+
+	RELEASE_ARRAY2D(final_sharpened_r, height);
+	RELEASE_ARRAY2D(final_sharpened_g, height);
+	RELEASE_ARRAY2D(final_sharpened_b, height);
+
+
+
 	SDL_FreeSurface(target_surface);
 
 	SDL_FreeFormat(pixel_format);
+
 
 	App->editor->RenderImg(filter, target, false);
 }
