@@ -876,6 +876,10 @@ SDL_Texture* Editor::LoadImg(const std::string& path) const
 	int width, height;
 	ImageLoader::GetTextureDimensions(texture, &width, &height);
 
+	if (App->renderer->texture_workbench_target) SDL_DestroyTexture(App->renderer->texture_workbench_target);
+	if (App->renderer->texture_filter) SDL_DestroyTexture(App->renderer->texture_filter);
+	if (App->renderer->texture_target) SDL_DestroyTexture(App->renderer->texture_target);
+
 	App->renderer->texture_workbench_target = App->renderer->CreateTexture(
 		App->renderer->texture_format,
 		SDL_TEXTUREACCESS_STREAMING,
