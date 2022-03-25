@@ -571,9 +571,9 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 
 			Uint8 wh = (r + g + b) / 3;
 
-			initial_sharpened_r[row][col] = (int)initial_target_r[row][col] + r;
-			initial_sharpened_g[row][col] = (int)initial_target_g[row][col] + g;
-			initial_sharpened_b[row][col] = (int)initial_target_b[row][col] + b;
+			initial_sharpened_r[row][col] = (int)initial_target_r[row][col] + r / (kernel_size * kernel_size);
+			initial_sharpened_g[row][col] = (int)initial_target_g[row][col] + g / (kernel_size * kernel_size);
+			initial_sharpened_b[row][col] = (int)initial_target_b[row][col] + b / (kernel_size * kernel_size);
 
 			if (min_sharpened_r > initial_sharpened_r[row][col]) min_sharpened_r = initial_sharpened_r[row][col];
 			if (min_sharpened_g > initial_sharpened_g[row][col]) min_sharpened_g = initial_sharpened_g[row][col];
