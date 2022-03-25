@@ -474,10 +474,24 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 		}
 	}
 
+	Uint8 initial_target_r = 0;
+	Uint8 initial_target_g = 0;
+	Uint8 initial_target_b = 0;
+
+	int min_r = 0;
+	int min_g = 0;
+	int min_b = 0;
+
+	int** sums_r = Array2D<int>(width, height);
+	int** sums_g = Array2D<int>(width, height);
+	int** sums_b = Array2D<int>(width, height);
+
 	for (int row = 0; row < height; ++row)
 	{
 		for (int col = 0; col < width; ++col)
 		{
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &initial_target_r, &initial_target_g, &initial_target_b);
+
 			int krad = kernel_size / 2;
 			int k_ind = 0;
 
@@ -499,7 +513,6 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &k_r, &k_g, &k_b);
 					}
 
-
 					sum_r += kernel[k_ind] * (int)k_r;
 					sum_g += kernel[k_ind] * (int)k_g;
 					sum_b += kernel[k_ind] * (int)k_b;
@@ -508,22 +521,64 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 				}
 			}
 
-			CLAMP(sum_r, 0, 255);
-			CLAMP(sum_g, 0, 255);
-			CLAMP(sum_b, 0, 255);
+			sums_r[row][col] = sum_r;
+			sums_g[row][col] = sum_g;
+			sums_b[row][col] = sum_b;
 
-			int sum = (Uint8)(sum_r + sum_g + sum_b) / 3;
+			if (min_r > sum_r) min_r = sum_r;
+			if (min_g > sum_g) min_g = sum_g;
+			if (min_b > sum_b) min_b = sum_b;
+		}
+	}
 
-			Uint8 current_target_r = 0;
-			Uint8 current_target_g = 0;
-			Uint8 current_target_b = 0;
-			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
+	printf("Min R: %d\n", min_r);
+	printf("Min G: %d\n", min_g);
+	printf("Min B: %d\n", min_b);
+
+	int** sums_r_min = Array2D<int>(width, height);
+	int** sums_g_min = Array2D<int>(width, height);
+	int** sums_b_min = Array2D<int>(width, height);
+
+	int max_r = 255;
+	int max_g = 255;
+	int max_b = 255;
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			sums_r_min[row][col] = sums_r[row][col] - min_r;
+			sums_g_min[row][col] = sums_g[row][col] - min_g;
+			sums_b_min[row][col] = sums_b[row][col] - min_b;
+
+			if (max_r < sums_r_min[row][col]) max_r = sums_r_min[row][col];
+			if (max_g < sums_g_min[row][col]) max_g = sums_g_min[row][col];
+			if (max_b < sums_b_min[row][col]) max_b = sums_b_min[row][col];
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			Uint8 r = sums_r_min[row][col] * (255.0f / max_r);
+			Uint8 g = sums_g_min[row][col] * (255.0f / max_g);
+			Uint8 b = sums_b_min[row][col] * (255.0f / max_b);
+
+			Uint8 wh = (r + g + b) / 3;
+
+			/*u_filter_pixels_2d[row][col] = SDL_MapRGB(
+				pixel_format,
+				r,
+				g,
+				b
+			);*/
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(
 				pixel_format,
-				current_target_r + sum,
-				current_target_g + sum,
-				current_target_b + sum
+				wh,
+				wh,
+				wh
 			);
 		}
 	}
