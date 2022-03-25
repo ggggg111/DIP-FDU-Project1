@@ -531,10 +531,6 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 		}
 	}
 
-	printf("Min R: %d\n", min_r);
-	printf("Min G: %d\n", min_g);
-	printf("Min B: %d\n", min_b);
-
 	int** sums_r_min = Array2D<int>(width, height);
 	int** sums_g_min = Array2D<int>(width, height);
 	int** sums_b_min = Array2D<int>(width, height);
@@ -575,9 +571,9 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 
 			Uint8 wh = (r + g + b) / 3;
 
-			initial_sharpened_r[row][col] = (int)initial_target_r[row][col] + wh;
-			initial_sharpened_g[row][col] = (int)initial_target_g[row][col] + wh;
-			initial_sharpened_b[row][col] = (int)initial_target_b[row][col] + wh;
+			initial_sharpened_r[row][col] = (int)initial_target_r[row][col] + r;
+			initial_sharpened_g[row][col] = (int)initial_target_g[row][col] + g;
+			initial_sharpened_b[row][col] = (int)initial_target_b[row][col] + b;
 
 			if (min_sharpened_r > initial_sharpened_r[row][col]) min_sharpened_r = initial_sharpened_r[row][col];
 			if (min_sharpened_g > initial_sharpened_g[row][col]) min_sharpened_g = initial_sharpened_g[row][col];
@@ -601,9 +597,9 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 			final_sharpened_g[row][col] = initial_sharpened_g[row][col] - min_sharpened_g;
 			final_sharpened_b[row][col] = initial_sharpened_b[row][col] - min_sharpened_b;
 
-			if (max_sharpened_r < sums_r_min[row][col]) max_sharpened_r = sums_r_min[row][col];
-			if (max_sharpened_g < sums_g_min[row][col]) max_sharpened_g = sums_g_min[row][col];
-			if (max_sharpened_b < sums_b_min[row][col]) max_sharpened_b = sums_b_min[row][col];
+			if (max_sharpened_r < final_sharpened_r[row][col]) max_sharpened_r = final_sharpened_r[row][col];
+			if (max_sharpened_g < final_sharpened_g[row][col]) max_sharpened_g = final_sharpened_g[row][col];
+			if (max_sharpened_b < final_sharpened_b[row][col]) max_sharpened_b = final_sharpened_b[row][col];
 		}
 	}
 
@@ -611,9 +607,9 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 	{
 		for (int col = 0; col < width; ++col)
 		{
-			int r = final_sharpened_r[row][col] * (255.0f /max_sharpened_r);
-			int g = final_sharpened_g[row][col] * (255.0f /max_sharpened_g);
-			int b = final_sharpened_b[row][col] * (255.0f /max_sharpened_b);
+			int r = final_sharpened_r[row][col] * (255.0f / max_sharpened_r);
+			int g = final_sharpened_g[row][col] * (255.0f / max_sharpened_g);
+			int b = final_sharpened_b[row][col] * (255.0f / max_sharpened_b);
 
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(
 				pixel_format,
