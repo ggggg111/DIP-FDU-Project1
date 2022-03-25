@@ -508,20 +508,23 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 				}
 			}
 
-			//sum_r /= (kernel_size * kernel_size);
-			//sum_g /= (kernel_size * kernel_size);
-			//sum_b /= (kernel_size * kernel_size);
-
 			CLAMP(sum_r, 0, 255);
 			CLAMP(sum_g, 0, 255);
 			CLAMP(sum_b, 0, 255);
+
+			int sum = (Uint8)(sum_r + sum_g + sum_b) / 3;
 
 			Uint8 current_target_r = 0;
 			Uint8 current_target_g = 0;
 			Uint8 current_target_b = 0;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
 
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum_r, sum_g, sum_b);
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(
+				pixel_format,
+				current_target_r + sum,
+				current_target_g + sum,
+				current_target_b + sum
+			);
 		}
 	}
 
