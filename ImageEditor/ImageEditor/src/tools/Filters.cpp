@@ -487,7 +487,7 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 			int krad = kernel_size / 2;
 			int k_ind = 0;
 
-			int sum = 0.0f;
+			int sum = 0;
 
 			for (int k_row = -krad; k_row <= krad; ++k_row)
 			{
@@ -511,20 +511,42 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 				}
 			}
 
-			sum /= (kernel_size * kernel_size);
+			//sum /= (kernel_size * kernel_size);
 
 			Uint8 current_target_r = 0;
 			Uint8 current_target_g = 0;
 			Uint8 current_target_b = 0;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
 
-			Uint8 final_value_r = current_target_r - (Uint8)sum;
-			Uint8 final_value_g = current_target_g - (Uint8)sum;
-			Uint8 final_value_b = current_target_b - (Uint8)sum;
-
 			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum, sum, sum);
 		}
 	}
+
+	Uint8 min_first_value = u_filter_pixels_2d[0][0];
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			Uint8 filter_r, filter_g, filter_b;
+
+			filter_r = 0;
+			filter_g = 0;
+			filter_b = 0;
+
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &filter_r, &filter_g, &filter_b);
+			
+			int sum = (filter_r + filter_g + filter_b) / 3;
+
+			if (sum < min_first_value)
+			{
+				min_first_value = sum;
+			}
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r - min_first_value, filter_g - min_first_value, filter_b - min_first_value);
+		}
+	}
+
+	printf("Min value: %d\n", min_first_value);
 
 	for (int row = 0; row < height; ++row)
 	{
