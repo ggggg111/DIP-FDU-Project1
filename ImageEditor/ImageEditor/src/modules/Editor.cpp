@@ -233,6 +233,11 @@ void Editor::MainMenuBar()
 					Filters::ApplyNegative(App->renderer->texture_target, App->renderer->texture_filter);
 				}
 
+				if (ImGui::MenuItem("Laplace"))
+				{
+					Filters::ApplyLaplace(App->renderer->texture_target, App->renderer->texture_filter);
+				}
+
 				ImGui::EndMenu();
 			}
 
@@ -243,16 +248,6 @@ void Editor::MainMenuBar()
 					if (ImGui::MenuItem("Median Blur"))
 					{
 						Filters::ApplyMedianBlur(App->renderer->texture_target, App->renderer->texture_filter, 5);
-					}
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Deblur"))
-				{
-					if (ImGui::MenuItem("Laplace"))
-					{
-						Filters::ApplyLaplace(App->renderer->texture_target, App->renderer->texture_filter);
 					}
 
 					ImGui::EndMenu();
