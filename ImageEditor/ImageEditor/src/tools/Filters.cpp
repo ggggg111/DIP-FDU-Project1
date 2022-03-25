@@ -557,28 +557,82 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 		}
 	}
 
+	int** initial_sharpened_r = Array2D<int>(width, height);
+	int** initial_sharpened_g = Array2D<int>(width, height);
+	int** initial_sharpened_b = Array2D<int>(width, height);
+
+	int min_sharpened_r = 0;
+	int min_sharpened_g = 0;
+	int min_sharpened_b = 0;
+
 	for (int row = 0; row < height; ++row)
 	{
 		for (int col = 0; col < width; ++col)
 		{
-			Uint8 r = sums_r_min[row][col] * (255.0f / max_r);
+			/*Uint8 r = sums_r_min[row][col] * (255.0f / max_r);
 			Uint8 g = sums_g_min[row][col] * (255.0f / max_g);
 			Uint8 b = sums_b_min[row][col] * (255.0f / max_b);
 
-			Uint8 wh = (r + g + b) / 3;
+			Uint8 wh = (r + g + b) / 3;*/
 
 			/*u_filter_pixels_2d[row][col] = SDL_MapRGB(
-				pixel_format,
-				r,
-				g,
-				b
-			);*/
-
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(
 				pixel_format,
 				wh,
 				wh,
 				wh
+			);*/
+
+			int r = sums_r_min[row][col] * (255.0f / max_r);
+			int g = sums_g_min[row][col] * (255.0f / max_g);
+			int b = sums_b_min[row][col] * (255.0f / max_b);
+
+			Uint8 wh = (r + g + b) / 3;
+
+			initial_sharpened_r[row][col] = (int)initial_target_r + r;
+			initial_sharpened_g[row][col] = (int)initial_target_g + g;
+			initial_sharpened_b[row][col] = (int)initial_target_b + b;
+
+			if (min_sharpened_r > initial_sharpened_r[row][col]) min_sharpened_r = initial_sharpened_r[row][col];
+			if (min_sharpened_g > initial_sharpened_g[row][col]) min_sharpened_g = initial_sharpened_g[row][col];
+			if (min_sharpened_b > initial_sharpened_b[row][col]) min_sharpened_b = initial_sharpened_b[row][col];
+		}
+	}
+
+	int** final_sharpened_r = Array2D<int>(width, height);
+	int** final_sharpened_g = Array2D<int>(width, height);
+	int** final_sharpened_b = Array2D<int>(width, height);
+
+	int max_sharpened_r = 255;
+	int max_sharpened_g = 255;
+	int max_sharpened_b = 255;
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			final_sharpened_r[row][col] = initial_sharpened_r[row][col] - min_sharpened_r;
+			final_sharpened_g[row][col] = initial_sharpened_g[row][col] - min_sharpened_g;
+			final_sharpened_b[row][col] = initial_sharpened_b[row][col] - min_sharpened_b;
+
+			if (max_sharpened_r < sums_r_min[row][col]) max_sharpened_r = sums_r_min[row][col];
+			if (max_sharpened_g < sums_g_min[row][col]) max_sharpened_g = sums_g_min[row][col];
+			if (max_sharpened_b < sums_b_min[row][col]) max_sharpened_b = sums_b_min[row][col];
+		}
+	}
+
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			int r = final_sharpened_r[row][col] * (255.0f /max_sharpened_r);
+			int g = final_sharpened_g[row][col] * (255.0f /max_sharpened_g);
+			int b = final_sharpened_b[row][col] * (255.0f /max_sharpened_b);
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(
+				pixel_format,
+				(Uint8)r,
+				(Uint8)g,
+				(Uint8)b
 			);
 		}
 	}
