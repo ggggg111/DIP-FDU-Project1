@@ -3,8 +3,9 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <Windows.h>
+#include <iostream>
 #include <vector>
+#include <Windows.h>
 
 #define RELEASE_ARRAY2D(arr, h) \
 	for (int i = 0; i < h; ++i) \
@@ -12,6 +13,10 @@
 		delete[] arr[i]; \
 	} \
 	delete[] arr;
+
+#define CLAMP(value, min_value, max_value) \
+	if (value < min_value) value = min_value; \
+	if (value > max_value) value = max_value;
 
 template<typename T>
 T** Array2D(const int& width, const int& height)

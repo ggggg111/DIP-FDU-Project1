@@ -478,101 +478,50 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 	{
 		for (int col = 0; col < width; ++col)
 		{
-			Uint8 filter_r, filter_g, filter_b;
-
-			filter_r = 0;
-			filter_g = 0;
-			filter_b = 0;
-
 			int krad = kernel_size / 2;
 			int k_ind = 0;
 
-			int sum = 0;
+			int sum_r = 0;
+			int sum_g = 0;
+			int sum_b = 0;
 
 			for (int k_row = -krad; k_row <= krad; ++k_row)
 			{
 				for (int k_col = -krad; k_col <= krad; ++k_col)
 				{
-					Uint8 target_r = 0, target_g = 0, target_b = 0;
+					Uint8 k_r = 0, k_g = 0, k_b = 0;
 					int target_row = row + k_row;
 					int target_col = col + k_col;
 
 					if (target_row >= 0 && target_col >= 0
 						&& target_row < height && target_col < width)
 					{
-						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &target_r, &target_g, &target_b);
+						SDL_GetRGB(u_target_pixels_2d[target_row][target_col], pixel_format, &k_r, &k_g, &k_b);
 					}
 
-					Uint8 target_grayscale = (target_r + target_g + target_b) / 3;
 
-					sum += kernel[k_ind] * target_grayscale;
+					sum_r += kernel[k_ind] * (int)k_r;
+					sum_g += kernel[k_ind] * (int)k_g;
+					sum_b += kernel[k_ind] * (int)k_b;
 
 					++k_ind;
 				}
 			}
 
-			//sum /= (kernel_size * kernel_size);
+			//sum_r /= (kernel_size * kernel_size);
+			//sum_g /= (kernel_size * kernel_size);
+			//sum_b /= (kernel_size * kernel_size);
+
+			CLAMP(sum_r, 0, 255);
+			CLAMP(sum_g, 0, 255);
+			CLAMP(sum_b, 0, 255);
 
 			Uint8 current_target_r = 0;
 			Uint8 current_target_g = 0;
 			Uint8 current_target_b = 0;
 			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &current_target_r, &current_target_g, &current_target_b);
 
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum, sum, sum);
-		}
-	}
-
-	Uint8 min_first_value = u_filter_pixels_2d[0][0];
-	for (int row = 0; row < height; ++row)
-	{
-		for (int col = 0; col < width; ++col)
-		{
-			Uint8 filter_r, filter_g, filter_b;
-
-			filter_r = 0;
-			filter_g = 0;
-			filter_b = 0;
-
-			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &filter_r, &filter_g, &filter_b);
-			
-			int sum = (filter_r + filter_g + filter_b) / 3;
-
-			if (sum < min_first_value)
-			{
-				min_first_value = sum;
-			}
-
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, filter_r - min_first_value, filter_g - min_first_value, filter_b - min_first_value);
-		}
-	}
-
-	printf("Min value: %d\n", min_first_value);
-
-	Uint8 max_first_value = u_filter_pixels_2d[0][0];
-	for (int row = 0; row < height; ++row)
-	{
-		for (int col = 0; col < width; ++col)
-		{
-			Uint8 filter_r, filter_g, filter_b;
-
-			filter_r = 0;
-			filter_g = 0;
-			filter_b = 0;
-
-			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &filter_r, &filter_g, &filter_b);
-
-			int sum = (filter_r + filter_g + filter_b) / 3;
-
-			if (sum > max_first_value)
-			{
-				max_first_value = sum;
-			}
-
-			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format,
-				filter_r * (255.0f / max_first_value),
-				filter_g * (255.0f / max_first_value),
-				filter_b * (255.0f / max_first_value)
-			);
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format, sum_r, sum_g, sum_b);
 		}
 	}
 
