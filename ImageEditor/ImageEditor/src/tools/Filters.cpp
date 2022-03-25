@@ -548,6 +548,34 @@ void Filters::ApplyLaplace(SDL_Texture* target, SDL_Texture* filter)
 
 	printf("Min value: %d\n", min_first_value);
 
+	Uint8 max_first_value = u_filter_pixels_2d[0][0];
+	for (int row = 0; row < height; ++row)
+	{
+		for (int col = 0; col < width; ++col)
+		{
+			Uint8 filter_r, filter_g, filter_b;
+
+			filter_r = 0;
+			filter_g = 0;
+			filter_b = 0;
+
+			SDL_GetRGB(u_target_pixels_2d[row][col], pixel_format, &filter_r, &filter_g, &filter_b);
+
+			int sum = (filter_r + filter_g + filter_b) / 3;
+
+			if (sum > max_first_value)
+			{
+				max_first_value = sum;
+			}
+
+			u_filter_pixels_2d[row][col] = SDL_MapRGB(pixel_format,
+				filter_r * (255.0f / max_first_value),
+				filter_g * (255.0f / max_first_value),
+				filter_b * (255.0f / max_first_value)
+			);
+		}
+	}
+
 	for (int row = 0; row < height; ++row)
 	{
 		for (int col = 0; col < width; ++col)
