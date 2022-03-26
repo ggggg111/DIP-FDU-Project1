@@ -16,7 +16,21 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 - Editing tools, including a standard brush, a rubber, circle and square brushes, lines, ellipses, and rectangles. The color and size of the tool can be tweaked.
   
-- Editing filters, including grayscale, blur, and negative filtering.
+- Filters:
+  - Grayscale.
+  - Blur.
+  - Gaussian Blur.
+  - Negative.
+  - Laplace Operator.
+
+- Enhancement:
+  - Denoise:
+    - Median Blur.
+  - Brighten:
+    - Laplace.
+  - Super Resolution.
+  
+- HDR Image Loading.
 
 ## Controls
 
@@ -39,6 +53,10 @@ This project has been created for the subject Digital Image Processing at Fudan 
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs).
 
 - [OpenCV](https://github.com/opencv/opencv).
+
+## External tools
+
+- [Real-ERSGAN](https://github.com/xinntao/Real-ESRGAN)/[Real-ERSGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
 ## Compatibility
 
