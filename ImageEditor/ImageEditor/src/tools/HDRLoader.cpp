@@ -18,8 +18,8 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 	align_mtb->process(images, images);
 
 	cv::Mat response_debevec;
-	cv::Ptr<cv::CalibrateDebevec> calibrateDebevec = cv::createCalibrateDebevec();
-	calibrateDebevec->process(images, response_debevec, times);
+	cv::Ptr<cv::CalibrateDebevec> calibrate_debevec = cv::createCalibrateDebevec();
+	calibrate_debevec->process(images, response_debevec, times);
 
 	cv::Mat hdr_debevec;
 	cv::Ptr<cv::MergeDebevec> merge_debevec = cv::createMergeDebevec();
@@ -28,6 +28,13 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 	cv::Mat ldr = HDRLoader::ApplyTonemap(tonemap_type, hdr_debevec);
 
 	HDRLoader::SendImageToEditor(ldr);
+
+	align_mtb.release();
+	calibrate_debevec.release();
+	response_debevec.release();
+	merge_debevec.release();
+	hdr_debevec.release();
+	ldr.release();
 }
 
 std::vector<cv::Mat> HDRLoader::ReadImages(const std::vector<std::string>& image_paths)
