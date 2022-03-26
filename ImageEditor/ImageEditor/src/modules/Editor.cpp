@@ -253,7 +253,7 @@ void Editor::MainMenuBar()
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::BeginMenu("Deblur"))
+				if (ImGui::BeginMenu("Brighten"))
 				{
 					if (ImGui::MenuItem("Laplace"))
 					{
