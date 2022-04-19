@@ -14,7 +14,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{96692040-0711-45de-9660-9f9221aafd20}</ProjectGuid>
+    <ProjectGuid>{2f786642-d050-4de2-913e-c5bcd9661ec5}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -54,6 +54,9 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\include;C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\include\torch\csrc\api\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.3\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -87,9 +90,10 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
-xcopy C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\lib C:\Users\usuario\Desktop\Fudan\Classes\Semester 2\Digital Image Processing\DIP-FDU-Project1\ImageEditor\Torch\x64\Debug /D /Y
+xcopy "C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\lib" "C:\Users\usuario\Desktop\Fudan\Classes\Semester 2\Digital Image Processing\DIP-FDU-Project1\ImageEditor\Torch\x64\Debug" /D /Y
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -145,7 +149,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
 xcopy C:\libtorch-win-shared-with-deps-1.11.0+cu113\libtorch\lib C:\Users\usuario\Desktop\Fudan\Classes\Semester 2\Digital Image Processing\DIP-FDU-Project1\ImageEditor\Torch\x64\Release /D /Y
 if %errorlevel% neq 0 goto :cmEnd
