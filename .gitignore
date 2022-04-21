@@ -357,3 +357,6 @@ ImageEditor/ImageEditor/workdir/opencv_world455d.dll
 
 # Folders
 ImageEditor/ImageEditor/vendor/OpenCV/
+
+# Files
+ImageEditor/Torch/fastflow_model.pt
