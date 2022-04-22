@@ -5,21 +5,54 @@
 
 #include <opencv2/opencv.hpp>
 
+cv::Mat TensorToCVImage(at::Tensor& tensor)
+{
+	/*int width = tensor.sizes()[1];
+	int height = tensor.sizes()[2];
+	std::cout << tensor.dtype();
+
+	try
+	{
+		cv::Mat output_mat(cv::Size{ width, height }, CV_8UC1, tensor.data_ptr<float>());
+		std::cout << output_mat << std::endl;
+		std::cout << output_mat.size << std::endl;
+		
+		return output_mat.clone();
+	}
+	catch (const c10::Error& e)
+	{
+		std::cout << "an error has occured : " << e.msg() << std::endl;
+	}
+
+	return cv::Mat(width, height, CV_8UC3);*/
+	tensor = tensor.mul(255).clamp(0, 255).to(torch::kU8);
+	tensor = tensor.to(torch::kCPU);
+	int64_t width = tensor.size(1);
+	int64_t height = tensor.size(2);
+	std::cout << width << height << std::endl;
+	cv::Mat mat = cv::Mat(cv::Size(width, height), CV_8UC3, tensor.data_ptr<uchar>());
+	return mat.clone();
+}
+
 int main()
 {
 	const char* model_path = "serialized_fastflow.zip";
 	torch::jit::script::Module model;
+
 	try
 	{
 		model = torch::jit::load(model_path);
+
 		std::cout << "Model loaded correctly" << std::endl;
 	}
 	catch (const c10::Error& e)
 	{
 		std::cout << "Model loaded incorrectly" << std::endl;
-		std::cerr << "error loading the model" << std::endl;
+		std::cerr << "Error loading the model" << std::endl;
+		
 		return -1;
 	}
+
 	model.to(torch::kCUDA);
 	model.eval();
 
@@ -40,27 +73,13 @@ int main()
 
 	c10::IValue output = model.forward({ tensor_image });
 	c10::Dict<at::IValue, at::IValue> out = output.toGenericDict();
-	at::Tensor anomaly_map = out.at("anomaly_map").toTensor();
+	at::Tensor anomaly_map = out.at("anomaly_map").toTensor().squeeze(0).detach();
+
 	std::cout << anomaly_map.sizes() << std::endl;
+
+	cv::Mat ret = TensorToCVImage(anomaly_map);
+	std::cout << ret << std::endl;
+	std::cout << ret.size << std::endl;
 	
-	std::cout << "Done!\n";
-
-	//std::vector<torch::jit::IValue> inputs;
-	//inputs.push_back(torch::ones({ 1, 3, 224, 224 }));
-
-	//at::Tensor output = m.forward(inputs).toTensor();
-	//std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
-
-	/*const char* input_image = "test.png";
-	at::Tensor input_tensor = torch::from_file(input_image);
-	std::cout << input_tensor << std::endl;
-	std::cout << input_tensor.sizes() << std::endl;
-	std::vector<torch::jit::IValue> inputs;
-	inputs.push_back(input_tensor);
-
-	at::Tensor output = m.forward(inputs).toTensor();*/
-
-
-
 	return 0;
 }
