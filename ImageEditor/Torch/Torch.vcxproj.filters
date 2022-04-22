@@ -10,9 +10,4 @@
       <UniqueIdentifier>{F23262D7-7A28-3657-BA8F-128552BB4444}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stb_image.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

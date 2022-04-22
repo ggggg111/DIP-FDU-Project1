@@ -3,8 +3,7 @@
 #include <torch/torch.h>
 #include <torch/script.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <opencv2/opencv.hpp>
 
 int main()
 {
@@ -25,7 +24,7 @@ int main()
 	std::cin.get();
 	return 0;*/
 
-	const char* encoder_path = "fastflow_encoder.pt";
+	const char* encoder_path = "serialized_fastflow.zip";
 	torch::jit::script::Module encoder;
 	try
 	{
@@ -40,8 +39,11 @@ int main()
 	}
 	encoder.eval();
 
+	cv::Mat img = cv::imread("002.png", cv::IMREAD_COLOR);
+	std::cout << img.size << " x " << img.channels() << std::endl;
 
-
+	at::Tensor tensor_image = torch::from_blob(img.data, { img.rows, img.cols, img.channels() }, at::kByte);
+	std::cout << tensor_image.sizes() << std::endl;
 
 	//std::vector<torch::jit::IValue> inputs;
 	//inputs.push_back(torch::ones({ 1, 3, 224, 224 }));
