@@ -21,7 +21,7 @@ int main()
 		return -1;
 	}
 	model.to(torch::kCUDA);
-	//model.eval();
+	model.eval();
 
 	cv::Mat img = cv::imread("002.png", cv::IMREAD_COLOR);
 	std::cout << img.size << " x " << img.channels() << std::endl;
