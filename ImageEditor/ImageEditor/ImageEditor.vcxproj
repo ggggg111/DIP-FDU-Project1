@@ -88,15 +88,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\SDLImage\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(ProjectDir)src\;$(ProjectDir)vendor\PortableFileDialogs\;$(ProjectDir)vendor\SDLGfx\include\;$(ProjectDir)vendor\OpenCV\build\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vendor\SDLImage\lib\x64\;$(ProjectDir)vendor\SDL\lib\x64\;$(ProjectDir)vendor\SDLGfx\lib\x64\;$(ProjectDir)vendor\OpenCV\build\x64\vc15\lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\SDLImage\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(ProjectDir)src\;$(ProjectDir)vendor\PortableFileDialogs\;$(ProjectDir)vendor\SDLGfx\include\;$(ProjectDir)vendor\OpenCV\build\include\;C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\include;C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\include\torch\csrc\api\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\SDLImage\lib\x64\;$(ProjectDir)vendor\SDL\lib\x64\;$(ProjectDir)vendor\SDLGfx\lib\x64\;$(ProjectDir)vendor\OpenCV\build\x64\vc15\lib\;C:\libtorch-win-shared-with-deps-debug-1.11.0+cu113\libtorch\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\SDLImage\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(ProjectDir)src\;$(ProjectDir)vendor\PortableFileDialogs\;$(ProjectDir)vendor\SDLGfx\include\;$(ProjectDir)vendor\OpenCV\build\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vendor\SDLImage\lib\x64\;$(ProjectDir)vendor\SDL\lib\x64\;$(ProjectDir)vendor\SDLGfx\lib\x64\;$(ProjectDir)vendor\OpenCV\build\x64\vc15\lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)vendor\SDL\include\;$(ProjectDir)vendor\SDLImage\include\;$(ProjectDir)vendor\ImGui\;$(ProjectDir)vendor\ImGui\backends\;$(ProjectDir)src\;$(ProjectDir)vendor\PortableFileDialogs\;$(ProjectDir)vendor\SDLGfx\include\;$(ProjectDir)vendor\OpenCV\build\include\;C:\libtorch-win-shared-with-deps-1.11.0+cu113\libtorch\include;C:\libtorch-win-shared-with-deps-1.11.0+cu113\libtorch\include\torch\csrc\api\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vendor\SDLImage\lib\x64\;$(ProjectDir)vendor\SDL\lib\x64\;$(ProjectDir)vendor\SDLGfx\lib\x64\;$(ProjectDir)vendor\OpenCV\build\x64\vc15\lib\;C:\libtorch-win-shared-with-deps-1.11.0+cu113\libtorch\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -135,7 +135,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
