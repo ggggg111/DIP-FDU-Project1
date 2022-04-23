@@ -1,9 +1,13 @@
 #include <iostream>
 #include <filesystem>
+#include <windows.h>
 
 #include "SDL_image.h"
 
 #include "ImageLoader.h"
+#include "Application.h"
+#include "modules/Editor.h"
+#include "modules/Renderer.h"
 
 SDL_Texture* ImageLoader::LoadTexture(SDL_Renderer* renderer, const std::string& path)
 {
@@ -56,4 +60,21 @@ void ImageLoader::GetTextureDimensions(SDL_Texture* texture, int* width, int* he
 void ImageLoader::GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height)
 {
     SDL_QueryTexture(texture, format, access, width, height);
+}
+
+void ImageLoader::SendMatToEditor(const cv::Mat& ldr)
+{
+    std::string extension = ".jpg";
+
+    std::string save_path;
+
+    char temp_filename[MAX_PATH] = { 0 };
+    tmpnam_s(temp_filename);
+
+    save_path.append(temp_filename).append(extension);
+
+    cv::imwrite(save_path, ldr * 255);
+
+    App->editor->bg = App->editor->LoadImg(save_path);
+    App->editor->RenderImg(App->editor->bg, App->renderer->texture_target);
 }

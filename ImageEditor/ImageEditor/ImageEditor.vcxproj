@@ -169,6 +169,7 @@
     <ClCompile Include="src\modules\GUI.cpp" />
     <ClCompile Include="src\modules\Input.cpp" />
     <ClCompile Include="src\modules\Renderer.cpp" />
+    <ClCompile Include="src\modules\TorchLoader.cpp" />
     <ClCompile Include="src\modules\Window.cpp" />
     <ClCompile Include="src\tools\EditorToolSelector.cpp" />
     <ClCompile Include="src\tools\Filters.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\modules\Input.h" />
     <ClInclude Include="src\modules\Module.h" />
     <ClInclude Include="src\modules\Renderer.h" />
+    <ClInclude Include="src\modules\TorchLoader.h" />
     <ClInclude Include="src\modules\Window.h" />
     <ClInclude Include="src\tools\EditorToolSelector.h" />
     <ClInclude Include="src\tools\Filters.h" />

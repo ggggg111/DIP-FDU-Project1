@@ -1,5 +1,3 @@
-#include <windows.h>
-
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/photo.hpp"
@@ -7,6 +5,7 @@
 #include "Application.h"
 #include "modules/Editor.h"
 #include "modules/Renderer.h"
+#include "tools/ImageLoader.h"
 #include "HDRLoader.h"
 
 void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type)
@@ -27,7 +26,7 @@ void HDRLoader::LoadHDRImage(const std::vector<std::string>& image_paths, const 
 
 	cv::Mat ldr = HDRLoader::ApplyTonemap(tonemap_type, hdr_debevec);
 
-	HDRLoader::SendImageToEditor(ldr);
+	ImageLoader::SendMatToEditor(ldr);
 
 	align_mtb.release();
 	calibrate_debevec.release();
@@ -113,21 +112,4 @@ cv::Mat HDRLoader::ApplyMantiukTonemap(const cv::Mat& hdr_debevec)
 	ldr_mantiuk *= 3;
 
 	return ldr_mantiuk;
-}
-
-void HDRLoader::SendImageToEditor(const cv::Mat& ldr)
-{
-	std::string extension = ".jpg";
-
-	std::string save_path;
-
-	char temp_filename[MAX_PATH] = { 0 };
-	tmpnam_s(temp_filename);
-
-	save_path.append(temp_filename).append(extension);
-
-	cv::imwrite(save_path, ldr * 255);
-
-	App->editor->bg = App->editor->LoadImg(save_path);
-	App->editor->RenderImg(App->editor->bg, App->renderer->texture_target);
 }

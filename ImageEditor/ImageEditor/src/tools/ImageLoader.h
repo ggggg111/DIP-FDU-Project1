@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "SDL.h"
+#include "opencv2/imgcodecs.hpp"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -16,6 +17,8 @@ public:
 	
 	static void GetTextureDimensions(SDL_Texture* texture, int* width, int* height);
 	static void GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height);
+
+	static void SendMatToEditor(const cv::Mat& ldr);
 };
 
 #endif /* __IMAGE_LOADER_H__ */

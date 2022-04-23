@@ -26,8 +26,6 @@ private:
 	static cv::Mat ApplyDragoTonemap(const cv::Mat& hdr_debevec);
 	static cv::Mat ApplyReinhardTonemap(const cv::Mat& hdr_debevec);
 	static cv::Mat ApplyMantiukTonemap(const cv::Mat& hdr_debevec);
-	
-	static void SendImageToEditor(const cv::Mat& ldr);
 };
 
 #endif /* __HDR_LOADER_H__ */

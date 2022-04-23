@@ -14,7 +14,7 @@ TorchLoader::~TorchLoader()
 
 void TorchLoader::Start()
 {
-	this->LoadFastFlowModel();
+	//this->LoadFastFlowModel();
 }
 
 void TorchLoader::CleanUp()
