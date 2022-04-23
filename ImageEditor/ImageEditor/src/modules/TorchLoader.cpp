@@ -14,7 +14,7 @@ TorchLoader::~TorchLoader()
 
 void TorchLoader::Start()
 {
-	//this->LoadFastFlowModel();
+	this->LoadFastFlowModel();
 }
 
 void TorchLoader::CleanUp()
@@ -24,7 +24,7 @@ void TorchLoader::CleanUp()
 
 void TorchLoader::LoadFastFlowModel()
 {
-	const char* model_path = "serialized_fastflow.zip";
+	const char* model_path = "models/serialized_fastflow.zip";
 	
 	try
 	{

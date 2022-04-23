@@ -357,6 +357,42 @@ ImageEditor/ImageEditor/workdir/opencv_world455d.dll
 ImageEditor/Torch/opencv_world455.dll
 ImageEditor/Torch/opencv_world455d.dll
 
+ImageEditor/ImageEditor/workdir/asmjit.dll
+ImageEditor/ImageEditor/workdir/c10.dll
+ImageEditor/ImageEditor/workdir/c10_cuda.dll
+ImageEditor/ImageEditor/workdir/caffe2_nvrtc.dll
+ImageEditor/ImageEditor/workdir/cublas64_11.dll
+ImageEditor/ImageEditor/workdir/cublasLt64_11.dll
+ImageEditor/ImageEditor/workdir/cudart64_110.dll
+ImageEditor/ImageEditor/workdir/cudnn64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_adv_infer64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_adv_train64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_cnn_infer64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_cnn_train64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_ops_infer64_8.dll
+ImageEditor/ImageEditor/workdir/cudnn_ops_train64_8.dll
+ImageEditor/ImageEditor/workdir/cufft64_10.dll
+ImageEditor/ImageEditor/workdir/cufftw64_10.dll
+ImageEditor/ImageEditor/workdir/cupti64_2021.1.0.dll
+ImageEditor/ImageEditor/workdir/curand64_10.dll
+ImageEditor/ImageEditor/workdir/cusolver64_11.dll
+ImageEditor/ImageEditor/workdir/cusolverMg64_11.dll
+ImageEditor/ImageEditor/workdir/cusparse64_11.dll
+ImageEditor/ImageEditor/workdir/fbgemm.dll
+ImageEditor/ImageEditor/workdir/libiomp5md.dll
+ImageEditor/ImageEditor/workdir/libiompstubs5md.dll
+ImageEditor/ImageEditor/workdir/nvToolsExt64_1.dll
+ImageEditor/ImageEditor/workdir/nvrtc-builtins64_113.dll
+ImageEditor/ImageEditor/workdir/nvrtc64_112_0.dll
+ImageEditor/ImageEditor/workdir/torch.dll
+ImageEditor/ImageEditor/workdir/torch_cpu.dll
+ImageEditor/ImageEditor/workdir/torch_cuda.dll
+ImageEditor/ImageEditor/workdir/torch_cuda_cpp.dll
+ImageEditor/ImageEditor/workdir/torch_cuda_cu.dll
+ImageEditor/ImageEditor/workdir/torch_global_deps.dll
+ImageEditor/ImageEditor/workdir/uv.dll
+ImageEditor/ImageEditor/workdir/zlibwapi.dll
+
 # Folders
 ImageEditor/ImageEditor/vendor/OpenCV/
 
