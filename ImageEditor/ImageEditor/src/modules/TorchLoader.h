@@ -2,6 +2,7 @@
 #define __TORCH_LOADER_H__
 
 #include <torch/torch.h>
+#include <opencv2/opencv.hpp>
 
 #include "Module.h"
 
@@ -14,8 +15,13 @@ public:
 	void Start() override;
 	void CleanUp() override;
 
+public:
+	cv::Mat FastFlowInference(const std::string& path);
+
 private:
 	void LoadFastFlowModel();
+
+	cv::Mat TensorToCVImage(at::Tensor tensor);
 
 private:
 	torch::jit::script::Module fastflow_model;

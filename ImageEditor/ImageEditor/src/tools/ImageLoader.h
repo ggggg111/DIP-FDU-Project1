@@ -18,7 +18,7 @@ public:
 	static void GetTextureDimensions(SDL_Texture* texture, int* width, int* height);
 	static void GetTextureInformation(SDL_Texture* texture, Uint32* format, int* access, int* width, int* height);
 
-	static void SendMatToEditor(const cv::Mat& ldr);
+	static void SendMatToEditor(const cv::Mat& ldr, const bool& normalized=true);
 };
 
 #endif /* __IMAGE_LOADER_H__ */

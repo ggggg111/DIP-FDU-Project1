@@ -45,6 +45,7 @@ private:
 
 	void ApplySuperResolution();
 	void ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type);
+	void ApplyFastFlowInferenceLeather();
 
 public:
 	EditorToolSelector tools;

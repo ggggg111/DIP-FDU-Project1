@@ -11,6 +11,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "GUI.h"
+#include "TorchLoader.h"
 
 Editor::Editor()
 	: Module(), bg(nullptr)
@@ -266,6 +267,16 @@ void Editor::MainMenuBar()
 				if (ImGui::MenuItem("Super Resolution"))
 				{
 					this->super_resolution_popup = true;
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Anomaly Detection"))
+			{
+				if (ImGui::MenuItem("Leather"))
+				{
+					this->ApplyFastFlowInferenceLeather();
 				}
 
 				ImGui::EndMenu();
@@ -867,6 +878,26 @@ void Editor::ApplySuperResolution()
 void Editor::ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type)
 {
 	HDRLoader::LoadHDRImage(image_paths, exposure_times, tonemap_type);
+}
+
+void Editor::ApplyFastFlowInferenceLeather()
+{
+	App->renderer->SetRenderTarget(App->renderer->texture_target);
+
+	std::string extension = ".png";
+	std::string input_path;
+
+	char temp_filename[MAX_PATH] = { 0 };
+	tmpnam_s(temp_filename);
+
+	input_path.append(temp_filename).append(extension);
+
+	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
+
+	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
+	//std::cout << result << std::endl;
+
+	ImageLoader::SendMatToEditor(result, false);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

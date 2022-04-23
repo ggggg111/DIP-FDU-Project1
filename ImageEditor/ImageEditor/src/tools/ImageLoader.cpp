@@ -62,7 +62,7 @@ void ImageLoader::GetTextureInformation(SDL_Texture* texture, Uint32* format, in
     SDL_QueryTexture(texture, format, access, width, height);
 }
 
-void ImageLoader::SendMatToEditor(const cv::Mat& ldr)
+void ImageLoader::SendMatToEditor(const cv::Mat& ldr, const bool& normalized)
 {
     std::string extension = ".jpg";
 
@@ -73,7 +73,10 @@ void ImageLoader::SendMatToEditor(const cv::Mat& ldr)
 
     save_path.append(temp_filename).append(extension);
 
-    cv::imwrite(save_path, ldr * 255);
+    if(normalized)
+        cv::imwrite(save_path, ldr * 255);
+    else
+        cv::imwrite(save_path, ldr);
 
     App->editor->bg = App->editor->LoadImg(save_path);
     App->editor->RenderImg(App->editor->bg, App->renderer->texture_target);
