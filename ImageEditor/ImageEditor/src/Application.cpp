@@ -11,6 +11,7 @@
 #include "modules/GUI.h"
 #include "modules/Input.h"
 #include "modules/Editor.h"
+#include "modules/TorchLoader.h"
 
 Application::Application()
     : running(true), name("Image Editor")
@@ -18,6 +19,7 @@ Application::Application()
     this->AddModule(this->input = new Input());
     this->AddModule(this->window = new Window("Image Editor", 1024, 768));
     this->AddModule(this->editor = new Editor());
+    this->AddModule(this->torch_loader = new TorchLoader());
     this->AddModule(this->renderer = new Renderer());
     this->AddModule(this->gui = new GUI());
 }

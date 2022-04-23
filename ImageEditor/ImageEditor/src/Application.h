@@ -10,6 +10,7 @@ class Renderer;
 class GUI;
 class Input;
 class Editor;
+class TorchLoader;
 
 class Application
 {
@@ -34,6 +35,7 @@ public:
     GUI* gui;
     Input* input;
     Editor* editor;
+    TorchLoader* torch_loader;
 
     bool running;
     std::string name;
