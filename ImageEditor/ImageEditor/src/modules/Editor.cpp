@@ -897,6 +897,8 @@ void Editor::ApplyFastFlowInferenceLeather()
 	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
 
 	ImageLoader::SendMatToEditor(result, false);
+
+	result.release();
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

@@ -28,34 +28,29 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 	cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
 	cv::resize(img, img, cv::Size(256, 256));
 
-	std::cout << img.size << " " << img.rows << " " << img.cols << " " << img.channels() << std::endl;
 	at::Tensor tensor_image = torch::from_blob(img.data, { img.rows, img.cols, img.channels() }, at::kByte);
 
 	tensor_image = tensor_image.toType(torch::kFloat);
 	tensor_image = tensor_image.permute({ 2, 0, 1 });
 	tensor_image = tensor_image.div(255);
 
-	tensor_image[0][0] = tensor_image[0][0].sub_(0.485).div_(0.229);
-	tensor_image[0][1] = tensor_image[0][1].sub_(0.456).div_(0.224);
-	tensor_image[0][2] = tensor_image[0][2].sub_(0.406).div_(0.225);
+	tensor_image[0][0].sub_(0.485).div_(0.229);
+	tensor_image[0][1].sub_(0.456).div_(0.224);
+	tensor_image[0][2].sub_(0.406).div_(0.225);
 
 	tensor_image = tensor_image.unsqueeze(0);
 	tensor_image = tensor_image.to(torch::kCUDA);
 	std::cout << tensor_image.sizes() << std::endl;
-	//std::cout << tensor_image << std::endl;
 
-	auto output = this->fastflow_model.forward({ tensor_image });
-	auto dict = output.toGenericDict();
-	auto anomaly = dict.at("anomaly_map");
+	auto anomaly = this->fastflow_model.forward({ tensor_image }).toGenericDict().at("anomaly_map");
+
 	at::Tensor t = anomaly.toTensor().data();
 	t = t.mul(-255).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
 	//t = t.repeat({ 3, 1, 1 });
-	std::cout << t.sizes() << std::endl;
-	std::cout << t.dtype() << std::endl;
-	//t[0] = 0;
-	//t[1] = 0;
-	//std::cout << t << std::endl;
 	cv::Mat ret = TensorToCVImage(t);
+
+	delete anomaly;
+	img.release();
 
 	return ret.clone();
 }
@@ -87,5 +82,5 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor tensor)
 	std::cout << width << height << std::endl;
 	cv::Mat mat = cv::Mat(cv::Size(width, height), CV_8UC1, tensor.data_ptr<uchar>());
 	
-	return mat.clone();
+	return mat;
 }
