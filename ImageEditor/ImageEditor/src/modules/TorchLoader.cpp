@@ -49,7 +49,7 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 	auto anomaly = dict.at("anomaly_map");
 	at::Tensor t = anomaly.toTensor().data();
 	t = t.mul(-255).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
-	t = t.repeat({ 3, 1, 1 });
+	//t = t.repeat({ 3, 1, 1 });
 	std::cout << t.sizes() << std::endl;
 	std::cout << t.dtype() << std::endl;
 	//t[0] = 0;
@@ -85,7 +85,7 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor tensor)
 	int64_t height = tensor.size(2);
 	
 	std::cout << width << height << std::endl;
-	cv::Mat mat = cv::Mat(cv::Size(width, height), CV_8UC3, tensor.data_ptr<uchar>());
+	cv::Mat mat = cv::Mat(cv::Size(width, height), CV_8UC1, tensor.data_ptr<uchar>());
 	
 	return mat.clone();
 }
