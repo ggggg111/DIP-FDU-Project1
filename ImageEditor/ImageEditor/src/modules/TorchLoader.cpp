@@ -49,7 +49,6 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 	//t = t.repeat({ 3, 1, 1 });
 	cv::Mat ret = TensorToCVImage(t);
 
-	delete anomaly;
 	img.release();
 
 	return ret.clone();
