@@ -895,7 +895,6 @@ void Editor::ApplyFastFlowInferenceLeather()
 	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
 
 	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
-	//std::cout << result << std::endl;
 
 	ImageLoader::SendMatToEditor(result, false);
 }
