@@ -30,6 +30,7 @@ void Editor::Start()
 	App->input->GetMousePosition(this->last_frame_mouse_position_x, this->last_frame_mouse_position_y);
 
 	this->preferences_panel = false;
+	this->anomaly_viewer_panel = false;
 	this->load_hdr_image_popup = false;
 	this->super_resolution_popup = false;
 }
@@ -356,6 +357,16 @@ void Editor::Panels()
 			{
 				App->gui->SetUIStyle(item);
 			}
+
+			ImGui::End();
+		}
+	}
+
+	if (this->anomaly_viewer_panel)
+	{
+		if (ImGui::Begin("Anomaly Viewer", &this->anomaly_viewer_panel))
+		{
+			//ImGui::Image();
 
 			ImGui::End();
 		}
@@ -896,7 +907,9 @@ void Editor::ApplyFastFlowInferenceLeather()
 
 	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
 
-	ImageLoader::SendMatToEditor(result, false);
+	//ImageLoader::SendMatToEditor(result, false);
+
+	this->anomaly_viewer_panel = true;
 
 	result.release();
 }
