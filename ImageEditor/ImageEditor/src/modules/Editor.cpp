@@ -377,7 +377,8 @@ void Editor::Panels()
 
 	if (this->anomaly_viewer_panel)
 	{
-		if (ImGui::Begin("Anomaly Viewer", &this->anomaly_viewer_panel))
+		ImGui::SetNextWindowSize(ImVec2(216, 238));
+		if (ImGui::Begin("Anomaly Viewer", &this->anomaly_viewer_panel, ImGuiWindowFlags_NoResize))
 		{
 			if (this->anomaly_viewer_texture)
 			{
@@ -388,6 +389,10 @@ void Editor::Panels()
 				App->renderer->SetRenderTarget(nullptr);
 
 				ImGui::Image(App->renderer->texture_anomaly_viewer_target, ImVec2(200, 200));
+			}
+			else
+			{
+				ImGui::Text("No anomaly detection has been executed");
 			}
 
 			ImGui::End();
