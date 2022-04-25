@@ -78,5 +78,9 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	tensor = tensor.permute({ 1, 2, 0 });
 	tensor = tensor.reshape({ width * height * 3 });
 
-	return cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
+	cv::Mat mat = cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
+	cv::convertScaleAbs(mat, mat, 1.5);
+	cv::applyColorMap(mat, mat, cv::COLORMAP_AUTUMN);
+
+	return mat;
 }
