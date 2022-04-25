@@ -289,6 +289,16 @@ void Editor::MainMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::MenuItem("Anomaly Viewer"))
+			{
+				this->anomaly_viewer_panel = true;
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Settings"))
 		{
 			if (ImGui::MenuItem("Preferences"))
@@ -369,13 +379,16 @@ void Editor::Panels()
 	{
 		if (ImGui::Begin("Anomaly Viewer", &this->anomaly_viewer_panel))
 		{
-			App->renderer->SetRenderTarget(App->renderer->texture_anomaly_viewer_target);
+			if (this->anomaly_viewer_texture)
+			{
+				App->renderer->SetRenderTarget(App->renderer->texture_anomaly_viewer_target);
 
-			App->renderer->RenderTexture(this->anomaly_viewer_texture, nullptr, nullptr);
+				App->renderer->RenderTexture(this->anomaly_viewer_texture, nullptr, nullptr);
 
-			App->renderer->SetRenderTarget(nullptr);
+				App->renderer->SetRenderTarget(nullptr);
 
-			ImGui::Image(App->renderer->texture_anomaly_viewer_target, { 200, 200 });
+				ImGui::Image(App->renderer->texture_anomaly_viewer_target, ImVec2(200, 200));
+			}
 
 			ImGui::End();
 		}
