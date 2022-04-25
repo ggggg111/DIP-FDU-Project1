@@ -21,7 +21,7 @@ public:
 private:
 	void LoadFastFlowModel();
 
-	cv::Mat TensorToCVImage(at::Tensor tensor);
+	cv::Mat TensorToCVImage(at::Tensor& tensor);
 
 private:
 	torch::jit::script::Module fastflow_model;

@@ -40,18 +40,16 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 	tensor_image = tensor_image.unsqueeze(0);
 	tensor_image = tensor_image.to(torch::kCUDA);
-	std::cout << tensor_image.sizes() << std::endl;
 
 	auto anomaly = this->fastflow_model.forward({ tensor_image }).toGenericDict().at("anomaly_map");
 
 	at::Tensor t = anomaly.toTensor().data();
 	t = t.mul(-255).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
-	//t = t.repeat({ 3, 1, 1 });
-	cv::Mat ret = TensorToCVImage(t);
+	t = t.repeat({ 3, 1, 1 });
 
 	img.release();
 
-	return ret.clone();
+	return TensorToCVImage(t).clone();
 }
 
 void TorchLoader::LoadFastFlowModel()
@@ -61,25 +59,24 @@ void TorchLoader::LoadFastFlowModel()
 	try
 	{
 		this->fastflow_model = torch::jit::load(model_path);
-		std::cout << "Model loaded correctly" << std::endl;
+		std::cout << "Fastflow model loaded correctly" << std::endl;
 	}
 	catch (const c10::Error& e)
 	{
-		std::cout << "Model loaded incorrectly" << std::endl;
-		std::cerr << "Error loading the model" << std::endl;
+		std::cout << "Fastflow model loaded incorrectly: " << e.what() << std::endl;
 	}
 
 	this->fastflow_model.to(torch::kCUDA);
 	this->fastflow_model.eval();
 }
 
-cv::Mat TorchLoader::TensorToCVImage(at::Tensor tensor)
+cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 {
 	int64_t width = tensor.size(1);
 	int64_t height = tensor.size(2);
-	
-	std::cout << width << height << std::endl;
-	cv::Mat mat = cv::Mat(cv::Size(width, height), CV_8UC1, tensor.data_ptr<uchar>());
-	
-	return mat;
+
+	tensor = tensor.permute({ 1, 2, 0 });
+	tensor = tensor.reshape({ width * height * 3 });
+
+	return cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
 }
