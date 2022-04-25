@@ -33,10 +33,9 @@ void Renderer::Start()
 	this->texture_target_width = App->window->width;
 	this->texture_target_height = App->window->height;
 
+	this->texture_anomaly_viewer_target = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_TARGET, 200, 200);
 	this->texture_workbench_target = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
-
 	this->texture_filter = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_STREAMING, App->window->width, App->window->height);
-
 	this->texture_target = SDL_CreateTexture(this->renderer, this->texture_format, SDL_TEXTUREACCESS_TARGET, App->window->width, App->window->height);
 
 	SDL_SetRenderTarget(App->renderer->renderer, App->renderer->texture_target);
@@ -87,6 +86,7 @@ void Renderer::PostUpdate()
 
 void Renderer::CleanUp()
 {
+	SDL_DestroyTexture(this->texture_anomaly_viewer_target);
 	SDL_DestroyTexture(this->texture_workbench_target);
 	SDL_DestroyTexture(this->texture_filter);
 	SDL_DestroyTexture(this->texture_target);

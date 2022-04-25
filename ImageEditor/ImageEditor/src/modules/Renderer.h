@@ -38,6 +38,7 @@ public:
 	SDL_Texture* texture_target;
 	SDL_Texture* texture_filter;
 	SDL_Texture* texture_workbench_target;
+	SDL_Texture* texture_anomaly_viewer_target;
 
 	int texture_target_width;
 	int texture_target_height;
