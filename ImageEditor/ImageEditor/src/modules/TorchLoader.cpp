@@ -1,4 +1,5 @@
 #include <torch/script.h>
+#include <c10/cuda/CUDACachingAllocator.h>
 
 #include "TorchLoader.h"
 
@@ -24,6 +25,10 @@ void TorchLoader::CleanUp()
 
 cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 {
+	c10::InferenceMode guard(true);
+
+	c10::cuda::CUDACachingAllocator::emptyCache();
+
 	cv::Mat img = cv::imread(path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
 	cv::resize(img, img, cv::Size(256, 256));
@@ -43,7 +48,7 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 	at::Tensor t = this->fastflow_model.forward({ tensor_image }).toGenericDict()
 		.at("anomaly_map").toTensor().data();
-
+	c10::cuda::CUDACachingAllocator::emptyCache();
 	t = t.mul(-255).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
 	t = t.repeat({ 3, 1, 1 });
 
@@ -54,6 +59,8 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 void TorchLoader::LoadFastFlowModel()
 {
+	c10::InferenceMode guard(true);
+
 	const char* model_path = "models/serialized_fastflow.zip";
 	
 	try
