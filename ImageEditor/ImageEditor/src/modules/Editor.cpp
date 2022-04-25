@@ -33,6 +33,8 @@ void Editor::Start()
 	this->anomaly_viewer_panel = false;
 	this->load_hdr_image_popup = false;
 	this->super_resolution_popup = false;
+
+	this->anomaly_viewer_texture = nullptr;
 }
 
 void Editor::Update()
@@ -160,6 +162,7 @@ void Editor::Update()
 
 void Editor::CleanUp()
 {
+	SDL_DestroyTexture(this->anomaly_viewer_texture);
 	SDL_DestroyTexture(this->bg);
 }
 
@@ -366,7 +369,13 @@ void Editor::Panels()
 	{
 		if (ImGui::Begin("Anomaly Viewer", &this->anomaly_viewer_panel))
 		{
-			//ImGui::Image();
+			App->renderer->SetRenderTarget(App->renderer->texture_anomaly_viewer_target);
+
+			App->renderer->RenderTexture(this->anomaly_viewer_texture, nullptr, nullptr);
+
+			App->renderer->SetRenderTarget(nullptr);
+
+			ImGui::Image(App->renderer->texture_anomaly_viewer_target, { 200, 200 });
 
 			ImGui::End();
 		}
@@ -895,20 +904,32 @@ void Editor::ApplyFastFlowInferenceLeather()
 {
 	App->renderer->SetRenderTarget(App->renderer->texture_target);
 
-	std::string extension = ".png";
+	std::string input_extension = ".png";
 	std::string input_path;
 
-	char temp_filename[MAX_PATH] = { 0 };
-	tmpnam_s(temp_filename);
+	char input_temp_filename[MAX_PATH] = { 0 };
+	tmpnam_s(input_temp_filename);
 
-	input_path.append(temp_filename).append(extension);
+	input_path.append(input_temp_filename).append(input_extension);
 
 	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
 
 	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
 
+	std::string output_extension = ".png";
+	std::string output_path;
+
+	char output_temp_filename[MAX_PATH] = { 0 };
+	tmpnam_s(output_temp_filename);
+
+	output_path.append(output_temp_filename).append(output_extension);
+
+	cv::imwrite(output_path, result);
+
 	//ImageLoader::SendMatToEditor(result, false);
 
+	if (this->anomaly_viewer_texture != nullptr) SDL_DestroyTexture(this->anomaly_viewer_texture);
+	this->anomaly_viewer_texture = ImageLoader::LoadTexture(App->renderer->renderer, output_path);
 	this->anomaly_viewer_panel = true;
 
 	result.release();

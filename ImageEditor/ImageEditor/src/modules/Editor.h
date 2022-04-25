@@ -50,6 +50,7 @@ private:
 public:
 	EditorToolSelector tools;
 	SDL_Texture* bg;
+	SDL_Texture* anomaly_viewer_texture;
 	SDL_Rect bg_rect;
 
 private:
