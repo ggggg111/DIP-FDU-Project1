@@ -41,9 +41,9 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 	tensor_image = tensor_image.unsqueeze(0);
 	tensor_image = tensor_image.to(torch::kCUDA);
 
-	auto anomaly = this->fastflow_model.forward({ tensor_image }).toGenericDict().at("anomaly_map");
+	at::Tensor t = this->fastflow_model.forward({ tensor_image }).toGenericDict()
+		.at("anomaly_map").toTensor().data();
 
-	at::Tensor t = anomaly.toTensor().data();
 	t = t.mul(-255).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
 	t = t.repeat({ 3, 1, 1 });
 
