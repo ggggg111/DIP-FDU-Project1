@@ -32,6 +32,8 @@ This project has been created for the subject Digital Image Processing at Fudan 
   
 - HDR Image Loading.
 
+- Anomaly Detection.
+
 ## Controls
 
 - **Left-click:** Use the current selected tool. Interact with the Immediate Use GUI.
@@ -54,9 +56,21 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 - [OpenCV](https://github.com/opencv/opencv).
 
+- [PyTorch C++](https://pytorch.org/cppdocs/).
+
 ## External tools
 
-- [Real-ERSGAN](https://github.com/xinntao/Real-ESRGAN)/[Real-ERSGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
+### Real-ERSGAN
+
+- [Paper](https://arxiv.org/abs/2107.10833)
+
+- [Real-ERSGAN (official)](https://github.com/xinntao/Real-ESRGAN)/[Real-ERSGAN-ncnn-vulkan (official)](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
+
+### FastFlow
+
+- [Paper](https://arxiv.org/abs/2111.07677)
+
+- [FastFlow (unofficial)](https://github.com/gathierry/FastFlow)
 
 ## Compatibility
 
@@ -72,9 +86,15 @@ Before starting, it is needed to add the OpenCV library manually:
 
 **3.** Place both *opencv_world455.dll* and *opencv_world455d.dll* DLLs inside *ImageEditor/ImageEditor/vendor/workdir/*.
 
+**4.** Download [Libtorch 1.11.0 + CUDA 11.3 (Debug)](https://download.pytorch.org/libtorch/cu113/libtorch-win-shared-with-deps-debug-1.11.0%2Bcu113.zip) and [Libtorch 1.11.0 + CUDA 11.3 (Release)](https://download.pytorch.org/libtorch/cu113/libtorch-win-shared-with-deps-1.11.0%2Bcu113.zip).
+
+**5.** Place the downloaded files in the *C:* directory so that the paths are as follows: *C:/libtorch-win-shared-with-deps-debug-1.11.0+cu113/libtorch* and *C:/libtorch-win-shared-with-deps-1.11.0+cu113/libtorch*.
+
+**6.** Download [CUDA 11.3](https://developer.nvidia.com/cuda-11.3.0-download-archive?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exe_local) and install it. The install path should be *C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.3*.
+
 To compile the project, follow the steps below:
 
-**1.** Run *ImageEditor.sln* to open the Visual Studio 2022 solution.
+**1.** Run *ImageEditor.sln* to open the Visual Studio 2019 solution.
 
 **2.** Set the solution platform to *x64*. You can use both debug or release configurations.
 
@@ -92,7 +112,7 @@ To run the release, do:
 
 ## Requirements
 
-- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/).
+- [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/).
   
   - [Desktop development with C++ workload](https://docs.microsoft.com/en-us/cpp/build/vscpp-step-0-installation?view=msvc-170).
   
