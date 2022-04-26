@@ -395,8 +395,3 @@ ImageEditor/ImageEditor/workdir/zlibwapi.dll
 
 # Folders
 ImageEditor/ImageEditor/vendor/OpenCV/
-
-# Files
-ImageEditor/Torch/fastflow_model.pt
-ImageEditor/Torch/fastflow_encoder.pt
-ImageEditor/Torch/serialized_fastflow.zip

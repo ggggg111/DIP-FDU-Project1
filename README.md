@@ -51,7 +51,7 @@ This project has been created for the subject Digital Image Processing at Fudan 
 - [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/).
 
 - [Dear ImGui](https://github.com/ocornut/imgui).
-  
+
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs).
 
 - [OpenCV](https://github.com/opencv/opencv).
