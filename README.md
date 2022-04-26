@@ -62,15 +62,15 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 ### Real-ERSGAN
 
-- [Paper](https://arxiv.org/abs/2107.10833)
+- [Paper](https://arxiv.org/abs/2107.10833).
 
 - [Real-ERSGAN (official)](https://github.com/xinntao/Real-ESRGAN)/[Real-ERSGAN-ncnn-vulkan (official)](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
 ### FastFlow
 
-- [Paper](https://arxiv.org/abs/2111.07677)
+- [Paper](https://arxiv.org/abs/2111.07677).
 
-- [FastFlow (unofficial)](https://github.com/gathierry/FastFlow)
+- [FastFlow (unofficial)](https://github.com/gathierry/FastFlow).
 
 ## Compatibility
 
