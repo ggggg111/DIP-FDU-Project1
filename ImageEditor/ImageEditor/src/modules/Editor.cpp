@@ -33,6 +33,7 @@ void Editor::Start()
 	this->anomaly_viewer_panel = false;
 	this->load_hdr_image_popup = false;
 	this->super_resolution_popup = false;
+	this->style_transfer_popup = false;
 
 	this->anomaly_viewer_texture = nullptr;
 }
@@ -284,6 +285,11 @@ void Editor::MainMenuBar()
 				}
 
 				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Style Transfer"))
+			{
+				this->style_transfer_popup = true;
 			}
 
 			ImGui::EndMenu();
@@ -568,6 +574,77 @@ void Editor::PopUps()
 				}
 
 				this->load_hdr_image_popup = false;
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	if (this->style_transfer_popup)
+	{
+		ImGui::OpenPopup("Style Transfer");
+
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("Style Transfer", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Setup");
+
+			ImGui::Separator();
+
+			static char content_image_path[MAX_PATH];
+
+			ImGui::InputTextWithHint("##ContentImage", "Content image path", content_image_path, IM_ARRAYSIZE(content_image_path));
+			ImGui::SameLine();
+			if (ImGui::Button("...##ContentImageButton"))
+			{
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg" })
+					.result();
+
+				if (!selection.empty())
+				{
+					std::string res = selection[0];
+					strcpy_s(content_image_path, res.c_str());
+				}
+			}
+
+			static char style_image_path[MAX_PATH];
+
+			ImGui::InputTextWithHint("##StyleImage", "Style image path", style_image_path, IM_ARRAYSIZE(style_image_path));
+			ImGui::SameLine();
+			if (ImGui::Button("...##StyleImageButton"))
+			{
+				auto selection = pfd::open_file("Select a file", ".",
+					{ "Image Files", "*.png *.jpg" })
+					.result();
+
+				if (!selection.empty())
+				{
+					std::string res = selection[0];
+					strcpy_s(style_image_path, res.c_str());
+				}
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("OK", ImVec2(100, 0)))
+			{
+				this->ApplyStyleTransferInference(content_image_path, style_image_path);
+
+				this->style_transfer_popup = false;
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(100, 0)))
+			{
+				this->style_transfer_popup = false;
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -932,7 +1009,7 @@ void Editor::ApplyFastFlowInferenceLeather()
 
 	ImageLoader::SaveTexture(App->renderer->renderer, App->renderer->texture_target, input_path);
 
-	cv::Mat result = App->torch_loader->FastFlowInference(input_path.c_str());
+	cv::Mat result = App->torch_loader->FastFlowInference(input_path);
 
 	std::string output_extension = ".png";
 	std::string output_path;
@@ -951,6 +1028,13 @@ void Editor::ApplyFastFlowInferenceLeather()
 	this->anomaly_viewer_panel = true;
 
 	result.release();
+}
+
+void Editor::ApplyStyleTransferInference(const std::string& content_path, const std::string& style_path)
+{
+	cv::Mat result = App->torch_loader->StyleTransferInference(content_path, style_path);
+
+	//ImageLoader::SendMatToEditor(result, false);
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const

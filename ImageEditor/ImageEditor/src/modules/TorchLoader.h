@@ -6,6 +6,11 @@
 
 #include "Module.h"
 
+namespace StyleTransfer
+{
+	void Preprocess(const at::Tensor& image);
+}
+
 class TorchLoader : public Module
 {
 public:
@@ -17,6 +22,7 @@ public:
 
 public:
 	cv::Mat FastFlowInference(const std::string& path);
+	cv::Mat StyleTransferInference(const std::string& content_path, const std::string& style_path);
 
 private:
 	void LoadFastFlowModel();

@@ -3,6 +3,8 @@
 
 #include "TorchLoader.h"
 
+namespace F = torch::nn::functional;
+
 TorchLoader::TorchLoader() : Module()
 {
 
@@ -57,6 +59,26 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 	return TensorToCVImage(t).clone();
 }
 
+cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
+{
+	cv::Mat content_image_mat = cv::imread(content_path.c_str(), cv::IMREAD_COLOR);
+	cv::cvtColor(content_image_mat, content_image_mat, cv::COLOR_BGR2RGB);
+	//cv::resize(content_image_mat, content_image_mat, cv::Size(256, 256));
+
+	at::Tensor content_image_tensor = torch::from_blob(
+		content_image_mat.data,
+		{ content_image_mat.rows, content_image_mat.cols, content_image_mat.channels() },
+		at::kByte
+	);
+
+	content_image_tensor = content_image_tensor.toType(torch::kFloat);
+	content_image_tensor = content_image_tensor.permute({ 2, 0, 1 });
+
+	StyleTransfer::Preprocess(content_image_tensor);
+
+	return cv::Mat();
+}
+
 void TorchLoader::LoadFastFlowModel()
 {
 	c10::InferenceMode guard(true);
@@ -90,4 +112,13 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	cv::applyColorMap(mat, mat, cv::COLORMAP_AUTUMN);
 
 	return mat;
+}
+
+void StyleTransfer::Preprocess(const at::Tensor& content_image)
+{
+	std::cout << content_image.sizes() << std::endl;
+	std::cout << content_image << std::endl;
+
+	F::PadFuncOptions opts({});
+	//F::pad();
 }

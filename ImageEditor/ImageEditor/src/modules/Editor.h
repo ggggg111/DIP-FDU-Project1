@@ -46,6 +46,7 @@ private:
 	void ApplySuperResolution();
 	void ApplyLoadHDRImage(const std::vector<std::string>& image_paths, const std::vector<float>& exposure_times, const TONEMAP_TYPE& tonemap_type);
 	void ApplyFastFlowInferenceLeather();
+	void ApplyStyleTransferInference(const std::string& content_path, const std::string& style_path);
 
 public:
 	EditorToolSelector tools;
@@ -64,6 +65,7 @@ private:
 	bool anomaly_viewer_panel;
 	bool load_hdr_image_popup;
 	bool super_resolution_popup;
+	bool style_transfer_popup;
 };
 
 #endif /* __EDITOR_H__ */
