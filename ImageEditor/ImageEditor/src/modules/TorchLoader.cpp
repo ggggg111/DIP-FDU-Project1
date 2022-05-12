@@ -94,7 +94,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		at::Tensor thumbnail_tensor = StyleTransfer::ContentTransform(thumbnail).to(torch::kCUDA);
 		std::cout << "Thumbnail shape: " << thumbnail_tensor.sizes() << std::endl;
 		
-		StyleTransfer::Preprocess(content_image_mat, this->style_transfer_params.PATCH_SIZE, this->style_transfer_params.PADDING);
+		StyleTransfer::Preprocess(content_image_mat, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
 	}
 	else
 	{
@@ -145,16 +145,25 @@ void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padd
 
 	int W = content_image_size.width;
 	int H = content_image_size.height;
-	int N = (int)ceilf(sqrtf((W * H) / (patch_size * patch_size)));
+	int N = (int)std::ceil(sqrt((W * H) / (patch_size * patch_size)));
 	
-	int W_ = (int)ceilf(W / N) * N + 2 * padding;
-	int H_ = (int)ceilf(H / N) * N + 2 * padding;
+	int W_ = (int)std::ceil(W / N) * N + 2 * padding;
+	int H_ = (int)std::ceil(H / N) * N + 2 * padding;
 
-	int w = (int)ceilf(W / N) + 2 * padding;
-	int h = (int)ceilf(H / N) + 2 * padding;
+	int w = (int)std::ceil(W / N) + 2 * padding;
+	int h = (int)std::ceil(H / N) + 2 * padding;
+
+	std::cout << W << " " << H << " " << N << " " << W_ << " " << H_ << " " << w << " " << h << std::endl;
 
 	at::Tensor content_image_tensor = StyleTransfer::ContentTransform(content_image_mat).to(torch::kCPU);
 	content_image_tensor = content_image_tensor.unsqueeze(0);
+
+	int p_left = (W_ - W) / 2;
+	int p_right = (W_ - W) - p_left;
+	int p_top = (H_ - H) / 2;
+	int p_bottom = (H_ - H) - p_top;
+
+	std::cout << p_left << " " << p_right << " " << p_top << " " << p_bottom << std::endl;
 
 	F::PadFuncOptions opts({});
 	//F::pad();
