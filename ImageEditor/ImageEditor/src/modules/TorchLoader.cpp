@@ -1,5 +1,6 @@
 #include <torch/script.h>
 #include <c10/cuda/CUDACachingAllocator.h>
+#include <torch/data/transforms.h>
 
 #include "TorchLoader.h"
 
@@ -22,7 +23,7 @@ void TorchLoader::Start()
 
 void TorchLoader::CleanUp()
 {
-
+	
 }
 
 cv::Mat TorchLoader::FastFlowInference(const std::string& path)
@@ -86,13 +87,15 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			cv::Size(aspect_ratio * this->style_transfer_params.THUMB_SIZE, this->style_transfer_params.THUMB_SIZE)
 		);
 
-		cv::Size thumbnail_size = thumbnail.size();
-		std::cout << "Thumbnail width: " << thumbnail_size.width << std::endl;
-		std::cout << "Thumbnail height: " << thumbnail_size.height << std::endl;
-		std::cout << "Content width: " << content_image_size.width << std::endl;
-		std::cout << "Content height: " << content_image_size.height << std::endl;
+		at::Tensor thumbnail_tensor = StyleTransfer::ContentTransform(thumbnail).to(torch::kCUDA);
+		//std::cout << "First channel thumbnail: " << thumbnail_tensor[0] << std::endl;
+		//std::cout << "Thumbnail sizes: " << thumbnail_tensor.sizes() << std::endl;
 
 		StyleTransfer::Preprocess(content_image_mat);
+	}
+	else
+	{
+
 	}
 
 	return cv::Mat();
@@ -149,4 +152,19 @@ void StyleTransfer::Preprocess(const cv::Mat& content_image_mat)
 
 	F::PadFuncOptions opts({});
 	//F::pad();
+}
+
+at::Tensor StyleTransfer::ContentTransform(cv::Mat& input)
+{
+	at::Tensor tensor = torch::from_blob(
+		input.data,
+		{ input.rows, input.cols, input.channels() },
+		at::kByte
+	);
+
+	tensor = tensor.toType(torch::kFloat);
+	tensor = tensor.permute({ 2, 0, 1 });
+	tensor = tensor.div(255.0f);
+
+	return tensor;
 }

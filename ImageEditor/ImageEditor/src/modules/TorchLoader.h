@@ -17,6 +17,8 @@ struct StyleTransferParams
 
 namespace StyleTransfer
 {
+	at::Tensor ContentTransform(cv::Mat& input);
+
 	void Preprocess(const cv::Mat& content_image_mat);
 }
 
