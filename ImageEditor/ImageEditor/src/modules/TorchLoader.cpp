@@ -94,7 +94,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		at::Tensor thumbnail_tensor = StyleTransfer::ContentTransform(thumbnail).to(torch::kCUDA);
 		std::cout << "Thumbnail shape: " << thumbnail_tensor.sizes() << std::endl;
 		
-		StyleTransfer::Preprocess(content_image_mat, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
+		at::Tensor patches = StyleTransfer::Preprocess(content_image_mat, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
 	}
 	else
 	{
