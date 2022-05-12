@@ -69,6 +69,8 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	
 	this->style_transfer_params.RESIZE = 0;
 	this->style_transfer_params.THUMB_SIZE = 1024;
+	this->style_transfer_params.PATCH_SIZE = 1000;
+	this->style_transfer_params.PADDING = 32;
 
 	if(this->style_transfer_params.RESIZE != 0)
 		cv::resize(content_image_mat, content_image_mat, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
@@ -88,10 +90,9 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		);
 
 		at::Tensor thumbnail_tensor = StyleTransfer::ContentTransform(thumbnail).to(torch::kCUDA);
-		//std::cout << "First channel thumbnail: " << thumbnail_tensor[0] << std::endl;
-		//std::cout << "Thumbnail sizes: " << thumbnail_tensor.sizes() << std::endl;
-
-		StyleTransfer::Preprocess(content_image_mat);
+		std::cout << "Thumbnail shape: " << thumbnail_tensor.sizes() << std::endl;
+		
+		StyleTransfer::Preprocess(content_image_mat, this->style_transfer_params.PATCH_SIZE, this->style_transfer_params.PADDING);
 	}
 	else
 	{
@@ -136,7 +137,7 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	return mat;
 }
 
-void StyleTransfer::Preprocess(const cv::Mat& content_image_mat)
+void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size)
 {
 	at::Tensor content_image_tensor = torch::from_blob(
 		content_image_mat.data,

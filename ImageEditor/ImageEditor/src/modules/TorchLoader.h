@@ -13,13 +13,15 @@ struct StyleTransferParams
 	int IMAGE_WIDTH;
 	int IMAGE_HEIGHT;
 	int THUMB_SIZE;
+	int PATCH_SIZE;
+	int PADDING;
 };
 
 namespace StyleTransfer
 {
 	at::Tensor ContentTransform(cv::Mat& input);
 
-	void Preprocess(const cv::Mat& content_image_mat);
+	void Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
 }
 
 class TorchLoader : public Module
