@@ -21,7 +21,7 @@ namespace StyleTransfer
 {
 	at::Tensor ContentTransform(const cv::Mat& input);
 
-	void Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
+	at::Tensor Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
 }
 
 class TorchLoader : public Module

@@ -139,7 +139,7 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	return mat;
 }
 
-void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size)
+at::Tensor StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size)
 {
 	cv::Size content_image_size = content_image_mat.size();
 
@@ -165,8 +165,26 @@ void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padd
 
 	std::cout << p_left << " " << p_right << " " << p_top << " " << p_bottom << std::endl;
 
-	content_image_tensor = F::pad(content_image_tensor, F::PadFuncOptions({ p_left, p_right, p_top, p_bottom }).mode(torch::kReflect));
-	std::cout << "Image shape after padding: " << content_image_tensor.sizes() << std::endl;
+	content_image_tensor = F::pad(
+		content_image_tensor,
+		F::PadFuncOptions({ p_left, p_right, p_top, p_bottom }).mode(torch::kReflect));
+
+	int c = content_image_tensor.sizes()[1];
+
+	content_image_tensor = F::unfold(
+		content_image_tensor,
+		F::UnfoldFuncOptions({ h, w })
+		.stride({ h - 2 * padding, w - 2 * padding }));
+
+	int B = content_image_tensor.sizes()[0];
+	int L = content_image_tensor.sizes()[2];
+
+	content_image_tensor = content_image_tensor.permute({ 0, 2, 1 }).contiguous();
+	content_image_tensor = content_image_tensor.view({B, L, c, h, w}).squeeze(0);
+
+	std::cout << content_image_tensor.sizes() << std::endl;
+
+	return content_image_tensor;
 }
 
 at::Tensor StyleTransfer::ContentTransform(const cv::Mat& input)
