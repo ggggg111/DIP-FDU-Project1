@@ -61,9 +61,23 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
 {
+	this->style_transfer_params.USE_URST = true;
+
 	cv::Mat content_image_mat = cv::imread(content_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(content_image_mat, content_image_mat, cv::COLOR_BGR2RGB);
-	//cv::resize(content_image_mat, content_image_mat, cv::Size(256, 256));
+	
+	this->style_transfer_params.RESIZE = 0;
+	this->style_transfer_params.THUMB_SIZE = 1024;
+
+	if(this->style_transfer_params.RESIZE != 0)
+		cv::resize(content_image_mat, content_image_mat, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
+
+	cv::Size content_image_size = content_image_mat.size();
+	this->style_transfer_params.IMAGE_WIDTH = content_image_size.width;
+	this->style_transfer_params.IMAGE_HEIGHT = content_image_size.height;
+
+	std::cout << "Width of content image is " << this->style_transfer_params.IMAGE_WIDTH << std::endl;
+	std::cout << "Height of content image is " << this->style_transfer_params.IMAGE_HEIGHT << std::endl;
 
 	at::Tensor content_image_tensor = torch::from_blob(
 		content_image_mat.data,
@@ -74,7 +88,18 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	content_image_tensor = content_image_tensor.toType(torch::kFloat);
 	content_image_tensor = content_image_tensor.permute({ 2, 0, 1 });
 
-	StyleTransfer::Preprocess(content_image_tensor);
+	if (this->style_transfer_params.USE_URST)
+	{
+		int aspect_ratio = this->style_transfer_params.IMAGE_WIDTH / this->style_transfer_params.IMAGE_HEIGHT;
+
+		cv::Mat thumbnail;
+		cv::resize(
+			content_image_mat, thumbnail,
+			cv::Size(aspect_ratio * this->style_transfer_params.THUMB_SIZE, this->style_transfer_params.THUMB_SIZE)
+		);
+
+		StyleTransfer::Preprocess(content_image_tensor);
+	}
 
 	return cv::Mat();
 }

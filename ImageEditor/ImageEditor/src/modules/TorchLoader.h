@@ -6,6 +6,15 @@
 
 #include "Module.h"
 
+struct StyleTransferParams
+{
+	bool USE_URST;
+	int RESIZE;
+	int IMAGE_WIDTH;
+	int IMAGE_HEIGHT;
+	int THUMB_SIZE;
+};
+
 namespace StyleTransfer
 {
 	void Preprocess(const at::Tensor& image);
@@ -31,6 +40,8 @@ private:
 
 private:
 	torch::jit::script::Module fastflow_model;
+
+	StyleTransferParams style_transfer_params;
 };
 
 #endif /* __TORCH_LOADER_H__ */
