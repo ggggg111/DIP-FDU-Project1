@@ -165,8 +165,8 @@ void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padd
 
 	std::cout << p_left << " " << p_right << " " << p_top << " " << p_bottom << std::endl;
 
-	F::PadFuncOptions opts({});
-	//F::pad();
+	content_image_tensor = F::pad(content_image_tensor, F::PadFuncOptions({ p_left, p_right, p_top, p_bottom }).mode(torch::kReflect));
+	std::cout << "Image shape after padding: " << content_image_tensor.sizes() << std::endl;
 }
 
 at::Tensor StyleTransfer::ContentTransform(const cv::Mat& input)
