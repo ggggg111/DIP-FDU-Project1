@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <torch/script.h>
 #include <c10/cuda/CUDACachingAllocator.h>
 #include <torch/data/transforms.h>
@@ -139,23 +141,26 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 
 void StyleTransfer::Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size)
 {
-	at::Tensor content_image_tensor = torch::from_blob(
-		content_image_mat.data,
-		{ content_image_mat.rows, content_image_mat.cols, content_image_mat.channels() },
-		at::kByte
-	);
+	cv::Size content_image_size = content_image_mat.size();
 
-	content_image_tensor = content_image_tensor.toType(torch::kFloat);
-	content_image_tensor = content_image_tensor.permute({ 2, 0, 1 });
+	int W = content_image_size.width;
+	int H = content_image_size.height;
+	int N = (int)ceilf(sqrtf((W * H) / (patch_size * patch_size)));
+	
+	int W_ = (int)ceilf(W / N) * N + 2 * padding;
+	int H_ = (int)ceilf(H / N) * N + 2 * padding;
 
-	std::cout << content_image_tensor.sizes() << std::endl;
-	std::cout << content_image_tensor << std::endl;
+	int w = (int)ceilf(W / N) + 2 * padding;
+	int h = (int)ceilf(H / N) + 2 * padding;
+
+	at::Tensor content_image_tensor = StyleTransfer::ContentTransform(content_image_mat).to(torch::kCPU);
+	content_image_tensor = content_image_tensor.unsqueeze(0);
 
 	F::PadFuncOptions opts({});
 	//F::pad();
 }
 
-at::Tensor StyleTransfer::ContentTransform(cv::Mat& input)
+at::Tensor StyleTransfer::ContentTransform(const cv::Mat& input)
 {
 	at::Tensor tensor = torch::from_blob(
 		input.data,
