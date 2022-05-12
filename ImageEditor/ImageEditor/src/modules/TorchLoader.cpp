@@ -76,18 +76,6 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	this->style_transfer_params.IMAGE_WIDTH = content_image_size.width;
 	this->style_transfer_params.IMAGE_HEIGHT = content_image_size.height;
 
-	std::cout << "Width of content image is " << this->style_transfer_params.IMAGE_WIDTH << std::endl;
-	std::cout << "Height of content image is " << this->style_transfer_params.IMAGE_HEIGHT << std::endl;
-
-	at::Tensor content_image_tensor = torch::from_blob(
-		content_image_mat.data,
-		{ content_image_mat.rows, content_image_mat.cols, content_image_mat.channels() },
-		at::kByte
-	);
-
-	content_image_tensor = content_image_tensor.toType(torch::kFloat);
-	content_image_tensor = content_image_tensor.permute({ 2, 0, 1 });
-
 	if (this->style_transfer_params.USE_URST)
 	{
 		int aspect_ratio = this->style_transfer_params.IMAGE_WIDTH / this->style_transfer_params.IMAGE_HEIGHT;
@@ -98,7 +86,13 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			cv::Size(aspect_ratio * this->style_transfer_params.THUMB_SIZE, this->style_transfer_params.THUMB_SIZE)
 		);
 
-		StyleTransfer::Preprocess(content_image_tensor);
+		cv::Size thumbnail_size = thumbnail.size();
+		std::cout << "Thumbnail width: " << thumbnail_size.width << std::endl;
+		std::cout << "Thumbnail height: " << thumbnail_size.height << std::endl;
+		std::cout << "Content width: " << content_image_size.width << std::endl;
+		std::cout << "Content height: " << content_image_size.height << std::endl;
+
+		StyleTransfer::Preprocess(content_image_mat);
 	}
 
 	return cv::Mat();
@@ -139,10 +133,19 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	return mat;
 }
 
-void StyleTransfer::Preprocess(const at::Tensor& content_image)
+void StyleTransfer::Preprocess(const cv::Mat& content_image_mat)
 {
-	std::cout << content_image.sizes() << std::endl;
-	std::cout << content_image << std::endl;
+	at::Tensor content_image_tensor = torch::from_blob(
+		content_image_mat.data,
+		{ content_image_mat.rows, content_image_mat.cols, content_image_mat.channels() },
+		at::kByte
+	);
+
+	content_image_tensor = content_image_tensor.toType(torch::kFloat);
+	content_image_tensor = content_image_tensor.permute({ 2, 0, 1 });
+
+	std::cout << content_image_tensor.sizes() << std::endl;
+	std::cout << content_image_tensor << std::endl;
 
 	F::PadFuncOptions opts({});
 	//F::pad();

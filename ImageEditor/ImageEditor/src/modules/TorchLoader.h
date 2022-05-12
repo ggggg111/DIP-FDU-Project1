@@ -17,7 +17,7 @@ struct StyleTransferParams
 
 namespace StyleTransfer
 {
-	void Preprocess(const at::Tensor& image);
+	void Preprocess(const cv::Mat& content_image_mat);
 }
 
 class TorchLoader : public Module
