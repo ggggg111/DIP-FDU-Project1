@@ -319,6 +319,8 @@ cv::Mat TorchLoader::TensorToCVImageStyleTransfer(at::Tensor& tensor)
 	tensor = tensor.permute({ 1, 2, 0 });
 	tensor = tensor.reshape({ width * height * 3 });
 
+	cv::Mat res = cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
+	cv::cvtColor(res, res, cv::COLOR_RGB2BGR);
 
-	return cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
+	return res;
 }
