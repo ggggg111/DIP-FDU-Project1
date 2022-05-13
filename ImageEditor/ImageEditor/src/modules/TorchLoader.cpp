@@ -5,6 +5,7 @@
 #include <torch/data/transforms.h>
 
 #include "TorchLoader.h"
+#include "tools/Torch/ThumbInstanceNorm.h"
 
 namespace F = torch::nn::functional;
 
@@ -78,6 +79,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	this->style_transfer_params.PATCH_SIZE = 1000;
 	this->style_transfer_params.PADDING = 32;
 	this->style_transfer_params.STYLE_SIZE = 1024;
+	this->style_transfer_params.ALPHA = 1.0f;
 
 	if(this->style_transfer_params.RESIZE != 0)
 		cv::resize(image, image, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
@@ -116,6 +118,10 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			torch::NoGradGuard no_grad;
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
+
+			StyleTransfer::StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+		
+			
 		}
 	}
 	else
@@ -244,4 +250,10 @@ at::Tensor StyleTransfer::Mat2Tensor(const cv::Mat& input)
 	tensor = tensor.div(255.0f);
 
 	return tensor;
+}
+
+void StyleTransfer::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha)
+{
+	content = content.unsqueeze(0);
+	
 }

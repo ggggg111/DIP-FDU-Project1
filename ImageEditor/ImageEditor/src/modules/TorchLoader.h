@@ -16,6 +16,7 @@ struct StyleTransferParams
 	int PATCH_SIZE;
 	int PADDING;
 	int STYLE_SIZE;
+	float ALPHA;
 };
 
 namespace StyleTransfer
@@ -23,6 +24,8 @@ namespace StyleTransfer
 	at::Tensor Mat2Tensor(const cv::Mat& input);
 
 	at::Tensor Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
+
+	void StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 }
 
 class TorchLoader : public Module
