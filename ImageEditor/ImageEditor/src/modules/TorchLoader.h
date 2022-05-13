@@ -45,7 +45,7 @@ private:
 	at::Tensor Mat2Tensor(const cv::Mat& input);
 	at::Tensor Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
 
-	void StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
+	cv::Mat StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 
 	at::Tensor StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 

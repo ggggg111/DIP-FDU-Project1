@@ -118,7 +118,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
 		}
 	}
 	else
@@ -277,7 +277,7 @@ at::Tensor TorchLoader::Mat2Tensor(const cv::Mat& input)
 	return tensor;
 }
 
-void TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha)
+cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha)
 {
 	content = content.unsqueeze(0);
 	
@@ -285,6 +285,7 @@ void TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& 
 
 	at::Tensor stylized_thumb_tensor = TorchLoader::StyleTransfer(content, style_f, alpha);
 	std::cout << "Stylized thumb shape: " << stylized_thumb_tensor.sizes() << std::endl;
+	std::cout << stylized_thumb_tensor << std::endl;
 }
 
 at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha)
