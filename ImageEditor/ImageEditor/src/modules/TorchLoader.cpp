@@ -118,7 +118,11 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			//cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			cv::Mat res = this->StyleTransferHighResolution(
+				patches_tensor, style_f_tensor,
+				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
+			);
 		
 			return res;
 		}
@@ -264,6 +268,11 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 	return image_tensor;
 }
 
+at::Tensor TorchLoader::Unpadding(at::Tensor tensor, const int& padding)
+{
+	return at::Tensor(); // TODO
+}
+
 at::Tensor TorchLoader::Mat2Tensor(const cv::Mat& input)
 {
 	at::Tensor tensor = torch::from_blob(
@@ -285,15 +294,43 @@ cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tenso
 	
 	InitThumbnailInstanceNorm(this->tain_model, true);
 
-	at::Tensor stylized_thumb_tensor = TorchLoader::StyleTransfer(content, style_f, alpha);
+	at::Tensor stylized_thumb_tensor = this->StyleTransfer(content, style_f, alpha);
 	std::cout << "Stylized thumb shape: " << stylized_thumb_tensor.sizes() << std::endl;
-	//std::cout << stylized_thumb_tensor << std::endl;
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
 
 	stylized_thumb_tensor = stylized_thumb_tensor.mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
 
 	return this->TensorToCVImageStyleTransfer(stylized_thumb_tensor).clone();
+}
+
+cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor& patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha)
+{
+	std::list<at::Tensor> stylized_patches;
+	
+	InitThumbnailInstanceNorm(this->tain_model, collection);
+	
+	for (int d = 0; d < patches.sizes()[0]; ++d)
+	{
+		at::Tensor patch = patches[d];
+		patch = patch.unsqueeze(0).to(torch::kCUDA);
+
+		at::Tensor stylized_patch = this->StyleTransfer(patch, style_f, alpha);
+		
+		stylized_patch = F::interpolate(
+			stylized_patch,
+			F::InterpolateFuncOptions()
+			.size(std::vector(patch.sizes()[2], patch.sizes()[3]))
+			.mode(torch::kBilinear)
+			.align_corners(true)
+		);
+
+		stylized_patch = Unpadding(stylized_patch, this->style_transfer_params.PADDING);
+		
+		stylized_patches.push_back(stylized_patch);
+	}
+
+	return cv::Mat();
 }
 
 at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha)
