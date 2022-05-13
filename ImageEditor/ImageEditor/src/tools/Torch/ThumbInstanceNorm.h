@@ -3,8 +3,11 @@
 
 #include <torch/torch.h>
 
+#include "utils/Utils.h"
+
 struct ThumbInstanceNorm : torch::nn::Module
 {
+public:
 	ThumbInstanceNorm(int out_channels = 0, bool affine = true)
 	{
 		if (affine)
@@ -75,6 +78,7 @@ struct ThumbInstanceNorm : torch::nn::Module
 
 struct ThumbAdaptiveInstanceNorm : ThumbInstanceNorm
 {
+public:
 	ThumbAdaptiveInstanceNorm(int out_channels = 0, bool affine = false) : ThumbInstanceNorm(out_channels, affine)
 	{
 
@@ -103,5 +107,7 @@ struct ThumbAdaptiveInstanceNorm : ThumbInstanceNorm
 		return { normalized_feat * style_std.expand(size) + style_mean.expand(size) };
 	}
 };
+
+void InitThumbnailInstanceNorm(ThumbAdaptiveInstanceNorm& model, bool collection);
 
 #endif /* __THUMB_INSTANCE_NORM_H__ */

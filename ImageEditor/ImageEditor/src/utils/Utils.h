@@ -32,4 +32,10 @@ wchar_t* CharArrayToLPCWSTR(const char* charArray, const int& buffer_size = 4096
 
 int Median(std::vector<int>& vector);
 
+template<typename Base, typename T>
+inline bool IsInstanceOf(const T* ptr)
+{
+	return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
 #endif /* __UTILS_H__ */

@@ -5,7 +5,6 @@
 #include <torch/data/transforms.h>
 
 #include "TorchLoader.h"
-#include "tools/Torch/ThumbInstanceNorm.h"
 
 namespace F = torch::nn::functional;
 
@@ -100,10 +99,10 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			cv::Size(aspect_ratio * this->style_transfer_params.THUMB_SIZE, this->style_transfer_params.THUMB_SIZE)
 		);
 
-		at::Tensor thumbnail_tensor = StyleTransfer::Mat2Tensor(thumbnail).to(torch::kCUDA);
+		at::Tensor thumbnail_tensor = this->Mat2Tensor(thumbnail).to(torch::kCUDA);
 		std::cout << "Thumbnail shape: " << thumbnail_tensor.sizes() << std::endl;
 		
-		at::Tensor patches_tensor = StyleTransfer::Preprocess(image, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
+		at::Tensor patches_tensor = this->Preprocess(image, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
 		std::cout << "Patches shape: " << patches_tensor.sizes() << std::endl;
 		
 		cv::resize(
@@ -111,7 +110,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			cv::Size(this->style_transfer_params.STYLE_SIZE, this->style_transfer_params.STYLE_SIZE)
 		);
 		
-		at::Tensor style_tensor = StyleTransfer::Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
+		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
 		{
@@ -119,9 +118,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			StyleTransfer::StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
-		
-			
+			this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
 		}
 	}
 	else
@@ -160,7 +157,7 @@ void TorchLoader::LoadStyleTransferModels()
 
 	try
 	{
-		this->tain_model = ThumbAdaptiveInstanceNorm();
+		//this->tain_model = ThumbAdaptiveInstanceNorm();
 		std::cout << "TAIN model loaded correctly" << std::endl;
 	}
 	catch (const c10::Error& e)
@@ -185,6 +182,21 @@ void TorchLoader::LoadStyleTransferModels()
 
 	this->vgg_model.to(torch::kCUDA);
 	this->vgg_model.eval();
+
+	const char* decoder_model_path = "models/style_transfer/decoder_model.pt";
+
+	try
+	{
+		this->decoder_model = torch::jit::load(decoder_model_path);
+		std::cout << "Decoder model loaded correctly" << std::endl;
+	}
+	catch (const c10::Error& e)
+	{
+		std::cout << "Decoder model loaded incorrectly: " << e.what() << std::endl;
+	}
+
+	this->decoder_model.to(torch::kCUDA);
+	this->decoder_model.eval();
 }
 
 cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
@@ -202,7 +214,7 @@ cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
 	return mat;
 }
 
-at::Tensor StyleTransfer::Preprocess(const cv::Mat& image, const int& padding, const int& patch_size)
+at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, const int& patch_size)
 {
 	cv::Size image_size = image.size();
 
@@ -218,7 +230,7 @@ at::Tensor StyleTransfer::Preprocess(const cv::Mat& image, const int& padding, c
 
 	std::cout << W << " " << H << " " << N << " " << W_ << " " << H_ << " " << w << " " << h << std::endl;
 
-	at::Tensor image_tensor = StyleTransfer::Mat2Tensor(image).to(torch::kCPU);
+	at::Tensor image_tensor = this->Mat2Tensor(image).to(torch::kCPU);
 	image_tensor = image_tensor.unsqueeze(0);
 
 	int p_left = (W_ - W) / 2;
@@ -250,7 +262,7 @@ at::Tensor StyleTransfer::Preprocess(const cv::Mat& image, const int& padding, c
 	return image_tensor;
 }
 
-at::Tensor StyleTransfer::Mat2Tensor(const cv::Mat& input)
+at::Tensor TorchLoader::Mat2Tensor(const cv::Mat& input)
 {
 	at::Tensor tensor = torch::from_blob(
 		input.data,
@@ -265,8 +277,27 @@ at::Tensor StyleTransfer::Mat2Tensor(const cv::Mat& input)
 	return tensor;
 }
 
-void StyleTransfer::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha)
+void TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha)
 {
 	content = content.unsqueeze(0);
 	
+	InitThumbnailInstanceNorm(this->tain_model, true);
+
+	at::Tensor stylized_thumb_tensor = TorchLoader::StyleTransfer(content, style_f, alpha);
+	std::cout << "Stylized thumb shape: " << stylized_thumb_tensor.sizes() << std::endl;
+}
+
+at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha)
+{
+	assert(0.0f <= alpha <= 1.0f);
+
+	at::Tensor content_f = this->vgg_model.forward({ content }).toTensor();
+	
+	std::vector<at::Tensor> feat = this->tain_model.forward(content_f, style_f);
+	
+	at::Tensor feat_tensor = feat[0];
+	//std::cout << feat_tensor.sizes() << "shape" << std::endl;
+	feat_tensor = feat_tensor * alpha + content_f * (1.0f - alpha);
+
+	return this->decoder_model.forward({ feat_tensor }).toTensor();
 }

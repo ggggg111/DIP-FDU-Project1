@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "Module.h"
+#include "tools/Torch/ThumbInstanceNorm.h"
 
 struct StyleTransferParams
 {
@@ -18,15 +19,6 @@ struct StyleTransferParams
 	int STYLE_SIZE;
 	float ALPHA;
 };
-
-namespace StyleTransfer
-{
-	at::Tensor Mat2Tensor(const cv::Mat& input);
-
-	at::Tensor Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
-
-	void StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
-}
 
 class TorchLoader : public Module
 {
@@ -45,18 +37,26 @@ private:
 	/* FastFlow */
 	void LoadFastFlowModel();
 
+	cv::Mat TensorToCVImage(at::Tensor& tensor);
+
 	/* Style Transfer */
 	void LoadStyleTransferModels();
 
-	cv::Mat TensorToCVImage(at::Tensor& tensor);
+	at::Tensor Mat2Tensor(const cv::Mat& input);
+	at::Tensor Preprocess(const cv::Mat& content_image_mat, const int& padding, const int& patch_size);
+
+	void StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
+
+	at::Tensor StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 
 private:
 	/* FastFlow */
 	torch::jit::script::Module fastflow_model;
 
 	/* Style Transfer */
-	torch::nn::Module tain_model;
+	ThumbAdaptiveInstanceNorm tain_model;
 	torch::jit::script::Module vgg_model;
+	torch::jit::script::Module decoder_model;
 
 	StyleTransferParams style_transfer_params;
 };
