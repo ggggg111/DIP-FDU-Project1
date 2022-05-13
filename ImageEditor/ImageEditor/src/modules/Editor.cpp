@@ -1035,6 +1035,8 @@ void Editor::ApplyStyleTransferInference(const std::string& content_path, const 
 	cv::Mat result = App->torch_loader->StyleTransferInference(content_path, style_path);
 
 	ImageLoader::SendMatToEditor(result, false);
+
+	result.release();
 }
 
 SDL_Texture* Editor::LoadImg(const std::string& path) const
