@@ -39,12 +39,20 @@ public:
 	cv::Mat StyleTransferInference(const std::string& content_path, const std::string& style_path);
 
 private:
+	/* FastFlow */
 	void LoadFastFlowModel();
+
+	/* Style Transfer */
+	void LoadStyleTransferModels();
 
 	cv::Mat TensorToCVImage(at::Tensor& tensor);
 
 private:
+	/* FastFlow */
 	torch::jit::script::Module fastflow_model;
+
+	/* Style Transfer */
+	torch::jit::script::Module vgg_model;
 
 	StyleTransferParams style_transfer_params;
 };

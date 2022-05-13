@@ -21,6 +21,7 @@ TorchLoader::~TorchLoader()
 void TorchLoader::Start()
 {
 	this->LoadFastFlowModel();
+	this->LoadStyleTransferModels();
 }
 
 void TorchLoader::CleanUp()
@@ -139,6 +140,26 @@ void TorchLoader::LoadFastFlowModel()
 
 	this->fastflow_model.to(torch::kCUDA);
 	this->fastflow_model.eval();
+}
+
+void TorchLoader::LoadStyleTransferModels()
+{
+	//c10::InferenceMode guard(true);
+
+	const char* vgg_model_path = "models/style_transfer/vgg_model.pt";
+
+	try
+	{
+		this->vgg_model = torch::jit::load(vgg_model_path);
+		std::cout << "VGG model loaded correctly" << std::endl;
+	}
+	catch (const c10::Error& e)
+	{
+		std::cout << "VGG model loaded incorrectly: " << e.what() << std::endl;
+	}
+
+	this->vgg_model.to(torch::kCUDA);
+	this->vgg_model.eval();
 }
 
 cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
