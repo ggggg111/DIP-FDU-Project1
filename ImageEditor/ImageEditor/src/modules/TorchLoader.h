@@ -37,7 +37,7 @@ private:
 	/* FastFlow */
 	void LoadFastFlowModel();
 
-	cv::Mat TensorToCVImage(at::Tensor& tensor);
+	cv::Mat TensorToCVImageFastFlow(at::Tensor& tensor);
 
 	/* Style Transfer */
 	void LoadStyleTransferModels();
@@ -48,6 +48,8 @@ private:
 	cv::Mat StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 
 	at::Tensor StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha);
+
+	cv::Mat TensorToCVImageStyleTransfer(at::Tensor& tensor);
 
 private:
 	/* FastFlow */

@@ -60,7 +60,7 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 	img.release();
 
-	return TensorToCVImage(t).clone();
+	return TensorToCVImageFastFlow(t).clone();
 }
 
 cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
@@ -119,6 +119,8 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
 			cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+		
+			return res;
 		}
 	}
 	else
@@ -128,7 +130,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 	torch::cuda::synchronize();
 
-	return cv::Mat();
+	//return cv::Mat();
 }
 
 void TorchLoader::LoadFastFlowModel()
@@ -199,7 +201,7 @@ void TorchLoader::LoadStyleTransferModels()
 	this->decoder_model.eval();
 }
 
-cv::Mat TorchLoader::TensorToCVImage(at::Tensor& tensor)
+cv::Mat TorchLoader::TensorToCVImageFastFlow(at::Tensor& tensor)
 {
 	int64_t width = tensor.size(1);
 	int64_t height = tensor.size(2);
@@ -285,7 +287,13 @@ cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tenso
 
 	at::Tensor stylized_thumb_tensor = TorchLoader::StyleTransfer(content, style_f, alpha);
 	std::cout << "Stylized thumb shape: " << stylized_thumb_tensor.sizes() << std::endl;
-	std::cout << stylized_thumb_tensor << std::endl;
+	//std::cout << stylized_thumb_tensor << std::endl;
+
+	c10::cuda::CUDACachingAllocator::emptyCache();
+
+	stylized_thumb_tensor = stylized_thumb_tensor.mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
+
+	return this->TensorToCVImageStyleTransfer(stylized_thumb_tensor).clone();
 }
 
 at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha)
@@ -301,4 +309,14 @@ at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tenso
 	feat_tensor = feat_tensor * alpha + content_f * (1.0f - alpha);
 
 	return this->decoder_model.forward({ feat_tensor }).toTensor();
+}
+
+cv::Mat TorchLoader::TensorToCVImageStyleTransfer(at::Tensor& tensor)
+{
+	int64_t width = tensor.size(1);
+	int64_t height = tensor.size(2);
+
+	tensor = tensor.permute({ 1, 2, 0 });
+
+	return cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
 }
