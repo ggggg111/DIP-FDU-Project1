@@ -111,6 +111,12 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		
 		at::Tensor style_tensor = StyleTransfer::Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
+
+		{
+			torch::NoGradGuard no_grad;
+
+			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
+		}
 	}
 	else
 	{
@@ -144,7 +150,7 @@ void TorchLoader::LoadFastFlowModel()
 
 void TorchLoader::LoadStyleTransferModels()
 {
-	//c10::InferenceMode guard(true);
+	c10::InferenceMode guard(true);
 
 	const char* vgg_model_path = "models/style_transfer/vgg_model.pt";
 
