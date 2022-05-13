@@ -21,6 +21,7 @@
     <ClCompile Include="src\utils\Utils.cpp" />
     <ClCompile Include="src\tools\HDRLoader.cpp" />
     <ClCompile Include="src\modules\TorchLoader.cpp" />
+    <ClCompile Include="src\tools\Torch\ThumbInstanceNorm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -47,5 +48,6 @@
     <ClInclude Include="src\tools\HDRLoader.h" />
     <ClInclude Include="src\utils\MemLeaks.h" />
     <ClInclude Include="src\modules\TorchLoader.h" />
+    <ClInclude Include="src\tools\Torch\ThumbInstanceNorm.h" />
   </ItemGroup>
 </Project>

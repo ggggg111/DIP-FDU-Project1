@@ -158,6 +158,19 @@ void TorchLoader::LoadStyleTransferModels()
 {
 	c10::InferenceMode guard(true);
 
+	try
+	{
+		this->tain_model = ThumbAdaptiveInstanceNorm();
+		std::cout << "TAIN model loaded correctly" << std::endl;
+	}
+	catch (const c10::Error& e)
+	{
+		std::cout << "TAIN model loaded incorrectly: " << e.what() << std::endl;
+	}
+
+	this->tain_model.to(torch::kCUDA);
+	this->tain_model.eval();
+
 	const char* vgg_model_path = "models/style_transfer/vgg_model.pt";
 
 	try

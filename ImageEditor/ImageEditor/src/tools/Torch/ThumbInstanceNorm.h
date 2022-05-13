@@ -14,7 +14,7 @@ struct ThumbInstanceNorm : torch::nn::Module
 		}
 	}
 
-	virtual std::vector<torch::Tensor> forward(torch::Tensor& x, torch::Tensor& thumb = {})
+	virtual std::vector<torch::Tensor> forward(torch::Tensor x, torch::Tensor thumb = {})
 	{
 		if (this->is_training())
 		{
@@ -75,12 +75,12 @@ struct ThumbInstanceNorm : torch::nn::Module
 
 struct ThumbAdaptiveInstanceNorm : ThumbInstanceNorm
 {
-	ThumbAdaptiveInstanceNorm(int out_channels, bool affine) : ThumbInstanceNorm(0, false)
+	ThumbAdaptiveInstanceNorm(int out_channels = 0, bool affine = false) : ThumbInstanceNorm(out_channels, affine)
 	{
 
 	}
 
-	std::vector<torch::Tensor> forward(torch::Tensor& content_feat, torch::Tensor& style_feat) override
+	std::vector<torch::Tensor> forward(torch::Tensor content_feat, torch::Tensor style_feat) override
 	{
 		assert(content_feat.sizes()[0] == style_feat.sizes()[0]);
 		assert(content_feat.sizes()[1] == style_feat.sizes()[1]);

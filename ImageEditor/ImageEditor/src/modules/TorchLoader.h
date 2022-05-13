@@ -55,6 +55,7 @@ private:
 	torch::jit::script::Module fastflow_model;
 
 	/* Style Transfer */
+	torch::nn::Module tain_model;
 	torch::jit::script::Module vgg_model;
 
 	StyleTransferParams style_transfer_params;
