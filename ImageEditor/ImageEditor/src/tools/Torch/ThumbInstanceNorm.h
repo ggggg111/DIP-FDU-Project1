@@ -5,7 +5,7 @@
 
 struct ThumbInstanceNorm : torch::nn::Module
 {
-	ThumbInstanceNorm(int out_channels = 0, bool affine = false)
+	ThumbInstanceNorm(int out_channels = 0, bool affine = true)
 	{
 		if (affine)
 		{
@@ -14,7 +14,7 @@ struct ThumbInstanceNorm : torch::nn::Module
 		}
 	}
 
-	std::vector<torch::Tensor> forward(torch::Tensor& x, torch::Tensor& thumb = {})
+	virtual std::vector<torch::Tensor> forward(torch::Tensor& x, torch::Tensor& thumb = {})
 	{
 		if (this->is_training())
 		{
@@ -71,6 +71,37 @@ struct ThumbInstanceNorm : torch::nn::Module
 	bool collection = true;
 
 	torch::Tensor weight, bias;
+};
+
+struct ThumbAdaptiveInstanceNorm : ThumbInstanceNorm
+{
+	ThumbAdaptiveInstanceNorm(int out_channels, bool affine) : ThumbInstanceNorm(0, false)
+	{
+
+	}
+
+	std::vector<torch::Tensor> forward(torch::Tensor& content_feat, torch::Tensor& style_feat) override
+	{
+		assert(content_feat.sizes()[0] == style_feat.sizes()[0]);
+		assert(content_feat.sizes()[1] == style_feat.sizes()[1]);
+
+		c10::IntArrayRef size = content_feat.sizes();
+
+		torch::Tensor style_mean = this->CalcMean(style_feat);
+		torch::Tensor style_std = this->CalcStd(style_feat);
+
+		if (this->collection)
+		{
+			torch::Tensor thumb_mean = this->CalcMean(content_feat);
+			torch::Tensor thumb_std = this->CalcStd(content_feat);
+
+			this->thumb_mean = thumb_mean;
+			this->thumb_std = thumb_std;
+		}
+
+		torch::Tensor normalized_feat = (content_feat - this->thumb_mean.expand(size)) / this->thumb_std.expand(size);
+		return { normalized_feat * style_std.expand(size) + style_mean.expand(size) };
+	}
 };
 
 #endif /* __THUMB_INSTANCE_NORM_H__ */
