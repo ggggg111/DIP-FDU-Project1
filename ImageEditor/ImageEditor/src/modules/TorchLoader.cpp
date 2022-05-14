@@ -65,7 +65,7 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
 {
-	this->style_transfer_params.USE_URST = true;
+	this->style_transfer_params.USE_URST = false;
 
 	cv::Mat image = cv::imread(content_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -87,6 +87,11 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	this->style_transfer_params.IMAGE_WIDTH = image_size.width;
 	this->style_transfer_params.IMAGE_HEIGHT = image_size.height;
 
+	cv::resize(
+		style, style,
+		cv::Size(this->style_transfer_params.STYLE_SIZE, this->style_transfer_params.STYLE_SIZE)
+	);
+
 	torch::cuda::synchronize();
 
 	if (this->style_transfer_params.USE_URST)
@@ -105,11 +110,6 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		at::Tensor patches_tensor = this->Preprocess(image, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
 		std::cout << "Patches shape: " << patches_tensor.sizes() << std::endl;
 		
-		cv::resize(
-			style, style,
-			cv::Size(this->style_transfer_params.STYLE_SIZE, this->style_transfer_params.STYLE_SIZE)
-		);
-		
 		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
@@ -118,11 +118,11 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			//cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
-			cv::Mat res = this->StyleTransferHighResolution(
+			cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			/*cv::Mat res = this->StyleTransferHighResolution(
 				patches_tensor, style_f_tensor,
 				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
-			);
+			);*/
 			//std::cout << res << std::endl;
 			return res;
 		}
@@ -402,7 +402,7 @@ at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tenso
 	std::vector<at::Tensor> feat = this->tain_model.forward(content_f, style_f);
 	
 	at::Tensor feat_tensor = feat[0];
-	//std::cout << feat_tensor.sizes() << "shape" << std::endl;
+	std::cout << "Feat tensor shape: " << feat_tensor.sizes() << std::endl;
 	feat_tensor = feat_tensor * alpha + content_f * (1.0f - alpha);
 
 	return this->decoder_model.forward({ feat_tensor }).toTensor();
