@@ -129,12 +129,22 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	}
 	else
 	{
+		at::Tensor image_tensor = this->Mat2Tensor(image).to(torch::kCUDA);
+		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 
+		std::cout << "Image shape: " << image_tensor.sizes() << std::endl;
+		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
+
+		{
+			torch::NoGradGuard no_grad;
+
+			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
+
+			cv::Mat res = this->StyleTransferThumbnail(image_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+		
+			return res;
+		}
 	}
-
-	torch::cuda::synchronize();
-
-	//return cv::Mat();
 }
 
 void TorchLoader::LoadFastFlowModel()
