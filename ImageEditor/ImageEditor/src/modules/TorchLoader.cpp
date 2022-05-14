@@ -270,7 +270,9 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 
 at::Tensor TorchLoader::Unpadding(at::Tensor tensor, const int& padding)
 {
-	return at::Tensor(); // TODO
+	c10::IntArrayRef size = tensor.sizes();
+
+	return at::Tensor();
 }
 
 at::Tensor TorchLoader::Mat2Tensor(const cv::Mat& input)
@@ -316,11 +318,12 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor& patches, at::Tensor
 		patch = patch.unsqueeze(0).to(torch::kCUDA);
 
 		at::Tensor stylized_patch = this->StyleTransfer(patch, style_f, alpha);
+		std::cout << "Stylized patch shape: " << stylized_patch.sizes() << std::endl;
 		
 		stylized_patch = F::interpolate(
 			stylized_patch,
 			F::InterpolateFuncOptions()
-			.size(std::vector(patch.sizes()[2], patch.sizes()[3]))
+			.size(std::vector({ patch.sizes()[2], patch.sizes()[3] }))
 			.mode(torch::kBilinear)
 			.align_corners(true)
 		);
