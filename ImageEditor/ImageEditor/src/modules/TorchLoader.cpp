@@ -123,7 +123,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 				patches_tensor, style_f_tensor,
 				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
 			);
-		
+			//std::cout << res << std::endl;
 			return res;
 		}
 	}
@@ -348,7 +348,7 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 	at::TensorList stylized_patches_tensorlist = at::TensorList(stylized_patches);
 	std::cout << stylized_patches_tensorlist.size() << std::endl;
 	
-	at::Tensor stylized_patches_tensor = torch::stack(stylized_patches_tensorlist, 0);
+	at::Tensor stylized_patches_tensor = torch::stack(stylized_patches_tensorlist, 0).squeeze();
 
 	c10::IntArrayRef stylized_patches_tensor_size = stylized_patches_tensor.sizes();
 	std::cout << stylized_patches_tensor_size << std::endl;
@@ -373,6 +373,12 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 		stylized_patches_tensor,
 		F::FoldFuncOptions({ h, w }).output_size({ output_size_h, output_size_w }).stride({ h, w })
 	);
+
+	std::cout << "Final size: " << stylized_image_tensor.sizes() << std::endl;
+
+	c10::cuda::CUDACachingAllocator::emptyCache();
+
+	stylized_image_tensor = stylized_image_tensor.mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
 
 	return this->TensorToCVImageStyleTransfer(stylized_image_tensor).clone();
 }
