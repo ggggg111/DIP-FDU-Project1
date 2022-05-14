@@ -268,11 +268,18 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 	return image_tensor;
 }
 
-at::Tensor TorchLoader::Unpadding(at::Tensor tensor, const int& padding)
+at::Tensor TorchLoader::Unpadding(at::Tensor& tensor, const int& padding)
 {
-	c10::IntArrayRef size = tensor.sizes();
+	using namespace torch::indexing;
 
-	return at::Tensor();
+	int h = tensor.sizes()[2];
+	int w = tensor.sizes()[3];
+
+	tensor = tensor.index({"...", Slice(padding, h - padding), Slice(padding, w - padding)});
+	
+	std::cout << tensor.sizes() << std::endl;
+
+	return tensor;
 }
 
 at::Tensor TorchLoader::Mat2Tensor(const cv::Mat& input)
