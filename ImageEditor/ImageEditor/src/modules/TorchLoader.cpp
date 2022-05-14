@@ -313,9 +313,10 @@ cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tenso
 	return this->TensorToCVImageStyleTransfer(stylized_thumb_tensor).clone();
 }
 
-cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor& patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha)
+cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha)
 {
-	std::list<at::Tensor> stylized_patches;
+	std::vector<at::Tensor> stylized_patches(patches.sizes()[0]);
+	std::cout << "It: " << patches.sizes()[0] << std::endl;
 	
 	InitThumbnailInstanceNorm(this->tain_model, collection);
 	
@@ -336,11 +337,44 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor& patches, at::Tensor
 		);
 
 		stylized_patch = Unpadding(stylized_patch, this->style_transfer_params.PADDING);
+		std::cout << "Stylized patch shape after unpadding: " << stylized_patch.sizes() << std::endl;
 		
-		stylized_patches.push_back(stylized_patch);
+		stylized_patches[d] = stylized_patch.to(torch::kCPU);
 	}
 
-	return cv::Mat();
+	for (auto& t : stylized_patches)
+		std::cout << t.sizes() << std::endl;
+	
+	at::TensorList stylized_patches_tensorlist = at::TensorList(stylized_patches);
+	std::cout << stylized_patches_tensorlist.size() << std::endl;
+	
+	at::Tensor stylized_patches_tensor = torch::stack(stylized_patches_tensorlist, 0);
+
+	c10::IntArrayRef stylized_patches_tensor_size = stylized_patches_tensor.sizes();
+	std::cout << stylized_patches_tensor_size << std::endl;
+	int b = stylized_patches_tensor_size[0]; int c = stylized_patches_tensor_size[1];
+	int h = stylized_patches_tensor_size[2]; int w = stylized_patches_tensor_size[3];
+
+	std::cout << b << " " << c << " " << h << " " << w;
+
+	stylized_patches_tensor = stylized_patches_tensor.unsqueeze(0);
+	try {
+		stylized_patches_tensor = stylized_patches_tensor.view({ 1, b, c * h * w }).permute({ 0, 2, 1 }).contiguous();
+	}
+	catch (const c10::Error& e)
+	{
+		std::cout << "Error: " << e.what() << std::endl;
+	}
+
+	int output_size_h = (int)sqrt(b) * h;
+	int output_size_w = (int)sqrt(b) * w;
+
+	at::Tensor stylized_image_tensor = F::fold(
+		stylized_patches_tensor,
+		F::FoldFuncOptions({ h, w }).output_size({ output_size_h, output_size_w }).stride({ h, w })
+	);
+
+	return this->TensorToCVImageStyleTransfer(stylized_image_tensor).clone();
 }
 
 at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha)

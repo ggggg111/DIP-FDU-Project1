@@ -48,7 +48,7 @@ private:
 	at::Tensor Unpadding(at::Tensor& tensor, const int& padding);
 
 	cv::Mat StyleTransferThumbnail(at::Tensor& content, const at::Tensor& style_f, const float& alpha);
-	cv::Mat StyleTransferHighResolution(at::Tensor& patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha);
+	cv::Mat StyleTransferHighResolution(at::Tensor patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha);
 
 	at::Tensor StyleTransfer(const at::Tensor& content, const at::Tensor& style_f, const float& alpha);
 
