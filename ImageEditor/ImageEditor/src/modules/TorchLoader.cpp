@@ -65,7 +65,7 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
 {
-	this->style_transfer_params.USE_URST = false;
+	this->style_transfer_params.USE_URST = true;
 
 	cv::Mat image = cv::imread(content_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -106,10 +106,14 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 		at::Tensor thumbnail_tensor = this->Mat2Tensor(thumbnail).to(torch::kCUDA);
 		std::cout << "Thumbnail shape: " << thumbnail_tensor.sizes() << std::endl;
+
+		thumbnail.release();
 		
 		at::Tensor patches_tensor = this->Preprocess(image, this->style_transfer_params.PADDING, this->style_transfer_params.PATCH_SIZE);
 		std::cout << "Patches shape: " << patches_tensor.sizes() << std::endl;
 		
+		image.release();
+
 		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
@@ -118,11 +122,11 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
-			/*cv::Mat res = this->StyleTransferHighResolution(
+			//cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			cv::Mat res = this->StyleTransferHighResolution(
 				patches_tensor, style_f_tensor,
 				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
-			);*/
+			);
 			//std::cout << res << std::endl;
 			return res;
 		}
@@ -388,7 +392,10 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
 
-	stylized_image_tensor = stylized_image_tensor.mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach().squeeze(0);
+	// Might require actual normalization. Get min & max values
+	stylized_image_tensor = stylized_image_tensor.squeeze(0).mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach();
+
+	std::cout << "Stylized image tensor shape: " << stylized_image_tensor.sizes() << std::endl;
 
 	return this->TensorToCVImageStyleTransfer(stylized_image_tensor).clone();
 }
@@ -419,5 +426,5 @@ cv::Mat TorchLoader::TensorToCVImageStyleTransfer(at::Tensor& tensor)
 	cv::Mat res = cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
 	cv::cvtColor(res, res, cv::COLOR_RGB2BGR);
 
-	return res;
+	return res.clone();
 }
