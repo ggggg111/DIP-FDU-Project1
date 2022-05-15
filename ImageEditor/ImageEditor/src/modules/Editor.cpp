@@ -636,6 +636,16 @@ void Editor::PopUps()
 			ImGui::Separator();
 
 			ImGui::Checkbox("Use URST", &App->torch_loader->style_transfer_params.USE_URST);
+
+			if (App->torch_loader->style_transfer_params.USE_URST)
+			{
+				ImGui::Separator();
+
+				ImGui::Checkbox("High Resolution Mode", &App->torch_loader->style_transfer_params.HIGH_RES_MODE);
+
+				ImGui::Separator();
+			}
+			ImGui::ShowDemoWindow();
 			ImGui::SliderInt("Resize", &App->torch_loader->style_transfer_params.RESIZE, 0, 7000);
 			ImGui::SliderInt("Thumb Size", &App->torch_loader->style_transfer_params.THUMB_SIZE, 0, 4096);
 			ImGui::SliderInt("Patch Size", &App->torch_loader->style_transfer_params.PATCH_SIZE, 0, 4000);

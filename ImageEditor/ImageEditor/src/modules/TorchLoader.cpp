@@ -24,6 +24,7 @@ void TorchLoader::Start()
 	this->LoadStyleTransferModels();
 
 	this->style_transfer_params.USE_URST = true;
+	this->style_transfer_params.HIGH_RES_MODE = true;
 	this->style_transfer_params.RESIZE = 0;
 	this->style_transfer_params.THUMB_SIZE = 1024;
 	this->style_transfer_params.PATCH_SIZE = 1000;
@@ -121,12 +122,21 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			//cv::Mat res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
-			cv::Mat res = this->StyleTransferHighResolution(
-				patches_tensor, style_f_tensor,
-				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
-			);
+			cv::Mat res;
+			if (this->style_transfer_params.HIGH_RES_MODE)
+			{
+				res = this->StyleTransferHighResolution(
+					patches_tensor, style_f_tensor,
+					this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
+				);
+			}
+			else
+			{
+				res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			}
+
 			//std::cout << res << std::endl;
+			
 			return res;
 		}
 	}

@@ -18,6 +18,7 @@ struct StyleTransferParams
 	int PADDING;
 	int STYLE_SIZE;
 	float ALPHA;
+	bool HIGH_RES_MODE;
 };
 
 class TorchLoader : public Module
