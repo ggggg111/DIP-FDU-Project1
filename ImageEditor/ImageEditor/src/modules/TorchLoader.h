@@ -54,6 +54,9 @@ private:
 
 	cv::Mat TensorToCVImageStyleTransfer(at::Tensor& tensor);
 
+public:
+	StyleTransferParams style_transfer_params;
+
 private:
 	/* FastFlow */
 	torch::jit::script::Module fastflow_model;
@@ -62,8 +65,6 @@ private:
 	ThumbAdaptiveInstanceNorm tain_model;
 	torch::jit::script::Module vgg_model;
 	torch::jit::script::Module decoder_model;
-
-	StyleTransferParams style_transfer_params;
 };
 
 #endif /* __TORCH_LOADER_H__ */

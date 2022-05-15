@@ -611,6 +611,8 @@ void Editor::PopUps()
 					strcpy_s(content_image_path, res.c_str());
 				}
 			}
+			ImGui::SameLine();
+			ImGui::Text("Content path");
 
 			static char style_image_path[MAX_PATH];
 
@@ -628,6 +630,18 @@ void Editor::PopUps()
 					strcpy_s(style_image_path, res.c_str());
 				}
 			}
+			ImGui::SameLine();
+			ImGui::Text("Style path");
+
+			ImGui::Separator();
+
+			ImGui::Checkbox("Use URST", &App->torch_loader->style_transfer_params.USE_URST);
+			ImGui::SliderInt("Resize", &App->torch_loader->style_transfer_params.RESIZE, 0, 7000);
+			ImGui::SliderInt("Thumb Size", &App->torch_loader->style_transfer_params.THUMB_SIZE, 0, 4096);
+			ImGui::SliderInt("Patch Size", &App->torch_loader->style_transfer_params.PATCH_SIZE, 0, 4000);
+			ImGui::SliderInt("Style Size", &App->torch_loader->style_transfer_params.STYLE_SIZE, 0, 4096);
+			ImGui::SliderInt("Padding", &App->torch_loader->style_transfer_params.PADDING, 0, 128);
+			ImGui::SliderFloat("Alpha", &App->torch_loader->style_transfer_params.ALPHA, 0.0f, 1.0f);
 
 			ImGui::Separator();
 

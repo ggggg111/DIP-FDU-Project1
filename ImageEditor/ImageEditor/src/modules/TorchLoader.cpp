@@ -22,6 +22,14 @@ void TorchLoader::Start()
 {
 	this->LoadFastFlowModel();
 	this->LoadStyleTransferModels();
+
+	this->style_transfer_params.USE_URST = true;
+	this->style_transfer_params.RESIZE = 0;
+	this->style_transfer_params.THUMB_SIZE = 1024;
+	this->style_transfer_params.PATCH_SIZE = 1000;
+	this->style_transfer_params.PADDING = 32;
+	this->style_transfer_params.STYLE_SIZE = 1024;
+	this->style_transfer_params.ALPHA = 1.0f;
 }
 
 void TorchLoader::CleanUp()
@@ -65,20 +73,11 @@ cv::Mat TorchLoader::FastFlowInference(const std::string& path)
 
 cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, const std::string& style_path)
 {
-	this->style_transfer_params.USE_URST = true;
-
 	cv::Mat image = cv::imread(content_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
 
 	cv::Mat style = cv::imread(style_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(style, style, cv::COLOR_BGR2RGB);
-	
-	this->style_transfer_params.RESIZE = 0;
-	this->style_transfer_params.THUMB_SIZE = 1024;
-	this->style_transfer_params.PATCH_SIZE = 1000;
-	this->style_transfer_params.PADDING = 32;
-	this->style_transfer_params.STYLE_SIZE = 1024;
-	this->style_transfer_params.ALPHA = 1.0f;
 
 	if(this->style_transfer_params.RESIZE != 0)
 		cv::resize(image, image, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
