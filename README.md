@@ -76,13 +76,13 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 ### URST & AdaIN
 
-- [Paper 1](https://arxiv.org/abs/2103.11784)
+- [Paper 1](https://arxiv.org/abs/2103.11784).
 
-- [URST (official)](https://github.com/czczup/URST)
+- [URST (official)](https://github.com/czczup/URST).
 
-- [Paper 2](https://arxiv.org/pdf/1703.06868.pdf)
+- [Paper 2](https://arxiv.org/pdf/1703.06868.pdf).
 
-- [AdaIn (official)](https://github.com/xunhuang1995/AdaIN-style)
+- [AdaIn (official)](https://github.com/xunhuang1995/AdaIN-style).
 
 ## Compatibility
 
