@@ -23,6 +23,9 @@ void TorchLoader::Start()
 	this->LoadFastFlowModel();
 	this->LoadStyleTransferModels();
 
+	this->tain_model.to(torch::kCUDA);
+	this->tain_model.eval();
+
 	this->style_transfer_params.USE_URST = true;
 	this->style_transfer_params.HIGH_RES_MODE = true;
 	this->style_transfer_params.RESIZE = 0;
@@ -122,22 +125,16 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
 
-			cv::Mat res;
-			if (this->style_transfer_params.HIGH_RES_MODE)
-			{
-				res = this->StyleTransferHighResolution(
-					patches_tensor, style_f_tensor,
-					this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
-				);
-			}
-			else
-			{
-				res = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
-			}
+			cv::Mat res_thumbnail;
+			cv::Mat res_high_resolution;
 
-			//std::cout << res << std::endl;
-			
-			return res;
+			res_thumbnail = this->StyleTransferThumbnail(thumbnail_tensor, style_f_tensor, this->style_transfer_params.ALPHA);
+			res_high_resolution = this->StyleTransferHighResolution(
+				patches_tensor, style_f_tensor,
+				this->style_transfer_params.PADDING, false, this->style_transfer_params.ALPHA
+			);
+
+			return this->style_transfer_params.HIGH_RES_MODE ? res_high_resolution : res_thumbnail;
 		}
 	}
 	else
@@ -183,19 +180,6 @@ void TorchLoader::LoadFastFlowModel()
 void TorchLoader::LoadStyleTransferModels()
 {
 	c10::InferenceMode guard(true);
-
-	try
-	{
-		//this->tain_model = ThumbAdaptiveInstanceNorm();
-		std::cout << "TAIN model loaded correctly" << std::endl;
-	}
-	catch (const c10::Error& e)
-	{
-		std::cout << "TAIN model loaded incorrectly: " << e.what() << std::endl;
-	}
-
-	this->tain_model.to(torch::kCUDA);
-	this->tain_model.eval();
 
 	const char* vgg_model_path = "models/style_transfer/vgg_model.pt";
 
@@ -381,13 +365,7 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 	std::cout << b << " " << c << " " << h << " " << w;
 
 	stylized_patches_tensor = stylized_patches_tensor.unsqueeze(0);
-	try {
-		stylized_patches_tensor = stylized_patches_tensor.view({ 1, b, c * h * w }).permute({ 0, 2, 1 }).contiguous();
-	}
-	catch (const c10::Error& e)
-	{
-		std::cout << "Error: " << e.what() << std::endl;
-	}
+	stylized_patches_tensor = stylized_patches_tensor.view({ 1, b, c * h * w }).permute({ 0, 2, 1 }).contiguous();
 
 	int output_size_h = (int)sqrt(b) * h;
 	int output_size_w = (int)sqrt(b) * w;
@@ -400,17 +378,7 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 	std::cout << "Final size: " << stylized_image_tensor.sizes() << std::endl;
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
-	/*
-#undef max
-#undef min
-	at::Tensor max = torch::max(stylized_image_tensor);
-	at::Tensor min = torch::min(stylized_image_tensor);
-	std::cout << max << " - " << min << std::endl;
 
-	at::Tensor numerator = stylized_image_tensor - min;
-	at::Tensor denominator = max - min;
-	stylized_image_tensor = numerator / denominator;
-	std::cout << "New mins and maxs: " << stylized_image_tensor.min() << " - " << stylized_image_tensor.max() << std::endl;*/
 	stylized_image_tensor = stylized_image_tensor.squeeze(0).mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach();
 
 	std::cout << "Stylized image tensor shape: " << stylized_image_tensor.sizes() << std::endl;
