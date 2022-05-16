@@ -374,8 +374,8 @@ at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tenso
 
 cv::Mat TorchLoader::TensorToCVImageStyleTransfer(at::Tensor& tensor)
 {
-	int64_t width = tensor.size(1);
-	int64_t height = tensor.size(2);
+	int64_t height = tensor.size(1);
+	int64_t width = tensor.size(2);
 
 	tensor = tensor.permute({ 1, 2, 0 });
 	tensor = tensor.reshape({ width * height * 3 });

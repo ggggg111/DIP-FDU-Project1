@@ -11,11 +11,11 @@ This project has been created for the subject Digital Image Processing at Fudan 
 ## Features
 
 - Load images in *.jpg*/*.png*/*.bmp* formats.
-  
+
 - Save images in *.jpg*/*.png*/*.bmp* formats.
 
 - Editing tools, including a standard brush, a rubber, circle and square brushes, lines, ellipses, and rectangles. The color and size of the tool can be tweaked.
-  
+
 - Filters:
   - Grayscale.
   - Blur.
@@ -29,10 +29,12 @@ This project has been created for the subject Digital Image Processing at Fudan 
   - Brighten:
     - Laplace.
   - Super Resolution.
-  
+
 - HDR Image Loading.
 
 - Anomaly Detection.
+
+- Style Transfer.
 
 ## Controls
 
@@ -71,6 +73,16 @@ This project has been created for the subject Digital Image Processing at Fudan 
 - [Paper](https://arxiv.org/abs/2111.07677).
 
 - [FastFlow (unofficial)](https://github.com/gathierry/FastFlow).
+
+### URST & AdaIN
+
+- [Paper 1](https://arxiv.org/abs/2103.11784)
+
+- [URST (official)](https://github.com/czczup/URST)
+
+- [Paper 2](https://arxiv.org/pdf/1703.06868.pdf)
+
+- [AdaIn (official)](https://github.com/xunhuang1995/AdaIN-style)
 
 ## Compatibility
 
@@ -113,9 +125,9 @@ To run the release, do:
 ## Requirements
 
 - [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/).
-  
+
   - [Desktop development with C++ workload](https://docs.microsoft.com/en-us/cpp/build/vscpp-step-0-installation?view=msvc-170).
-  
+
 - [Windows 10](https://www.microsoft.com/en-us/software-download/windows10).
 
 ## Releases
