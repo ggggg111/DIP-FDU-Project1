@@ -82,7 +82,7 @@ This project has been created for the subject Digital Image Processing at Fudan 
 
 - [Paper 2](https://arxiv.org/pdf/1703.06868.pdf).
 
-- [AdaIn (official)](https://github.com/xunhuang1995/AdaIN-style).
+- [AdaIN (official)](https://github.com/xunhuang1995/AdaIN-style).
 
 ## Compatibility
 
