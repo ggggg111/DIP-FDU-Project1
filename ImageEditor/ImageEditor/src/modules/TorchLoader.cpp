@@ -121,6 +121,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
 		{
+			c10::InferenceMode guard(true);
 			torch::NoGradGuard no_grad;
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
@@ -146,6 +147,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
 		{
+			c10::InferenceMode guard(true);
 			torch::NoGradGuard no_grad;
 
 			at::Tensor style_f_tensor = this->vgg_model.forward({ style_tensor }).toTensor();
@@ -159,8 +161,6 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 void TorchLoader::LoadFastFlowModel()
 {
-	c10::InferenceMode guard(true);
-
 	const char* model_path = "models/serialized_fastflow.zip";
 	
 	try
@@ -179,8 +179,6 @@ void TorchLoader::LoadFastFlowModel()
 
 void TorchLoader::LoadStyleTransferModels()
 {
-	c10::InferenceMode guard(true);
-
 	const char* vgg_model_path = "models/style_transfer/vgg_model.pt";
 
 	try
@@ -241,8 +239,6 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 	int w = (int)std::ceil(W / N) + 2 * padding;
 	int h = (int)std::ceil(H / N) + 2 * padding;
 
-	std::cout << W << " " << H << " " << N << " " << W_ << " " << H_ << " " << w << " " << h << std::endl;
-
 	at::Tensor image_tensor = this->Mat2Tensor(image).to(torch::kCPU);
 	image_tensor = image_tensor.unsqueeze(0);
 
@@ -250,8 +246,6 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 	int p_right = (W_ - W) - p_left;
 	int p_top = (H_ - H) / 2;
 	int p_bottom = (H_ - H) - p_top;
-
-	std::cout << p_left << " " << p_right << " " << p_top << " " << p_bottom << std::endl;
 
 	image_tensor = F::pad(
 		image_tensor,
@@ -270,8 +264,6 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 	image_tensor = image_tensor.permute({ 0, 2, 1 }).contiguous();
 	image_tensor = image_tensor.view({B, L, c, h, w}).squeeze(0);
 
-	std::cout << image_tensor.sizes() << std::endl;
-
 	return image_tensor;
 }
 
@@ -284,8 +276,6 @@ at::Tensor TorchLoader::Unpadding(at::Tensor& tensor, const int& padding)
 
 	tensor = tensor.index({"...", Slice(padding, h - padding), Slice(padding, w - padding)});
 	
-	std::cout << tensor.sizes() << std::endl;
-
 	return tensor;
 }
 
@@ -311,7 +301,6 @@ cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tenso
 	InitThumbnailInstanceNorm(this->tain_model, true);
 
 	at::Tensor stylized_thumb_tensor = this->StyleTransfer(content, style_f, alpha);
-	std::cout << "Stylized thumb shape: " << stylized_thumb_tensor.sizes() << std::endl;
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
 
@@ -323,7 +312,6 @@ cv::Mat TorchLoader::StyleTransferThumbnail(at::Tensor& content, const at::Tenso
 cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor& style_f, const int& padding, const bool& collection, const float& alpha)
 {
 	std::vector<at::Tensor> stylized_patches(patches.sizes()[0]);
-	std::cout << "It: " << patches.sizes()[0] << std::endl;
 	
 	InitThumbnailInstanceNorm(this->tain_model, collection);
 	
@@ -333,7 +321,6 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 		patch = patch.unsqueeze(0).to(torch::kCUDA);
 
 		at::Tensor stylized_patch = this->StyleTransfer(patch, style_f, alpha);
-		std::cout << "Stylized patch shape: " << stylized_patch.sizes() << std::endl;
 		
 		stylized_patch = F::interpolate(
 			stylized_patch,
@@ -343,26 +330,17 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 			.align_corners(true)
 		);
 
-		stylized_patch = Unpadding(stylized_patch, this->style_transfer_params.PADDING);
-		std::cout << "Stylized patch shape after unpadding: " << stylized_patch.sizes() << std::endl;
-		
+		stylized_patch = Unpadding(stylized_patch, this->style_transfer_params.PADDING);		
 		stylized_patches[d] = stylized_patch.to(torch::kCPU);
 	}
-
-	for (auto& t : stylized_patches)
-		std::cout << t.sizes() << std::endl;
 	
 	at::TensorList stylized_patches_tensorlist = at::TensorList(stylized_patches);
-	std::cout << stylized_patches_tensorlist.size() << std::endl;
 	
 	at::Tensor stylized_patches_tensor = torch::stack(stylized_patches_tensorlist, 0).squeeze();
 
 	c10::IntArrayRef stylized_patches_tensor_size = stylized_patches_tensor.sizes();
-	std::cout << stylized_patches_tensor_size << std::endl;
 	int b = stylized_patches_tensor_size[0]; int c = stylized_patches_tensor_size[1];
 	int h = stylized_patches_tensor_size[2]; int w = stylized_patches_tensor_size[3];
-
-	std::cout << b << " " << c << " " << h << " " << w;
 
 	stylized_patches_tensor = stylized_patches_tensor.unsqueeze(0);
 	stylized_patches_tensor = stylized_patches_tensor.view({ 1, b, c * h * w }).permute({ 0, 2, 1 }).contiguous();
@@ -375,13 +353,9 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 		F::FoldFuncOptions({ h, w }).output_size({ output_size_h, output_size_w }).stride({ h, w })
 	);
 
-	std::cout << "Final size: " << stylized_image_tensor.sizes() << std::endl;
-
 	c10::cuda::CUDACachingAllocator::emptyCache();
 
 	stylized_image_tensor = stylized_image_tensor.squeeze(0).mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach();
-
-	std::cout << "Stylized image tensor shape: " << stylized_image_tensor.sizes() << std::endl;
 
 	return this->TensorToCVImageStyleTransfer(stylized_image_tensor).clone();
 }
@@ -391,10 +365,8 @@ at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tenso
 	assert(0.0f <= alpha <= 1.0f);
 
 	at::Tensor content_f = this->vgg_model.forward({ content }).toTensor();
-	
 	at::Tensor feat_tensor = this->tain_model.forward(content_f, style_f);
 	
-	std::cout << "Feat tensor shape: " << feat_tensor.sizes() << std::endl;
 	feat_tensor = feat_tensor * alpha + content_f * (1.0f - alpha);
 
 	return this->decoder_model.forward({ feat_tensor }).toTensor();
