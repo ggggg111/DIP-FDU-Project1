@@ -350,7 +350,7 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 
 	at::Tensor stylized_image_tensor = F::fold(
 		stylized_patches_tensor,
-		F::FoldFuncOptions({ h, w }).output_size({ output_size_h, output_size_w }).stride({ h, w })
+		F::FoldFuncOptions({ output_size_h, output_size_w }, { h, w }).stride({ h, w })
 	);
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
