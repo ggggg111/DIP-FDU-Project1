@@ -424,9 +424,8 @@ at::Tensor TorchLoader::StyleTransfer(const at::Tensor& content, const at::Tenso
 
 	at::Tensor content_f = this->vgg_model.forward({ content }).toTensor();
 	
-	std::vector<at::Tensor> feat = this->tain_model.forward(content_f, style_f);
+	at::Tensor feat_tensor = this->tain_model.forward(content_f, style_f);
 	
-	at::Tensor feat_tensor = feat[0];
 	std::cout << "Feat tensor shape: " << feat_tensor.sizes() << std::endl;
 	feat_tensor = feat_tensor * alpha + content_f * (1.0f - alpha);
 
