@@ -108,6 +108,6 @@ public:
 	}
 };
 
-void InitThumbnailInstanceNorm(ThumbAdaptiveInstanceNorm& model, bool collection);
+void InitThumbnailInstanceNorm(ThumbAdaptiveInstanceNorm& model, const bool& collection);
 
 #endif /* __THUMB_INSTANCE_NORM_H__ */

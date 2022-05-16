@@ -400,8 +400,17 @@ cv::Mat TorchLoader::StyleTransferHighResolution(at::Tensor patches, at::Tensor&
 	std::cout << "Final size: " << stylized_image_tensor.sizes() << std::endl;
 
 	c10::cuda::CUDACachingAllocator::emptyCache();
+	/*
+#undef max
+#undef min
+	at::Tensor max = torch::max(stylized_image_tensor);
+	at::Tensor min = torch::min(stylized_image_tensor);
+	std::cout << max << " - " << min << std::endl;
 
-	// Might require actual normalization. Get min & max values
+	at::Tensor numerator = stylized_image_tensor - min;
+	at::Tensor denominator = max - min;
+	stylized_image_tensor = numerator / denominator;
+	std::cout << "New mins and maxs: " << stylized_image_tensor.min() << " - " << stylized_image_tensor.max() << std::endl;*/
 	stylized_image_tensor = stylized_image_tensor.squeeze(0).mul(255.0).clamp(0, 255).to(torch::kU8).to(torch::kCPU).detach();
 
 	std::cout << "Stylized image tensor shape: " << stylized_image_tensor.sizes() << std::endl;
