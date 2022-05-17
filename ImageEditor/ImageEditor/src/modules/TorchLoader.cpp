@@ -28,7 +28,8 @@ void TorchLoader::Start()
 
 	this->style_transfer_params.USE_URST = true;
 	this->style_transfer_params.HIGH_RES_MODE = true;
-	this->style_transfer_params.RESIZE = 0;
+	this->style_transfer_params.RESIZE_H = 0;
+	this->style_transfer_params.RESIZE_V = 0;
 	this->style_transfer_params.THUMB_SIZE = 1024;
 	this->style_transfer_params.PATCH_SIZE = 1000;
 	this->style_transfer_params.PADDING = 32;
@@ -82,9 +83,9 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 
 	cv::Mat style = cv::imread(style_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(style, style, cv::COLOR_BGR2RGB);
-
-	if (this->style_transfer_params.RESIZE != 0)
-		cv::resize(image, image, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
+	
+	if (this->style_transfer_params.RESIZE_H != 0 && this->style_transfer_params.RESIZE_V != 0)
+		cv::resize(image, image, cv::Size(this->style_transfer_params.RESIZE_H, this->style_transfer_params.RESIZE_V));
 
 	cv::Size image_size = image.size();
 	this->style_transfer_params.IMAGE_WIDTH = image_size.width;

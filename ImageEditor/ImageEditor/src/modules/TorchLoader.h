@@ -10,7 +10,8 @@
 struct StyleTransferParams
 {
 	bool USE_URST;
-	int RESIZE;
+	int RESIZE_H;
+	int RESIZE_V;
 	int IMAGE_WIDTH;
 	int IMAGE_HEIGHT;
 	int THUMB_SIZE;
