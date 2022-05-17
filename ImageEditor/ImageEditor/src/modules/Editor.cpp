@@ -642,15 +642,16 @@ void Editor::PopUps()
 				ImGui::Separator();
 
 				ImGui::Checkbox("High Resolution Mode", &App->torch_loader->style_transfer_params.HIGH_RES_MODE);
+				ImGui::DragInt("Thumb Size", &App->torch_loader->style_transfer_params.THUMB_SIZE, 1.0f, 0, 4096);
+				ImGui::DragInt("Patch Size", &App->torch_loader->style_transfer_params.PATCH_SIZE, 1.0f, 0, 4000);
+				ImGui::SliderInt("Padding", &App->torch_loader->style_transfer_params.PADDING, 0, 128);
 
 				ImGui::Separator();
 			}
+
 			ImGui::DragInt("Resize Horizontal", &App->torch_loader->style_transfer_params.RESIZE_H, 5.0f, 0, 7000);
 			ImGui::DragInt("Resize Vertical", &App->torch_loader->style_transfer_params.RESIZE_V, 5.0f, 0, 7000);
-			ImGui::DragInt("Thumb Size", &App->torch_loader->style_transfer_params.THUMB_SIZE, 1.0f, 0, 4096);
-			ImGui::DragInt("Patch Size", &App->torch_loader->style_transfer_params.PATCH_SIZE, 1.0f, 0, 4000);
 			ImGui::DragInt("Style Size", &App->torch_loader->style_transfer_params.STYLE_SIZE, 1.0f, 0, 4096);
-			ImGui::SliderInt("Padding", &App->torch_loader->style_transfer_params.PADDING, 0, 128);
 			ImGui::SliderFloat("Alpha", &App->torch_loader->style_transfer_params.ALPHA, 0.0f, 1.0f);
 
 			ImGui::Separator();
