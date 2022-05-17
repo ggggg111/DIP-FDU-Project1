@@ -249,14 +249,16 @@ at::Tensor TorchLoader::Preprocess(const cv::Mat& image, const int& padding, con
 
 	image_tensor = F::pad(
 		image_tensor,
-		F::PadFuncOptions({ p_left, p_right, p_top, p_bottom }).mode(torch::kReflect));
+		F::PadFuncOptions({ p_left, p_right, p_top, p_bottom }).mode(torch::kReflect)
+	);
 
 	int c = image_tensor.sizes()[1];
 
 	image_tensor = F::unfold(
 		image_tensor,
 		F::UnfoldFuncOptions({ h, w })
-		.stride({ h - 2 * padding, w - 2 * padding }));
+		.stride({ h - 2 * padding, w - 2 * padding })
+	);
 
 	int B = image_tensor.sizes()[0];
 	int L = image_tensor.sizes()[2];
