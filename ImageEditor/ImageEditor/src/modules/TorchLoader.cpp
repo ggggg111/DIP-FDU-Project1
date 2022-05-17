@@ -83,7 +83,7 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	cv::Mat style = cv::imread(style_path.c_str(), cv::IMREAD_COLOR);
 	cv::cvtColor(style, style, cv::COLOR_BGR2RGB);
 
-	if(this->style_transfer_params.RESIZE != 0)
+	if (this->style_transfer_params.RESIZE != 0)
 		cv::resize(image, image, cv::Size(this->style_transfer_params.RESIZE, this->style_transfer_params.RESIZE));
 
 	cv::Size image_size = image.size();
@@ -120,6 +120,8 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
 
+		style.release();
+
 		{
 			c10::InferenceMode guard(true);
 			torch::NoGradGuard no_grad;
@@ -142,6 +144,9 @@ cv::Mat TorchLoader::StyleTransferInference(const std::string& content_path, con
 	{
 		at::Tensor image_tensor = this->Mat2Tensor(image).to(torch::kCUDA);
 		at::Tensor style_tensor = this->Mat2Tensor(style).unsqueeze(0).to(torch::kCUDA);
+
+		image.release();
+		style.release();
 
 		std::cout << "Image shape: " << image_tensor.sizes() << std::endl;
 		std::cout << "Style shape: " << style_tensor.sizes() << std::endl;
@@ -382,7 +387,7 @@ cv::Mat TorchLoader::TensorToCVImageStyleTransfer(at::Tensor& tensor)
 	tensor = tensor.permute({ 1, 2, 0 });
 	tensor = tensor.reshape({ width * height * 3 });
 
-	cv::Mat res = cv::Mat(cv::Size(height, width), CV_8UC3, tensor.data_ptr());
+	cv::Mat res = cv::Mat(cv::Size(width, height), CV_8UC3, tensor.data_ptr());
 	cv::cvtColor(res, res, cv::COLOR_RGB2BGR);
 
 	return res.clone();
